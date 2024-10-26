@@ -5,13 +5,13 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
-  final String? errorText; // New field for error text
+  final String? errorText;
 
   CustomTextField({
     required this.controller,
     required this.hintText,
     this.obscureText = false,
-    this.errorText, // Added parameter for error text
+    this.errorText,
   });
 
   @override
@@ -64,16 +64,16 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
         ),
-        if (errorText != null) SizedBox(height: 4), // Space if there's an error
+        if (errorText != null) SizedBox(height: 4),
         if (errorText != null)
           Padding(
-            padding: const EdgeInsets.only(left: 4), // Optional left padding
+            padding: const EdgeInsets.only(left: 4),
             child: Text(
               errorText!,
               style: GoogleFonts.outfit(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
-                color: const Color.fromARGB(255, 255, 0, 0), // Red color for errors
+                color: const Color.fromARGB(255, 255, 0, 0),
               ),
             ),
           ),

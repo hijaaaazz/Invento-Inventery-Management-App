@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/screens/screen_register/screen_register.dart';
 import 'package:invento2/screens/screen_sign_in/screen_sign_in.dart';
 
@@ -39,7 +40,7 @@ class ScreenIntro extends StatelessWidget {
             Text(
               "Inventory Management Made Easy",
               textAlign: TextAlign.center,
-              style: GoogleFonts.outfit( // Use GoogleFonts to set the Outfit font
+              style: GoogleFonts.outfit(
                   fontSize: 27,
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 70, 68, 68)
@@ -84,6 +85,7 @@ class ScreenIntro extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: (){
+                    printAllUsers();
                     Navigator.push(context, MaterialPageRoute(builder: (context)=> ScreenRegister()));
                   },
                   child: Container(

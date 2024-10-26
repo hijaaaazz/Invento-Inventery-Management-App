@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ScreenDashboard extends StatelessWidget {
+  final dynamic userData;
+
+  const ScreenDashboard({Key? key, required this.userData}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(child: Text('Welcome to the Dashboard')),
+      body: Center(child: Text("Dashboard for ${userData.username}")),
     );
   }
 }

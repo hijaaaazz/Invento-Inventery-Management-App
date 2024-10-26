@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ScreenInventory extends StatelessWidget {
+  final dynamic userData;
+
+  const ScreenInventory({Key? key, required this.userData}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: Colors.white,
-      body: Center(child: Text('View your inventory here')),
+      body: Center(child: Text("Dashboard for ${userData.username}")),
     );
   }
 }

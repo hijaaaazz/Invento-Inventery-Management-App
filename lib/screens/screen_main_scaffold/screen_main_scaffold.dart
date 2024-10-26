@@ -1,19 +1,28 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:invento2/screens/screen_add/screen_add.dart';
 import 'package:invento2/screens/screen_dashboard/screen_dashboard.dart';
 import '../screen_inventory/screen_inventory.dart';
 import '../screen_profile/screen_profile.dart';
+import 'package:invento2/database/users/user_model.dart';
 
 class ScreenMain extends StatefulWidget {
-  const ScreenMain({super.key, required userdetails});
+  final UserModel userdetails;
+  const ScreenMain({Key? key, required this.userdetails}) : super(key: key);
 
   @override
   _ScreenMainState createState() => _ScreenMainState();
 }
 
+
 class _ScreenMainState extends State<ScreenMain> {
   final PageController _pageController = PageController(viewportFraction: 0.22, initialPage: 1);
-  int _currentIndex = 1; // Set initial index to 1
+  int _currentIndex = 1;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   final List<IconData> icons = [
     Icons.bar_chart_rounded,
@@ -29,20 +38,21 @@ class _ScreenMainState extends State<ScreenMain> {
     "Profile",
   ];
 
-  final List<Widget> screens = [
-    ScreenDashboard(),
-    ScreenAddOrder(),
-    ScreenInventory(),
-    ScreenProfile(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Display the current screen
-          screens[_currentIndex],
+
+          IndexedStack(
+            index: _currentIndex,
+            children: [
+              ScreenDashboard(userData: widget.userdetails),
+              ScreenAddOrder(userData: widget.userdetails), 
+              ScreenInventory(userData: widget.userdetails),
+              ScreenProfile(user: widget.userdetails,)  
+            ],
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -69,7 +79,7 @@ class _ScreenMainState extends State<ScreenMain> {
                                 duration: Duration(milliseconds: 300),
                                 curve: Curves.easeInOut);
                             setState(() {
-                              _currentIndex = index; 
+                              _currentIndex = index;
                             });
                           },
                           child: Container(

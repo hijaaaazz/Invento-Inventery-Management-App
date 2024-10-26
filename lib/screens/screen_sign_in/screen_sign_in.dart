@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:invento2/database/users/models/models_user.dart';
+import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/screens/screen_main_scaffold/screen_main_scaffold.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
@@ -17,7 +17,6 @@ class ScreenSignIn extends StatefulWidget {
 class _ScreenSignInState extends State<ScreenSignIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  late Box userDB;
 
   String _usernameError = '';
   String _passwordError = '';
@@ -25,7 +24,6 @@ class _ScreenSignInState extends State<ScreenSignIn> {
   @override
   void initState() {
     super.initState();
-    userDB = Hive.box<User>("user_db");
   }
 
   void _validateAndLogin() {
@@ -36,7 +34,6 @@ class _ScreenSignInState extends State<ScreenSignIn> {
 
     bool isValid = true;
 
-    // Validation logic
     if (_usernameController.text.isEmpty) {
       setState(() {
         _usernameError = 'Please enter your username';
@@ -51,37 +48,47 @@ class _ScreenSignInState extends State<ScreenSignIn> {
       isValid = false;
     }
 
-    // If fields are valid, proceed to login
     if (isValid) {
       _login();
     }
   }
 
-  void _login() {
-    String userName = _usernameController.text;
-    String password = _passwordController.text;
+  Future<void> _login() async {
+  var userDB = await Hive.openBox<UserModel>('user_db');
+  var sessionBox = await Hive.openBox('sessionBox'); // Open a box for storing session data
 
-    bool userFound = false;
+  String userName = _usernameController.text.trim();
+  String password = _passwordController.text;
 
-    for (var element in userDB.values) {
+  bool userFound = false;
+
+  for (var element in userDB.values) {
+    if (element is UserModel) {
       if (element.username == userName && element.password == password) {
-        log("User ${element.username} successfully logged in");
+        setState(() {});
+        
+        await userDB.put(element.id, element); // Update the user database
+        await sessionBox.put('lastLoggedUser', element); // Store the last logged-in user in sessionBox
+
         userFound = true;
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => ScreenMain(
-            userdetails: element,
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => ScreenMain(userdetails: element),
           ),
-        ));
+        );
         break;
       }
     }
-
-    if (!userFound) {
-      setState(() {
-        _usernameError = 'Invalid username or password';
-      });
-    }
   }
+
+  if (!userFound) {
+    setState(() {
+      _usernameError = 'Invalid username or password';
+    });
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +117,7 @@ class _ScreenSignInState extends State<ScreenSignIn> {
                       ),
                     ),
                     Text(
-                      "Thank You for returning! Please log in to access your inventory and streamline your management process.",
+                      "Thank you for returning! Please log in to access your inventory and streamline your management process.",
                       style: GoogleFonts.outfit(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
