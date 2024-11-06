@@ -256,7 +256,7 @@ void _loadCategories() async {
 
 
   // Build the section for displaying all products
-  Widget _buildAllSection(List<Product> userProducts) {
+Widget _buildAllSection(List<Product> userProducts) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 16.0),
     decoration: BoxDecoration(
@@ -272,7 +272,7 @@ void _loadCategories() async {
             }));
           },
           child: Padding(
-            padding: const EdgeInsets.only(left: 20,right: 20,bottom: 15),
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -285,42 +285,63 @@ void _loadCategories() async {
             ),
           ),
         ),
-        CarouselSlider(
-          items: userProducts.map((product) {
-            return GestureDetector(
-              onTap: () {
-                // Navigate to the product details page
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProductDetailsPage(product: product),
-                ));
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
+        userProducts.isEmpty
+            ? Container(
+                height: 150, // Same height as the CarouselSlider
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Center(
-                  child: Semantics(
-                    label: 'Product: ${product.name}',
-                    child: Text(
-                      product.name,
-                      style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
+                child: Text(
+                  "There are no products",
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
                   ),
                 ),
+              )
+            : CarouselSlider(
+                items: userProducts.map((product) {
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to the product details page
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProductDetailsPage(product: product),
+                      ));
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Center(
+                        child: Semantics(
+                          label: 'Product: ${product.name}',
+                          child: Text(
+                            product.name,
+                            style: GoogleFonts.inter(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                options: CarouselOptions(
+                  height: 150,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.8,
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  autoPlayInterval: const Duration(seconds: 3),
+                ),
               ),
-            );
-          }).toList(),
-          options: CarouselOptions(
-            height: 150,
-            autoPlay: true,
-            enlargeCenterPage: true,
-            viewportFraction: 0.8,
-            autoPlayAnimationDuration: const Duration(milliseconds: 800),
-            autoPlayInterval: const Duration(seconds: 3),
-          ),
-        ),
       ],
     ),
   );
