@@ -2,6 +2,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:invento2/database/inventory/category/category_functions.dart';
+import 'package:invento2/database/inventory/inventory_model.dart';
+import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/screens/screen_main_scaffold/screen_main_scaffold.dart';
@@ -11,10 +14,10 @@ class ScreenSignIn extends StatefulWidget {
   const ScreenSignIn({super.key});
 
   @override
-  _ScreenSignInState createState() => _ScreenSignInState();
+  ScreenSignInState createState() => ScreenSignInState();
 }
 
-class _ScreenSignInState extends State<ScreenSignIn> {
+class ScreenSignInState extends State<ScreenSignIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -55,8 +58,7 @@ class _ScreenSignInState extends State<ScreenSignIn> {
 
   Future<void> _login() async {
   var userDB = await Hive.openBox<UserModel>('user_db');
-  var sessionBox = await Hive.openBox('sessionBox'); // Open a box for storing session data
-
+  var sessionBox = await Hive.openBox('sessionBox'); 
   String userName = _usernameController.text.trim();
   String password = _passwordController.text;
 
@@ -65,10 +67,18 @@ class _ScreenSignInState extends State<ScreenSignIn> {
   for (var element in userDB.values) {
     if (element is UserModel) {
       if (element.username == userName && element.password == password) {
-        setState(() {});
         
-        await userDB.put(element.id, element); // Update the user database
-        await sessionBox.put('lastLoggedUser', element); // Store the last logged-in user in sessionBox
+        await sessionBox.put('lastLoggedUser', element);
+
+        userDataNotifier.value = element; // This updates the notifier
+        userDataNotifier.notifyListeners(); // Notify listeners
+
+        final existingInventory = inventoryBox!.values.firstWhere(
+      (inventory) => inventory.userId == element.id, 
+      orElse: () => InventoryModel(userId: element.id, categories: []),
+    );
+    categoryListNotifier.value = existingInventory.categories!;
+    categoryListNotifier.notifyListeners();
 
         userFound = true;
         Navigator.of(context).pushReplacement(
@@ -87,6 +97,7 @@ class _ScreenSignInState extends State<ScreenSignIn> {
     });
   }
 }
+
 
 
 

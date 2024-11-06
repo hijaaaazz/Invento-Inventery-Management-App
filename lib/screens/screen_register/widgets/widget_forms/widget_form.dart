@@ -6,12 +6,14 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final String? errorText;
+  final TextInputType? keyboardType; // Added keyboardType parameter
 
   CustomTextField({
     required this.controller,
     required this.hintText,
     this.obscureText = false,
     this.errorText,
+    this.keyboardType, // Accept keyboardType in constructor
   });
 
   @override
@@ -40,6 +42,7 @@ class CustomTextField extends StatelessWidget {
               child: TextFormField(
                 controller: controller,
                 obscureText: obscureText,
+                keyboardType: keyboardType, // Set keyboardType here
                 style: GoogleFonts.outfit(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

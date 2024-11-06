@@ -166,6 +166,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                       controller: _phoneController,
                       hintText: "Phone Number",
                       errorText: _phoneError,
+                      keyboardType: TextInputType.phone,
                     ),
                   ],
                   if (_showSecondSetOfFields) ...[
@@ -196,7 +197,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
             GestureDetector(
               onTap: () async {
   if (_validateAndSubmit()) {
-    // Show loading indicator
+ 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Registering...')),
     );

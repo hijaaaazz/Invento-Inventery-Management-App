@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/screens/screen_register/screen_register.dart';
 import 'package:invento2/screens/screen_sign_in/screen_sign_in.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../helpers/media_query_helper/media_query_helper.dart';
 
@@ -33,6 +34,11 @@ class ScreenIntro extends StatelessWidget {
                       Radius.circular(20)
                   )
               ),
+              child: Padding(
+
+                padding:  EdgeInsets.only(right: MediaQueryInfo.screenWidth * 0.08),
+                child: Lottie.asset("assets/gifs/box.json"),
+              )
             ),
             SizedBox(
               height: 25,
@@ -85,7 +91,7 @@ class ScreenIntro extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: (){
-                    printAllUsers();
+               
                     Navigator.push(context, MaterialPageRoute(builder: (context)=> ScreenRegister()));
                   },
                   child: Container(
