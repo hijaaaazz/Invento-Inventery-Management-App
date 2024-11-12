@@ -7,7 +7,7 @@ import 'package:invento2/database/users/user_model.dart';
 class ScreenDashboard extends StatelessWidget {
   final dynamic userData;
 
-  const ScreenDashboard({Key? key, required this.userData}) : super(key: key);
+  const ScreenDashboard({super.key, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -15,35 +15,31 @@ class ScreenDashboard extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            // User Data
             ValueListenableBuilder<UserModel?>(
               valueListenable: userDataNotifier,
               builder: (context, user, child) {
                 if (user == null) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else {
                   return Text('Welcome ${user.name}');
                 }
               },
             ),
 
-            // Spacer to add some space between widgets
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            // Category Data
             Expanded(
               child: ValueListenableBuilder<List<CategoryModel>>(
                 valueListenable: categoryListNotifier,
                 builder: (context, categories, child) {
                   if (categories.isEmpty) {
-                    return Text('No Categories Available');
+                    return const Text('No Categories Available');
                   } else {
-                    // Using ListView.builder wrapped in Expanded
                     return ListView.builder(
                       itemCount: categories.length,
                      itemBuilder: (context, index) {
   return ListTile(
-    title: Text(categories[index].name ?? 'Unnamed Category'), // Provide a default value
+    title: Text(categories[index].name ?? 'Unnamed Category'), 
   );
 },
 

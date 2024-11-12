@@ -1,5 +1,6 @@
-import 'dart:ui';
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/screens/screen_add/screen_add.dart';
 import 'package:invento2/screens/screen_dashboard/screen_dashboard.dart';
 import '../screen_inventory/screen_inventory.dart';
@@ -8,9 +9,10 @@ import 'package:invento2/database/users/user_model.dart';
 
 class ScreenMain extends StatefulWidget {
   final UserModel userdetails;
-  const ScreenMain({Key? key, required this.userdetails}) : super(key: key);
+  const ScreenMain({super.key, required this.userdetails});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ScreenMainState createState() => _ScreenMainState();
 }
 
@@ -22,6 +24,12 @@ class _ScreenMainState extends State<ScreenMain> {
   @override
   void initState() {
     super.initState();
+    if (userDataNotifier.value.id.isNotEmpty) {
+    log("Current User ID: ${userDataNotifier.value.id}");
+    }
+    
+    
+
   }
 
   final List<IconData> icons = [
@@ -55,7 +63,7 @@ class _ScreenMainState extends State<ScreenMain> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
+            child: SizedBox(
               height: 90,
               child: PageView.builder(
                 controller: _pageController,
@@ -69,14 +77,14 @@ class _ScreenMainState extends State<ScreenMain> {
                   double scale = _currentIndex == index ? 0.7 : 0.5;
                   return TweenAnimationBuilder(
                     tween: Tween<double>(begin: scale, end: scale),
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     builder: (context, double scale, child) {
                       return Transform.scale(
                         scale: scale,
                         child: GestureDetector(
                           onTap: () {
                             _pageController.animateToPage(index,
-                                duration: Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 300),
                                 curve: Curves.easeInOut);
                             setState(() {
                               _currentIndex = index;
@@ -85,13 +93,13 @@ class _ScreenMainState extends State<ScreenMain> {
                           child: Container(
                             width: 60,
                             height: 60,
-                            margin: EdgeInsets.symmetric(horizontal: 0),
+                            margin: const EdgeInsets.symmetric(horizontal: 0),
                             decoration: BoxDecoration(
                               boxShadow: _currentIndex == index
                                   ? [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),
-                                        offset: Offset(0, 2),
+                                        offset: const Offset(0, 2),
                                         blurRadius: 10,
                                         spreadRadius: 1,
                                       ),
@@ -100,13 +108,13 @@ class _ScreenMainState extends State<ScreenMain> {
                               shape: BoxShape.circle,
                               color: _currentIndex == index
                                   ? Colors.white
-                                  : Color.fromRGBO(184, 182, 182, 0.4),
+                                  : const Color.fromRGBO(184, 182, 182, 0.4),
                             ),
                             child: Center(
                               child: Icon(
                                 icons[index],
                                 color: _currentIndex == index
-                                    ? Color(0xFF8C8C8C)
+                                    ? const Color(0xFF8C8C8C)
                                     : Colors.white,
                                 size: _currentIndex == index ? 40 : 25,
                               ),

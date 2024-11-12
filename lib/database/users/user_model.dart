@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:invento2/database/inventory/inventory_model.dart'; // Ensure you have the correct import
+import 'package:invento2/database/inventory/inventory_model.dart'; 
 
 part 'user_model.g.dart';
 
@@ -24,7 +24,7 @@ class UserModel {
   final String password;
 
   @HiveField(6)
-  final InventoryModel? inventories; // List of inventories for the user
+  final InventoryModel? inventories; 
 
   UserModel({
     required this.id,
@@ -33,6 +33,6 @@ class UserModel {
     required this.phone,
     required this.username,
     required this.password,
-    this.inventories, // inventories is optional
+    this.inventories,
   });
 }

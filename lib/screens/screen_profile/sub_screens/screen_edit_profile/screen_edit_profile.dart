@@ -7,7 +7,7 @@ import 'package:invento2/screens/screen_profile/sub_screens/screen_edit_profile/
 class ScreenEditProfile extends StatefulWidget {
   final UserModel userdata;
 
-  const ScreenEditProfile({Key? key, required this.userdata}) : super(key: key);
+  const ScreenEditProfile({super.key, required this.userdata});
 
   @override
   State<ScreenEditProfile> createState() => _ScreenEditProfileState();
@@ -90,21 +90,21 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> { // Declare the 
           EditProfileFields(
             controller: nameController,
             label: 'Name',
-            icon: Icon(Icons.person, color: Colors.black45),
+            icon: const Icon(Icons.person, color: Colors.black45),
           ),
-          Divider(height: 5),
+          const Divider(height: 5),
           EditProfileFields(
             controller: emailController,
             label: 'Email ID',
-            icon: Icon(Icons.email, color: Colors.black45),
+            icon: const Icon(Icons.email, color: Colors.black45),
           ),
-          Divider(height: 5),
+          const Divider(height: 5),
           EditProfileFields(
             controller: phoneController,
             label: 'Phone Number',
-            icon: Icon(Icons.phone, color: Colors.black45),
+            icon: const Icon(Icons.phone, color: Colors.black45),
           ),
-          Divider(height: 5),
+          const Divider(height: 5),
         ],
       ),
     );

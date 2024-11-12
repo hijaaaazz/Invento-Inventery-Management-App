@@ -7,7 +7,10 @@ import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_for
 import 'package:invento2/screens/screen_sign_in/screen_sign_in.dart';
 
 class ScreenRegister extends StatefulWidget {
+  const ScreenRegister({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _ScreenRegisterState createState() => _ScreenRegisterState();
 }
 
@@ -199,7 +202,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   if (_validateAndSubmit()) {
  
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Registering...')),
+      const SnackBar(content: Text('Registering...')),
     );
 
     bool isSuccess = await addUser(
@@ -213,21 +216,24 @@ class _ScreenRegisterState extends State<ScreenRegister> {
 
     if (isSuccess) {
       log("User added");
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Successfully registered!'),
           duration: Duration(seconds: 2), 
         ),
       );
 
       Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
         context,
-        MaterialPageRoute(builder: (context) => ScreenSignIn()),
+        MaterialPageRoute(builder: (context) => const ScreenSignIn()),
       );
     } else {
       log("Failed to add user");
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Failed to register. Please try again.'),
           duration: Duration(seconds: 2),
         ),

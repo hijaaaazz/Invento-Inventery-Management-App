@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
@@ -65,31 +64,32 @@ class ScreenSignInState extends State<ScreenSignIn> {
   bool userFound = false;
 
   for (var element in userDB.values) {
-    if (element is UserModel) {
-      if (element.username == userName && element.password == password) {
-        
-        await sessionBox.put('lastLoggedUser', element);
+    if (element.username == userName && element.password == password) {
+      
+      await sessionBox.put('lastLoggedUser', element);
 
-        userDataNotifier.value = element; // This updates the notifier
-        userDataNotifier.notifyListeners(); // Notify listeners
+      userDataNotifier.value = element;
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      userDataNotifier.notifyListeners(); 
 
-        final existingInventory = inventoryBox!.values.firstWhere(
-      (inventory) => inventory.userId == element.id, 
-      orElse: () => InventoryModel(userId: element.id, categories: []),
-    );
-    categoryListNotifier.value = existingInventory.categories!;
-    categoryListNotifier.notifyListeners();
+      final existingInventory = inventoryBox!.values.firstWhere(
+    (inventory) => inventory.userId == element.id, 
+    orElse: () => InventoryModel(userId: element.id, categories: []),
+  );
+  categoryListNotifier.value = existingInventory.categories!;
+  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+  categoryListNotifier.notifyListeners();
 
-        userFound = true;
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => ScreenMain(userdetails: element),
-          ),
-        );
-        break;
-      }
+      userFound = true;
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => ScreenMain(userdetails: element),
+        ),
+      );
+      break;
     }
-  }
+    }
 
   if (!userFound) {
     setState(() {
@@ -108,7 +108,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.07),
-          child: Container(
+          child: SizedBox(
             height: MediaQueryInfo.screenHeight,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +123,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
                         style: GoogleFonts.outfit(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 84, 81, 81),
+                          color: const Color.fromARGB(255, 84, 81, 81),
                         ),
                       ),
                     ),
@@ -132,17 +132,17 @@ class ScreenSignInState extends State<ScreenSignIn> {
                       style: GoogleFonts.outfit(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        color: const Color.fromARGB(255, 0, 0, 0),
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     CustomTextField(
                       controller: _usernameController,
                       hintText: "Username",
                       errorText: _usernameError,
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     CustomTextField(
                       controller: _passwordController,
                       hintText: "Password",
@@ -159,7 +159,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
                         width: MediaQueryInfo.screenWidth * 0.9,
                         height: MediaQueryInfo.screenHeight * 0.07,
                         decoration: BoxDecoration(
-                          color: Color(0xFFE500D6),
+                          color: const Color(0xFFE500D6),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Center(
@@ -168,7 +168,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
                             style: GoogleFonts.outfit(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              color: Color.fromARGB(255, 255, 255, 255),
+                              color: const Color.fromARGB(255, 255, 255, 255),
                             ),
                           ),
                         ),

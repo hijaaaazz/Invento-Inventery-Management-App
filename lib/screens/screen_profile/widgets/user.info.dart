@@ -6,7 +6,7 @@ import 'package:invento2/database/users/user_model.dart';
 class UserInfo extends StatefulWidget {
   final UserModel user;
 
-  const UserInfo({required this.user});
+  const UserInfo({super.key, required this.user});
 
   @override
   State<UserInfo> createState() => _UserInfoState();

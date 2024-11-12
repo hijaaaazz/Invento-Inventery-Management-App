@@ -4,18 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:lottie/lottie.dart';
 
-
 Future<void> showAddCategoryDialog(BuildContext context, String userId) async {
   showDialog(
     context: context,
     builder: (context) => AddCategoryDialog(
-      onConfirm: (String id, String name) {
+      onConfirm: (String name, String categoryId) {
         addCategory(
+          categoryId: categoryId,
           userId: userId,
-          categoryName: name // Use the passed userId
-          
+          categoryName: name,
         );
-        log("Added category: id = $id, name = $name for userId = $userId");
+        log("Added category: id = $userId, name = $name for userId = $userId");
       },
     ),
   );
@@ -24,9 +23,10 @@ Future<void> showAddCategoryDialog(BuildContext context, String userId) async {
 class AddCategoryDialog extends StatefulWidget {
   final Function(String, String) onConfirm;
 
-  AddCategoryDialog({required this.onConfirm});
+  const AddCategoryDialog({super.key, required this.onConfirm});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddCategoryDialogState createState() => _AddCategoryDialogState();
 }
 
@@ -35,7 +35,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
 
   @override
   void dispose() {
-    nameController.dispose(); // Dispose the controller
+    nameController.dispose();
     super.dispose();
   }
 
@@ -50,7 +50,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
           constraints: BoxConstraints(
             maxHeight: screenHeight * 0.8,
           ),
@@ -68,29 +68,30 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: TextField(
                   controller: nameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Name',
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: screenHeight * 0.2,
                 child: Lottie.asset('assets/gifs/logout.json'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
                   if (nameController.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Please enter a category name')),
+                      const SnackBar(content: Text('Please enter a category name')),
                     );
                     return;
                   }
-                  widget.onConfirm(
-                    DateTime.now().millisecondsSinceEpoch.toString(),
-                    nameController.text.trim(),
-                  );
+
+                  String categoryId = DateTime.now().millisecondsSinceEpoch.toString();
+                  String name = nameController.text.trim();
+
+                  widget.onConfirm(name, categoryId);
 
                   Navigator.of(context).pop();
                 },
@@ -102,9 +103,9 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                   ),
                 ),
               ),
-              Divider(
+              const Divider(
                 height: 25,
-                color: const Color.fromARGB(255, 231, 231, 231),
+                color: Color.fromARGB(255, 231, 231, 231),
               ),
               GestureDetector(
                 onTap: () {
@@ -115,7 +116,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                   style: GoogleFonts.outfit(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
             ],
           ),
         ),

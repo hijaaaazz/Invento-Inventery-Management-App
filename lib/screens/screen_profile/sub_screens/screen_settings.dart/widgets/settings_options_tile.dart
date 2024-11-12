@@ -6,11 +6,11 @@ class SettingsOptionTile extends StatelessWidget {
   final Widget? trailing;
 
   const SettingsOptionTile({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     this.trailing,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class SettingsOptionTile extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
           if (trailing != null) Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: trailing),

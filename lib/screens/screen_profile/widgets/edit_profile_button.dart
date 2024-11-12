@@ -7,11 +7,11 @@ import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 class EditProfileButton extends StatelessWidget {
   final UserModel user;
 
-  const EditProfileButton({required this.user});
+  const EditProfileButton({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 80,
       child: Stack(

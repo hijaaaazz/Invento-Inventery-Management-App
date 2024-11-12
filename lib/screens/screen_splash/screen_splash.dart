@@ -10,7 +10,7 @@ import 'package:invento2/screens/screen_main_scaffold/screen_main_scaffold.dart'
 import 'package:lottie/lottie.dart';
 
 class ScreenSplash extends StatefulWidget {
-  const ScreenSplash({Key? key}) : super(key: key);
+  const ScreenSplash({super.key});
 
   @override
   ScreenSplashState createState() => ScreenSplashState();
@@ -25,18 +25,17 @@ class ScreenSplashState extends State<ScreenSplash> {
 
   Future<void> checkLoggedUser() async {
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
 
-      // Open the required Hive boxes
       await Hive.openBox<UserModel>('user_db');
       var sessionBox = await Hive.openBox('sessionBox');
 
-      // Retrieve the last logged user from the session box
+
       var lastLoggedUser = sessionBox.get('lastLoggedUser');
 
       if (lastLoggedUser is UserModel) {
-        // Update the user data notifier
         userDataNotifier.value = lastLoggedUser;
+        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
         userDataNotifier.notifyListeners();
 
        final existingInventory = inventoryBox!.values.firstWhere(
@@ -44,10 +43,12 @@ class ScreenSplashState extends State<ScreenSplash> {
       orElse: () => InventoryModel(userId: lastLoggedUser.id, categories: []),
     );
     categoryListNotifier.value = existingInventory.categories!;
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     categoryListNotifier.notifyListeners();
 
 
         
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
@@ -61,14 +62,14 @@ class ScreenSplashState extends State<ScreenSplash> {
           ),
         );
 
-        // Load all user data
+
         getAllUser();
       } else {
-        // Navigate to the intro screen if no logged-in user is found
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => ScreenIntro(),
-            transitionDuration: Duration(milliseconds: 500),
+            pageBuilder: (context, animation, secondaryAnimation) => const ScreenIntro(),
+            transitionDuration: const Duration(milliseconds: 500),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return FadeTransition(
                 opacity: animation,
@@ -78,9 +79,9 @@ class ScreenSplashState extends State<ScreenSplash> {
           ),
         );
       }
+    // ignore: empty_catches
     } catch (e) {
-      // Handle any errors that occur during database operations
-      print('Error during user check or database access: $e');
+    
     }
   }
 
@@ -89,7 +90,7 @@ class ScreenSplashState extends State<ScreenSplash> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: MediaQueryInfo.screenWidth * 0.5,
           height: MediaQueryInfo.screenWidth * 0.5,
           child: Lottie.asset("assets/gifs/truck.json"),

@@ -9,11 +9,11 @@ class EditProfileFields extends StatelessWidget {
   final Icon icon;
 
   const EditProfileFields({
-    Key? key,
+    super.key,
     required this.controller,
     required this.label,
     required this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class EditProfileFields extends StatelessWidget {
       builder: (ctx, newValue, _){
         return Row(
         children: [
-          Container(
+          SizedBox(
             width: MediaQueryInfo.screenHeight * 0.07,
             height: MediaQueryInfo.screenHeight * 0.07,
             child: icon,

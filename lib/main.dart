@@ -4,29 +4,31 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
 import 'package:invento2/database/inventory/inventory_model.dart';
+import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/screens/screen_splash/screen_splash.dart';
+import 'package:invento2/database/inventory/product/product_functions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
 
-  // Register your adapters
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(CategoryModelAdapter());
   Hive.registerAdapter(InventoryModelAdapter());
+  Hive.registerAdapter(ProductModelAdapter());
 
-  // Initialize databases and fetch user data
   try {
     await initUserDB();
     await initCategoryDB();
+    await initProductDB();
     await getAllUser();
+  // ignore: empty_catches
   } catch (e) {
-    // Log or handle initialization error
-    print("Error initializing databases: $e");
+    
   }
 
   runApp(const MyApp());

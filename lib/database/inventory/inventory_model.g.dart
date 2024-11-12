@@ -19,7 +19,7 @@ class InventoryModelAdapter extends TypeAdapter<InventoryModel> {
     return InventoryModel(
       userId: fields[0] as String,
       categories: (fields[1] as List?)?.cast<CategoryModel>(),
-      products: (fields[2] as List?)?.cast<Product>(),
+      products: (fields[2] as List?)?.cast<ProductModel>(),
     );
   }
 

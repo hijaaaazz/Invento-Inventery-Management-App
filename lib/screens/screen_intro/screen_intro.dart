@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/screens/screen_register/screen_register.dart';
 import 'package:invento2/screens/screen_sign_in/screen_sign_in.dart';
 import 'package:lottie/lottie.dart';
@@ -28,8 +27,8 @@ class ScreenIntro extends StatelessWidget {
 
               height: MediaQueryInfo.screenHeight*0.5,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: const Color(0xFFE500D6),
+              decoration: const BoxDecoration(
+                  color: Color(0xFFE500D6),
                   borderRadius: BorderRadius.all(
                       Radius.circular(20)
                   )
@@ -40,7 +39,7 @@ class ScreenIntro extends StatelessWidget {
                 child: Lottie.asset("assets/gifs/box.json"),
               )
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             Text(
@@ -53,14 +52,14 @@ class ScreenIntro extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             Text("Manage your Inventory effortlessly with a simple and efficient system. Keep track of stock, streamline operations, and stay organised with ease",
               textAlign: TextAlign.center,
               style:GoogleFonts.outfit(
                 fontSize: 12,
                 fontWeight: FontWeight.w300,
               ),),
-            SizedBox(
+            const SizedBox(
               width: double.infinity,
               height: 40,
             ),
@@ -68,12 +67,12 @@ class ScreenIntro extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ScreenSignIn(), ));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const ScreenSignIn(), ));
                   },
                   child: Container(
                     width: MediaQueryInfo.screenWidth*0.43,
                     height: MediaQueryInfo.screenHeight*0.08,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Color(0xFFE500D6),
                         borderRadius: BorderRadius.horizontal(
                             left: Radius.circular(15)
@@ -92,14 +91,14 @@ class ScreenIntro extends StatelessWidget {
                 GestureDetector(
                   onTap: (){
                
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ScreenRegister()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const ScreenRegister()));
                   },
                   child: Container(
                     width: MediaQueryInfo.screenWidth*0.43,
                     height: MediaQueryInfo.screenHeight*0.08,
                     decoration: BoxDecoration(
                         color: Colors.grey[200],
-                        borderRadius: BorderRadius.horizontal(
+                        borderRadius: const BorderRadius.horizontal(
                             right: Radius.circular(15)
                         )
                     ),
@@ -108,7 +107,7 @@ class ScreenIntro extends StatelessWidget {
                         style:GoogleFonts.outfit(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 84, 81, 81)
+                            color: const Color.fromARGB(255, 84, 81, 81)
                         ),),
                     ),
                   ),

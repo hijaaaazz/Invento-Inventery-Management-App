@@ -32,12 +32,12 @@ class ScreenSettings extends StatelessWidget {
               ),
             ),
             SizedBox(height: MediaQueryInfo.screenHeight * 0.015),
-            SettingsOptionTile(
+            const SettingsOptionTile(
               icon: Icons.privacy_tip_outlined,
               title: "Privacy Policy",
             ),
             SizedBox(height: MediaQueryInfo.screenHeight * 0.015),
-            SettingsOptionTile(
+            const SettingsOptionTile(
               icon: Icons.file_copy_outlined,
               title: "Terms & Conditions",
             ),

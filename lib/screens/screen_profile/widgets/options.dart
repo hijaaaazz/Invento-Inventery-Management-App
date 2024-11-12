@@ -5,7 +5,7 @@ class OptionsList extends StatelessWidget {
   final Function onLogout;
   final Function navSettings;
 
-  OptionsList({required this.onLogout,required this.navSettings});
+  OptionsList({super.key, required this.onLogout,required this.navSettings});
 
   final List<Map<String, dynamic>> options = [
     {'title': 'Settings', 'icon': Icons.settings, 'color': Colors.black},
@@ -19,7 +19,7 @@ class OptionsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.2),
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.4,
         child: ListView.builder(
           itemCount: options.length,

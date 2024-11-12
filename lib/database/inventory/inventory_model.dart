@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 
@@ -13,7 +13,7 @@ class InventoryModel {
   final List<CategoryModel>? categories;
 
   @HiveField(2)
-  final List<Product>? products;
+  final List<ProductModel>? products;
 
   InventoryModel({
     required this.userId,

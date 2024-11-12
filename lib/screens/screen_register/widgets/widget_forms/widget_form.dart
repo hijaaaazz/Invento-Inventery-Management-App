@@ -8,7 +8,7 @@ class CustomTextField extends StatelessWidget {
   final String? errorText;
   final TextInputType? keyboardType; // Added keyboardType parameter
 
-  CustomTextField({
+  const CustomTextField({super.key, 
     required this.controller,
     required this.hintText,
     this.obscureText = false,
@@ -25,14 +25,14 @@ class CustomTextField extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.07,
           decoration: BoxDecoration(
-            color: Color(0xFFF3F3F3),
+            color: const Color(0xFFF3F3F3),
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
                 spreadRadius: 0,
                 blurRadius: 1,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -46,7 +46,7 @@ class CustomTextField extends StatelessWidget {
                 style: GoogleFonts.outfit(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 129, 129, 129),
+                  color: const Color.fromARGB(255, 129, 129, 129),
                 ),
                 cursorColor: Colors.grey,
                 cursorHeight: 15,
@@ -55,10 +55,10 @@ class CustomTextField extends StatelessWidget {
                   hintStyle: GoogleFonts.outfit(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 129, 129, 129),
+                    color: const Color.fromARGB(255, 129, 129, 129),
                   ),
                   filled: true,
-                  fillColor: Color(0xFFF3F3F3),
+                  fillColor: const Color(0xFFF3F3F3),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -67,7 +67,7 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
         ),
-        if (errorText != null) SizedBox(height: 4),
+        if (errorText != null) const SizedBox(height: 4),
         if (errorText != null)
           Padding(
             padding: const EdgeInsets.only(left: 4),

@@ -12,7 +12,7 @@ import 'package:invento2/screens/screen_profile/widgets/user.info.dart'; // Impo
 class ScreenProfile extends StatelessWidget {
   final UserModel user;
 
-  ScreenProfile({required this.user});
+  const ScreenProfile({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class ScreenProfile extends StatelessWidget {
             UserInfo(user: user),
             EditProfileButton(user: user),
             OptionsList(onLogout: () => showLogoutDialog(context),navSettings:(){
-              Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> ScreenSettings()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> const ScreenSettings()));
             },),
             Center(
               child: Text(
@@ -54,6 +54,7 @@ class ScreenProfile extends StatelessWidget {
   Future<void> logout(BuildContext context) async {
     var sessionBox = await Hive.openBox('sessionBox');
     await sessionBox.delete('lastLoggedUser');
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const ScreenIntro(),
