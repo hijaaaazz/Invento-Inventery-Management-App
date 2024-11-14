@@ -277,12 +277,10 @@ void showEditProductDetailsDialog(
                 maxlimit: productNotifier.value.maxlimit,
               );
 
-              // Update the UI
               productNotifier.value = productNotifier.value.copyWith(
                 name: nameController.text,
                 description: descriptionController.text,
               );
-
               Navigator.of(context).pop(); // Close dialog
             },
             child: Text("Save", style: GoogleFonts.lato()),

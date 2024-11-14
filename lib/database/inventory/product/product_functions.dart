@@ -4,7 +4,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 
 ValueNotifier<List<ProductModel>> ProductListNotifier = ValueNotifier([]);
+ValueNotifier<List<ProductModel>> FilteredProductListNotifier = ValueNotifier([]);
 ValueNotifier<ProductModel> productDetailsNotifier= ValueNotifier(ProductModel(userId: '', productId: '', name: '', category: '', description: '', unit: '', price: 0, minlimit: 0, maxlimit: 0, rate: 0, productImage: '',));
+
 
 const PRODUCT_DB_NAME = 'product_db';
 Box<ProductModel>? productBox;

@@ -15,7 +15,6 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
   return ValueListenableBuilder(
     valueListenable: ProductListNotifier,
     builder: (context, productList, _) {
-      // Filter products by the current user
       final userSpecificProducts = productList
           .where((product) => product.userId == userData.id)
           .toList();

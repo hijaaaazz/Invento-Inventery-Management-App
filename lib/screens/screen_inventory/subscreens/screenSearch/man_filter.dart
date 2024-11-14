@@ -144,7 +144,23 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
             right: 0,
             child: SlideTransition(
               position: filterDrawerSlideAnimation,
-              child: _buildFilterDrawer(),
+              child: FilterDrawer(
+              categories: categories,
+              selectedCategories: selectedCategories,
+              minPrice: minPrice,
+              maxPrice: maxPrice,
+              maxProductPrice: getMaxPrice(),
+              onPriceChanged: (start, end) {
+                setState(() {
+                  minPrice = start;
+                  maxPrice = end;
+                });
+              },
+              onCategorySelected: _onCategorySelected,
+              onApplyFilters: _applyFilters,
+              onClearFilters: _clearFilters,
+              onCloseDrawer: toggleFilterDrawer,
+            ),
             ),
           ),
 
@@ -184,7 +200,39 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
     );
   }
 
-  Widget _buildFilterDrawer() {
+  
+
+}
+
+
+class FilterDrawer extends StatelessWidget {
+  final List<String> categories;
+  final List<String> selectedCategories;
+  final double minPrice;
+  final double maxPrice;
+  final double maxProductPrice;
+  final Function(double, double) onPriceChanged;
+  final Function(String) onCategorySelected;
+  final VoidCallback onApplyFilters;
+  final VoidCallback onClearFilters;
+  final VoidCallback onCloseDrawer;
+
+  const FilterDrawer({
+    super.key,
+    required this.categories,
+    required this.selectedCategories,
+    required this.minPrice,
+    required this.maxPrice,
+    required this.maxProductPrice,
+    required this.onPriceChanged,
+    required this.onCategorySelected,
+    required this.onApplyFilters,
+    required this.onClearFilters,
+    required this.onCloseDrawer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: 400,
@@ -202,75 +250,59 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
       child: Column(
         children: [
           const SizedBox(height: 60),
-          _buildFilterHeader(),
-          _buildCategoryFilter(),
-          _buildPriceFilter(),
-          _buildFilterButtons(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text('Filters', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-          IconButton(icon: const Icon(Icons.close), onPressed: toggleFilterDrawer),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryFilter() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Wrap(
-        spacing: 8.0,
-        runSpacing: 4.0,
-        children: categories.map((category) {
-          return FilterChip(
-            label: Text(category),
-            selected: selectedCategories.contains(category),
-            onSelected: (_) => _onCategorySelected(category),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildPriceFilter() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Column(
-        children: [
-          const Text("Price Range"),
-          RangeSlider(
-            values: RangeValues(minPrice, maxPrice),
-            min: 0.0,
-            max: getMaxPrice(),
-            divisions: 20,
-            onChanged: (values) => setState(() {
-              minPrice = values.start;
-              maxPrice = values.end;
-            }),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Filters', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: onCloseDrawer,
+                ),
+              ],
+            ),
           ),
-          Text('Selected Price Range: ₹${minPrice.toStringAsFixed(2)} - ₹${maxPrice.toStringAsFixed(2)}'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterButtons() {
-    return Padding(
-      padding: const EdgeInsets.all(15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ElevatedButton(onPressed: _applyFilters, child: const Text('Apply Filters')),
-          ElevatedButton(onPressed: _clearFilters, child: const Text('Clear Filters')),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: categories.map((category) {
+                return FilterChip(
+                  label: Text(category),
+                  selected: selectedCategories.contains(category),
+                  onSelected: (_) => onCategorySelected(category),
+                );
+              }).toList(),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Column(
+              children: [
+                const Text("Price Range"),
+                RangeSlider(
+                  values: RangeValues(minPrice, maxPrice),
+                  min: 0.0,
+                  max: maxProductPrice,
+                  divisions: 20,
+                  onChanged: (values) => onPriceChanged(values.start, values.end),
+                ),
+                Text('Selected Price Range: ₹${minPrice.toStringAsFixed(2)} - ₹${maxPrice.toStringAsFixed(2)}'),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(onPressed: onApplyFilters, child: const Text('Apply Filters')),
+                ElevatedButton(onPressed: onClearFilters, child: const Text('Clear Filters')),
+              ],
+            ),
+          ),
         ],
       ),
     );
