@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
-import 'package:invento2/screens/screen_inventory/subscreens/screen_search_and_filter/screen_search_and_filter_main.dart';
+import 'package:invento2/screens/screen_inventory/subscreens/screenSearch/man_filter.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_inventory_list.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_search_section.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_appbar.dart';
@@ -46,7 +46,6 @@ class _ScreenInventoryState extends State<ScreenInventory> {
       ),
       body: Stack(
         children: [
-          // Apply the animated transition between Search and Inventory sections
           AnimatedSwitcher(
             duration: Duration(milliseconds: 500),
             child: isSearchClicked
