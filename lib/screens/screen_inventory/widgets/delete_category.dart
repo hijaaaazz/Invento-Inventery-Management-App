@@ -1,6 +1,4 @@
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
@@ -23,6 +21,7 @@ void longPressEmptyCategory(BuildContext context, CategoryModel category) {
           TextButton(
             onPressed: () async {
             deleteCategory(category.id!,userDataNotifier.value.id, context,);
+            Navigator.of(context).pop();
             },
             child: const Text(
               "Delete",

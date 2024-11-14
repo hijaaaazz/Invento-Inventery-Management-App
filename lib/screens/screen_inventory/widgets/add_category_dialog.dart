@@ -26,7 +26,6 @@ class AddCategoryDialog extends StatefulWidget {
   const AddCategoryDialog({super.key, required this.onConfirm});
 
   @override
-  // ignore: library_private_types_in_public_api
   _AddCategoryDialogState createState() => _AddCategoryDialogState();
 }
 

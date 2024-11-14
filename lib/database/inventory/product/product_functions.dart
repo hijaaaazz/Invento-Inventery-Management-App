@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 
-ValueNotifier<List<ProductModel>> ProductListNotifier = ValueNotifier([
-  ProductModel(productId: 'uhu', name: '.', category: 'n', description: 'h', unit: 'kg' , rate: 2, price: 1, minlimit: 2, maxlimit: 1, userId: '1730980661608', productImage: '')
-]);
+ValueNotifier<List<ProductModel>> ProductListNotifier = ValueNotifier([]);
+ValueNotifier<ProductModel> productDetailsNotifier= ValueNotifier(ProductModel(userId: '', productId: '', name: '', category: '', description: '', unit: '', price: 0, minlimit: 0, maxlimit: 0, rate: 0, productImage: '',));
 
 const PRODUCT_DB_NAME = 'product_db';
 Box<ProductModel>? productBox;
@@ -27,13 +26,14 @@ Future<bool> addProduct({
   required String category,
   required String description,
   required String unit,
-  required double rate,
   required double price,
   required double minlimit,
   required double maxlimit,
   required String userId, 
-  required String productImage
+  required String productImage,
+  required double rate
 }) async {
+  
   await initProductDB();
 
   final newProduct = ProductModel(
@@ -42,12 +42,12 @@ Future<bool> addProduct({
     category: category,
     description: description,
     unit: unit,
-    rate: rate,
     price: price,
     minlimit: minlimit,
     maxlimit: maxlimit,
     userId: userId,
-    productImage: productImage
+    productImage: productImage,
+    rate: rate
   );
 
   try {
@@ -61,45 +61,55 @@ Future<bool> addProduct({
     return false;
   }
 }
-
 Future<void> updateProduct({
   required String id,
   required String name,
-  required String category,
   required String description,
-  required String unit,
-  required double rate,
-  required double price,
   required double minlimit,
   required double maxlimit,
-  required String productImage,
-  double? stock,
-
 }) async {
   await initProductDB();
 
+  // Check if productBox is initialized
+  if (productBox == null) {
+    log("Product database is not initialized.");
+    return;
+  }
+
   final product = productBox?.get(id);
   if (product != null) {
+    // Stock validation: Ensure stock is non-negative
+    if (product.stock != null && product.stock < 0) {
+      log("Stock cannot be negative");
+      return;
+    }
+
+    // Create an updated product model with new details
     final updatedProduct = ProductModel(
       productId: id,
       name: name,
-      category: category,
+      category: product.category,
       description: description,
-      unit: unit,
-      rate: rate,
-      price: price,
+      unit: product.unit,
+      price: product.price,
+      rate: product.rate,
       minlimit: minlimit,
       maxlimit: maxlimit,
-      stock: stock ?? product.stock,
+      stock: product.stock, // Retaining existing stock value
       userId: product.userId,
-      productImage: productImage,
+      productImage: product.productImage,
     );
 
     try {
-      await productBox!.put(id, updatedProduct); 
-      log("Product updated: ${updatedProduct.name}");
+      // Update the product in the database
+      await productBox?.put(id, updatedProduct);
+      log("Product updated successfully: ${updatedProduct.name}");
 
-      ProductListNotifier.value = productBox!.values.toList();
+      ProductListNotifier.value = [...productBox!.values];
+      ProductListNotifier.notifyListeners();
+
+      productDetailsNotifier.value = updatedProduct;
+      productDetailsNotifier.notifyListeners();
     } catch (e) {
       log("Error updating product: $e");
     }
@@ -107,6 +117,7 @@ Future<void> updateProduct({
     log("Product with ID $id not found.");
   }
 }
+
 
 Future<List<ProductModel>> getAllProducts() async {
   await initProductDB();
@@ -117,15 +128,26 @@ Future<bool> productExists(String id) async {
   await initProductDB();
   return productBox!.containsKey(id);
 }
-
 Future<void> deleteProduct(String id) async {
   await initProductDB();
-  try {
-    await productBox!.delete(id);
-    log("Product with ID $id deleted");
+  
+  if (productBox == null) {
+    log("Product box is not initialized");
+    return;
+  }
 
-    ProductListNotifier.value = productBox!.values.toList();
-  } catch (e) {
-    log("Error deleting product: $e");
+  if (await productExists(id)) {
+    try {
+      await productBox!.delete(id);
+      log("Product with ID $id deleted successfully");
+      
+      ProductListNotifier.value = productBox!.values.toList();
+      ProductListNotifier.notifyListeners();
+      
+    } catch (e) {
+      log("Error deleting product: $e");
+    }
+  } else {
+    log("Product with ID $id not found.");
   }
 }

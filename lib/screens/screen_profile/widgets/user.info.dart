@@ -18,7 +18,6 @@ class _UserInfoState extends State<UserInfo> {
     return ValueListenableBuilder<UserModel?>(
       valueListenable: userDataNotifier,
       builder: (context, userData, child) {
-        // Handle the case where userData might be null
         if (userData == null) {
           return const Center(child: Text('No user data available'));
         }
@@ -33,7 +32,7 @@ class _UserInfoState extends State<UserInfo> {
               ),
               const SizedBox(height: 10),
               Text(
-                userData.name,  // Safely access userData
+                userData.name,  
                 style: GoogleFonts.montserrat(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

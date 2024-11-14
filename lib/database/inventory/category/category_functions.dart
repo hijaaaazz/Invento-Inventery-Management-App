@@ -6,6 +6,7 @@ import 'category_model.dart';
 
 ValueNotifier<List<CategoryModel>> categoryListNotifier = ValueNotifier<List<CategoryModel>>([]);
 
+
 const CATEGORY_DB_NAME = 'categoryBox';
 Box<InventoryModel>? inventoryBox;
 

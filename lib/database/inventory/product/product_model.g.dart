@@ -17,18 +17,18 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ProductModel(
-      productId: fields[10] as String,
+      productId: fields[9] as String,
       name: fields[0] as String,
       category: fields[1] as String,
       description: fields[2] as String,
       unit: fields[3] as String,
-      rate: fields[4] as double,
-      price: fields[5] as double,
-      minlimit: fields[6] as double,
-      maxlimit: fields[7] as double,
-      stock: fields[8] as double,
-      userId: fields[9] as String,
-      productImage: fields[11] as String,
+      price: fields[4] as double,
+      minlimit: fields[5] as double,
+      maxlimit: fields[6] as double,
+      rate: fields[11] as double,
+      stock: fields[7] as double,
+      userId: fields[8] as String,
+      productImage: fields[10] as String,
     );
   }
 
@@ -45,21 +45,21 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       ..writeByte(3)
       ..write(obj.unit)
       ..writeByte(4)
-      ..write(obj.rate)
-      ..writeByte(5)
       ..write(obj.price)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.minlimit)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.maxlimit)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.stock)
-      ..writeByte(9)
+      ..writeByte(8)
       ..write(obj.userId)
-      ..writeByte(10)
+      ..writeByte(9)
       ..write(obj.productId)
+      ..writeByte(10)
+      ..write(obj.productImage)
       ..writeByte(11)
-      ..write(obj.productImage);
+      ..write(obj.rate);
   }
 
   @override

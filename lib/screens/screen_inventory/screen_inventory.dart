@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
+import 'package:invento2/screens/screen_inventory/subscreens/screen_search_and_filter/screen_search_and_filter_main.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_inventory_list.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_search_section.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_appbar.dart';
@@ -45,22 +46,31 @@ class _ScreenInventoryState extends State<ScreenInventory> {
       ),
       body: Stack(
         children: [
+          // Apply the animated transition between Search and Inventory sections
           AnimatedSwitcher(
-            duration: Duration(milliseconds: 100), 
+            duration: Duration(milliseconds: 500),
             child: isSearchClicked
-                ? build_search_section()
-                : build_inventory_list(context, widget.userData),
+                ? SearchAndFilterSection(key: ValueKey('search')) 
+                : build_inventory_list(context, widget.userData), 
             transitionBuilder: (child, animation) {
-              const begin = Offset(0, 1);
-              const end = Offset.zero;
               const curve = Curves.easeInOut;
 
-              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              const beginSearch = Offset(0, -1);
+              const endSearch = Offset.zero;
+
+              
+              const beginInventory = Offset(0, 1); 
+              const endInventory = Offset.zero;
+
+              var tween = Tween(
+                begin: isSearchClicked ? beginSearch : beginInventory,
+                end: isSearchClicked ? endSearch : endInventory,
+              ).chain(CurveTween(curve: curve));
+
               var offsetAnimation = animation.drive(tween);
               return SlideTransition(position: offsetAnimation, child: child);
             },
           ),
-
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(

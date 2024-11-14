@@ -132,13 +132,11 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: Text(
-          "Add Item",
-          style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
+      title: Text(
+        "Add Items",
+        style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold),
       ),
+     
     );
   }
 }

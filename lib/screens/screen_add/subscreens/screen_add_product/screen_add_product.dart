@@ -82,14 +82,15 @@ Future<void> _addProduct() async {
   final productImage = imagePath;
 
   final success = await addProduct(
+
     id: productId,
     name: name,
     category: category,
     description: description,
     unit: unit,
-    rate: rate,
     price: price,
     minlimit: minStock,
+    rate: rate,
     maxlimit: maxStock,
     userId: userDataNotifier.value.id,
     productImage: productImage!,
@@ -175,7 +176,7 @@ const SizedBox(height: 15,),
             Row(
               children: [
                 Expanded(child: buildTextField(label: "Rate", controller: _rateController, keyboardType: TextInputType.number)),
-                Expanded(child: buildTextField(label: "MRP", controller: _mrpController, keyboardType: TextInputType.number)),
+                Expanded(child: buildTextField(label: "Sales Prrice", controller: _mrpController, keyboardType: TextInputType.number)),
               ],
             ),
             const SizedBox(height: 10),
