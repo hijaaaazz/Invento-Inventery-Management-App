@@ -66,7 +66,7 @@ Future<void> _addProduct() async {
       _categoryController.text.isEmpty ||
       _selectedUnit == null ||
       imagePath == "assets/images/box.jpg") {
-    showErrorDialog(context,"Please fill all fields and select an image.");
+    showErrorDialog(context,"Fields Seems Empty","Please fill all fields and select an image",);
     return;
   }
 
@@ -98,6 +98,7 @@ Future<void> _addProduct() async {
 
   if (success) {
     _clearForm();
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
   }
 }
@@ -195,7 +196,7 @@ const SizedBox(height: 15,),
             const SizedBox(height: 10),            
             Row(
               children: [
-                buildCategoryAutocomplete(_categories, _categoryController),
+                buildCategoryAutocomplete(_categories, _categoryController,null),
                 const SizedBox(width: 20),
                 buildUnitDropdown(_units, _selectedUnit, onChanged)
                 
@@ -222,7 +223,7 @@ const SizedBox(height: 15,),
     });
   } else {
     // ignore: use_build_context_synchronously
-    showErrorDialog(context,"No image selected.");
+    showErrorDialog(context,"No image selected.","Please Select an Image");
   }
 }
 
@@ -234,6 +235,7 @@ const SizedBox(height: 15,),
     
 }
 
+// ignore: non_constant_identifier_names
 AppBar build_appbar(VoidCallback addProduct) {
   return AppBar(
         automaticallyImplyLeading: false,

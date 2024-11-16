@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 
+// ignore: non_constant_identifier_names
 ValueNotifier<List<ProductModel>> ProductListNotifier = ValueNotifier([]);
+// ignore: non_constant_identifier_names
 ValueNotifier<List<ProductModel>> FilteredProductListNotifier = ValueNotifier([]);
 ValueNotifier<ProductModel> productDetailsNotifier= ValueNotifier(ProductModel(userId: '', productId: '', name: '', category: '', description: '', unit: '', price: 0, minlimit: 0, maxlimit: 0, rate: 0, productImage: '',));
 
 
+// ignore: constant_identifier_names
 const PRODUCT_DB_NAME = 'product_db';
 Box<ProductModel>? productBox;
 
@@ -69,10 +72,13 @@ Future<void> updateProduct({
   required String description,
   required double minlimit,
   required double maxlimit,
+  required String productImage,
+  required String category,
+  required double price,
+  required double rate,
 }) async {
   await initProductDB();
 
-  // Check if productBox is initialized
   if (productBox == null) {
     log("Product database is not initialized.");
     return;
@@ -80,37 +86,36 @@ Future<void> updateProduct({
 
   final product = productBox?.get(id);
   if (product != null) {
-    // Stock validation: Ensure stock is non-negative
-    if (product.stock != null && product.stock < 0) {
+    if (product.stock < 0) {
       log("Stock cannot be negative");
       return;
     }
 
-    // Create an updated product model with new details
     final updatedProduct = ProductModel(
       productId: id,
       name: name,
-      category: product.category,
+      category: category,
       description: description,
       unit: product.unit,
-      price: product.price,
-      rate: product.rate,
+      price: price,
+      rate: rate,
       minlimit: minlimit,
       maxlimit: maxlimit,
-      stock: product.stock, // Retaining existing stock value
+      stock: product.stock, 
       userId: product.userId,
-      productImage: product.productImage,
+      productImage: productImage,
     );
 
     try {
-      // Update the product in the database
       await productBox?.put(id, updatedProduct);
       log("Product updated successfully: ${updatedProduct.name}");
 
       ProductListNotifier.value = [...productBox!.values];
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       ProductListNotifier.notifyListeners();
 
       productDetailsNotifier.value = updatedProduct;
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       productDetailsNotifier.notifyListeners();
     } catch (e) {
       log("Error updating product: $e");
@@ -144,6 +149,7 @@ Future<void> deleteProduct(String id) async {
       log("Product with ID $id deleted successfully");
       
       ProductListNotifier.value = productBox!.values.toList();
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       ProductListNotifier.notifyListeners();
       
     } catch (e) {

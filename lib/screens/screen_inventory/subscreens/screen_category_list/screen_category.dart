@@ -5,6 +5,7 @@ import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/screen_product.dart';
 
 class ScreenProductList extends StatelessWidget {
@@ -17,32 +18,20 @@ class ScreenProductList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppStyle appStyle = AppStyle();
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 246, 246, 246),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 246, 246, 246),
-        automaticallyImplyLeading: true,
-        leading: Padding(
-          padding: EdgeInsets.only(left: MediaQueryInfo.screenWidth * 0.04),
-          child: IconButton(
-            iconSize: 16,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back_ios),
-          ),
-        ),
-        title: Text(
-          title,
-          style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
+      backgroundColor: appStyle.BackgroundWhite,
+      appBar: categorylistAppBar(title,context),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.04),
         child: ValueListenableBuilder(
           valueListenable: ProductListNotifier,
           builder: (context, List<ProductModel> productList, _) {
-            final userProducts = productList.where((product) => product.userId == userDataNotifier.value.id).toList();
+            final userProducts = productList.where((product) {
+              return product.userId == userDataNotifier.value.id &&
+                  (title == "All Products" || product.category == title);
+            }).toList();
+
 
             if (userProducts.isEmpty) {
               return Center(
@@ -66,8 +55,8 @@ class ScreenProductList extends StatelessWidget {
                     );
                   },
                   child: Card(
-                    surfaceTintColor: Colors.white,
-                    color: Colors.white,
+                    surfaceTintColor: appStyle.BackgroundWhite,
+                    color: appStyle.BackgroundWhite,
                     shadowColor: Colors.black,
                     elevation: 5,
                     margin: EdgeInsets.symmetric(vertical: MediaQueryInfo.screenHeight * 0.01),
@@ -79,7 +68,7 @@ class ScreenProductList extends StatelessWidget {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 222, 253, 255).withOpacity(0.2),
+                              color: appStyle.BackgroundWhite.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(13),
                             ),
                             height: MediaQueryInfo.screenHeight * 0.1,
@@ -151,4 +140,26 @@ class ScreenProductList extends StatelessWidget {
       ),
     );
   }
+}
+
+AppBar categorylistAppBar(String title,BuildContext context){
+  AppStyle appStyle= AppStyle();
+ return AppBar(
+        backgroundColor: appStyle.BackgroundWhite,
+        automaticallyImplyLeading: true,
+        leading: Padding(
+          padding: EdgeInsets.only(left: MediaQueryInfo.screenWidth * 0.04),
+          child: IconButton(
+            iconSize: 16,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
+        ),
+        title: Text(
+          title,
+          style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      );
 }

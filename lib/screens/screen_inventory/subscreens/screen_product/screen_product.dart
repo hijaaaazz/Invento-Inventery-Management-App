@@ -1,16 +1,23 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/app_bar.dart';
-
+import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/edit_product_details.dart';
+import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/edit_stock_managment.dart';
+import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/product_delete_diallog.dart';
 class ScreenProductDetails extends StatefulWidget {
   final ProductModel product;
+  // ignore: non_constant_identifier_names
+  final ValueNotifier<List<ProductModel>>? Gridviewnotifier;
+  final VoidCallback? getMaxPrice;
+   final VoidCallback? clearfilter;
 
-  const ScreenProductDetails({super.key, required this.product});
+
+  // ignore: non_constant_identifier_names
+  const ScreenProductDetails({super.key, required this.product,this.Gridviewnotifier,this.getMaxPrice,this.clearfilter});
 
   @override
   State<ScreenProductDetails> createState() => _ScreenProductDetailsState();
@@ -36,9 +43,10 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
     AppStyle appStyle = AppStyle();
 
     return Scaffold(
-      backgroundColor: appStyle.secondaryColor,
+      backgroundColor: appStyle.BackgroundWhite,
       appBar: build_product_page_appbar(
-          () => showProductDeleteDialog(context, productDetailsNotifier.value),
+          () => showProductDeleteDialog(context, productDetailsNotifier.value, widget.Gridviewnotifier)
+,
           context,
           appStyle),
       body: ValueListenableBuilder(
@@ -103,8 +111,12 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  showEditProductDetailsDialog(
-                                      context, productDetailsNotifier);
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EditProduct(productNotifier: productDetailsNotifier,
+                                  gridViewNotifier: widget.Gridviewnotifier,
+                                  getMaxPrice: widget.getMaxPrice,
+                                  clearfilter: widget.clearfilter,
+                                      )));
+                                  
                                 },
                                 icon: const Icon(
                                   Icons.edit_outlined,
@@ -113,6 +125,19 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                                 ))
                           ],
                         ),
+                        Row(
+                              children: [
+                                const Text("Category : "),
+                                Text(
+                                  updatedProduct.category,
+                                  style: GoogleFonts.lato(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                        
                         Text(updatedProduct.description,
                             style: GoogleFonts.lato(
                                 fontSize: 16, fontWeight: FontWeight.w300)),
@@ -132,11 +157,11 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                                     horizontal: MediaQueryInfo.screenWidth * 0.04),
                                 child: Center(
                                   child: Text(
-                                    "Current Stock : ${updatedProduct.stock}",
+                                    "Current Stock : ${updatedProduct.stock} ${updatedProduct.unit}",
                                     style: GoogleFonts.lato(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
-                                      color: appStyle.secondaryColor,
+                                      color: appStyle.BackgroundWhite,
                                     ),
                                   ),
                                 ),
@@ -155,18 +180,6 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                const Text("Unit :"),
-                                Text(
-                                  updatedProduct.unit.toUpperCase(),
-                                  style: GoogleFonts.lato(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              ],
-                            ),
                             Row(
                               children: [
                                 const Text("Rate : ₹"),
@@ -195,7 +208,7 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                             IconButton(
                               onPressed: () {
                                 showEditStockManagementDialog(
-                                    context, productDetailsNotifier);
+                                    context, productDetailsNotifier,widget.Gridviewnotifier);
                               },
                               icon: const Icon(
                                 Icons.edit_outlined,
@@ -232,173 +245,3 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
   }
 }
 
-void showEditProductDetailsDialog(
-    BuildContext context, ValueNotifier<ProductModel> productNotifier) {
-  final nameController = TextEditingController(text: productNotifier.value.name);
-  final descriptionController =
-      TextEditingController(text: productNotifier.value.description);
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          "Edit Product Details",
-          style: GoogleFonts.lato(),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: "Product Name"),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(labelText: "Product Description"),
-              maxLines: 3,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text("Cancel", style: GoogleFonts.lato()),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              // Update product in database
-              await updateProduct(
-                id: productNotifier.value.productId,
-                name: nameController.text,
-                description: descriptionController.text,
-                minlimit: productNotifier.value.minlimit,
-                maxlimit: productNotifier.value.maxlimit,
-              );
-
-              productNotifier.value = productNotifier.value.copyWith(
-                name: nameController.text,
-                description: descriptionController.text,
-              );
-              Navigator.of(context).pop(); // Close dialog
-            },
-            child: Text("Save", style: GoogleFonts.lato()),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-void showEditStockManagementDialog(
-    BuildContext context, ValueNotifier<ProductModel> productNotifier) {
-  final reorderLevelController =
-      TextEditingController(text: productNotifier.value.minlimit.toInt().toString());
-  final maxLimitController =
-      TextEditingController(text: productNotifier.value.maxlimit.toInt().toString());
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          "Edit Stock Management",
-          style: GoogleFonts.lato(),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: reorderLevelController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: "Reorder Level"),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: maxLimitController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: "Max Limit"),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              "Cancel",
-              style: GoogleFonts.lato(),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final newMinLimit = double.tryParse(reorderLevelController.text) ?? 0;
-              final newMaxLimit = double.tryParse(maxLimitController.text) ?? 0;
-              
-              await updateProduct(
-                id: productNotifier.value.productId,
-                name: productNotifier.value.name,
-                description: productNotifier.value.description,
-                minlimit: newMinLimit,
-                maxlimit: newMaxLimit,
-              );
-
-              // Update the UI
-              productNotifier.value = productNotifier.value.copyWith(
-                minlimit: newMinLimit,
-                maxlimit: newMaxLimit,
-              );
-
-              Navigator.of(context).pop();
-            },
-            child: Text("Save", style: GoogleFonts.lato()),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<void> showProductDeleteDialog(
-    BuildContext context, ProductModel product) async {
-  if (product.stock == 0) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Confirm Delete"),
-        content: const Text("Are you sure you want to delete this product?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await deleteProduct(product.productId);
-              ProductListNotifier.value
-                  .removeWhere((p) => p.productId == product.productId);
-              ProductListNotifier.notifyListeners();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-            child: const Text("Delete"),
-          ),
-        ],
-      ),
-    );
-  } else {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Cannot Delete"),
-        content: const Text("Product cannot be deleted as it still has stock."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("OK"),
-          ),
-        ],
-      ),
-    );
-  }
-}

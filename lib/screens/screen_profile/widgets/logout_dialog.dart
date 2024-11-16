@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:lottie/lottie.dart';
 
 class LogoutDialog extends StatelessWidget {
@@ -10,11 +11,12 @@ class LogoutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppStyle appStyle =AppStyle();
     return Dialog(
       child: Container(
       
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: appStyle.BackgroundWhite,
           borderRadius: BorderRadius.circular(25)
         ),
         child: Column(

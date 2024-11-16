@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
@@ -18,57 +19,73 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
   late AnimationController filterDrawerAnimationController;
   late Animation<Offset> filterDrawerSlideAnimation;
 
-  List<ProductModel> filteredProducts = [];
+  late ValueNotifier<List<ProductModel>> filteredProductsNotifier= ValueNotifier<List<ProductModel>>(
+    ProductListNotifier.value
+        .where((product) => product.userId == userDataNotifier.value.id)
+        .toList(),
+  );
+
   List<String> selectedCategories = [];
   List<String> categories = [];
   bool showFilterDrawer = false;
   double minPrice = 0.0;
   double maxPrice = 1000.0;
+@override
+void initState() {
+  super.initState();
 
-  @override
-  void initState() {
-    super.initState();
-    searchController = TextEditingController();
-    searchController.addListener(() => filterProducts(searchController.text));
+  
 
-    filterDrawerAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.dismissed) {
-          setState(() => showFilterDrawer = false);
-        }
-      });
+  // Initialize the search controller
+  searchController = TextEditingController();
+  searchController.addListener(() => filterProducts(searchController.text));
 
-    filterDrawerSlideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, -1.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: filterDrawerAnimationController,
-      curve: Curves.easeInOut,
-    ));
+  // Initialize filtered products notifier with products belonging to the current user
+  filteredProductsNotifier = ValueNotifier<List<ProductModel>>(
+    ProductListNotifier.value.where((product) => product.userId == userDataNotifier.value.id).toList(),
+  );
 
-    categories = categoryListNotifier.value
-        .where((category) => category.name != null)
-        .map((category) => category.name!)
-        .toList();
+  // Initialize the filter drawer animation controller
+  filterDrawerAnimationController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 300),
+  )..addStatusListener((status) {
+      if (status == AnimationStatus.dismissed) {
+        setState(() => showFilterDrawer = false);
+      }
+    });
 
-    filteredProducts = ProductListNotifier.value
-        .where((product) => product.userId == userDataNotifier.value.id)
-        .toList();
-  }
+  filterDrawerSlideAnimation = Tween<Offset>(
+    begin: const Offset(0.0, -1.0),
+    end: Offset.zero,
+  ).animate(CurvedAnimation(
+    parent: filterDrawerAnimationController,
+    curve: Curves.easeInOut,
+  ));
+
+  // Initialize categories list
+  categories = categoryListNotifier.value
+      .where((category) => category.name != null)
+      .map((category) => category.name!)
+      .toList();
+}
 
   void filterProducts(String query) {
-    setState(() {
-      filteredProducts = ProductListNotifier.value.where((product) {
-        return product.userId == userDataNotifier.value.id &&
-            product.name.toLowerCase().contains(query.toLowerCase()) &&
-            (selectedCategories.isEmpty || selectedCategories.contains(product.category)) &&
-            product.price >= minPrice &&
-            product.price <= maxPrice;
-      }).toList();
-    });
-  }
+  final filteredList = ProductListNotifier.value.where((product) {
+    bool matchesUserId = product.userId == userDataNotifier.value.id;
+    bool matchesQuery = query.isEmpty || product.name.toLowerCase().contains(query.toLowerCase());
+    bool matchesCategory = selectedCategories.isEmpty || selectedCategories.contains(product.category);
+    bool matchesPrice = product.price >= minPrice && product.price <= maxPrice;
+
+    return matchesUserId && matchesQuery && matchesCategory && matchesPrice;
+  }).toList();
+
+  filteredProductsNotifier.value = filteredList;
+  log("Filtered products: ${filteredProductsNotifier.value.length}");
+}
+
+
+
 
   double getMaxPrice() {
     return ProductListNotifier.value.fold(0.0, (max, product) => product.price > max ? product.price : max);
@@ -101,33 +118,36 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
   }
 
   void _onCategorySelected(String category) {
-    setState(() {
-      selectedCategories.contains(category)
-          ? selectedCategories.remove(category)
-          : selectedCategories.add(category);
-    });
-  }
+  setState(() {
+    if (selectedCategories.contains(category)) {
+      selectedCategories.remove(category);
+    } else {
+      selectedCategories.add(category);
+    }
+    // Update the filtered products immediately after category selection
+    filterProducts(searchController.text);
+  });
+}
 
-  @override
-  void dispose() {
-    searchController.dispose();
-    filterDrawerAnimationController.dispose();
-    super.dispose();
-  }
+@override
+void dispose() {
+  // Dispose of all controllers to avoid memory leaks
+  searchController.dispose();
+  filterDrawerAnimationController.dispose();
+  filteredProductsNotifier.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Positioned.fill(
-          child: ListView(
-            padding: const EdgeInsets.only(top: 100),
-            children: filteredProducts.isEmpty
-                ? [const Center(child: Text("No products found."))]
-                : [showGridView(filteredProducts)],
+          child: Padding(
+            padding: const EdgeInsets.only(top: 50),
+            child: ProductGridView(filteredProductsNotifier: filteredProductsNotifier),
           ),
         ),
-
         if (showFilterDrawer)
           Positioned.fill(
             top: 60,
@@ -136,7 +156,6 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
               child: Container(color: Colors.black.withOpacity(0.5)),
             ),
           ),
-
         if (showFilterDrawer)
           Positioned(
             top: 0,
@@ -145,25 +164,24 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
             child: SlideTransition(
               position: filterDrawerSlideAnimation,
               child: FilterDrawer(
-              categories: categories,
-              selectedCategories: selectedCategories,
-              minPrice: minPrice,
-              maxPrice: maxPrice,
-              maxProductPrice: getMaxPrice(),
-              onPriceChanged: (start, end) {
-                setState(() {
-                  minPrice = start;
-                  maxPrice = end;
-                });
-              },
-              onCategorySelected: _onCategorySelected,
-              onApplyFilters: _applyFilters,
-              onClearFilters: _clearFilters,
-              onCloseDrawer: toggleFilterDrawer,
-            ),
+                categories: categories,
+                selectedCategories: selectedCategories,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
+                maxProductPrice: getMaxPrice(),
+                onPriceChanged: (start, end) {
+                  setState(() {
+                    minPrice = start;
+                    maxPrice = end;
+                  });
+                },
+                onCategorySelected: _onCategorySelected,
+                onApplyFilters: _applyFilters,
+                onClearFilters: _clearFilters,
+                onCloseDrawer: toggleFilterDrawer,
+              ),
             ),
           ),
-
         Positioned(
           top: 0,
           left: 0,
@@ -205,7 +223,7 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
 }
 
 
-class FilterDrawer extends StatelessWidget {
+class FilterDrawer extends StatefulWidget {
   final List<String> categories;
   final List<String> selectedCategories;
   final double minPrice;
@@ -230,6 +248,24 @@ class FilterDrawer extends StatelessWidget {
     required this.onClearFilters,
     required this.onCloseDrawer,
   });
+
+  @override
+  State<FilterDrawer> createState() => _FilterDrawerState();
+
+}
+
+
+class _FilterDrawerState extends State<FilterDrawer> {
+  late double localMinPrice;
+  late double localMaxPrice;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize local state with values from the parent widget
+    localMinPrice = widget.minPrice;
+    localMaxPrice = widget.maxPrice;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +294,7 @@ class FilterDrawer extends StatelessWidget {
                 const Text('Filters', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: onCloseDrawer,
+                  onPressed: widget.onCloseDrawer,
                 ),
               ],
             ),
@@ -268,11 +304,11 @@ class FilterDrawer extends StatelessWidget {
             child: Wrap(
               spacing: 8.0,
               runSpacing: 4.0,
-              children: categories.map((category) {
+              children: widget.categories.map((category) {
                 return FilterChip(
                   label: Text(category),
-                  selected: selectedCategories.contains(category),
-                  onSelected: (_) => onCategorySelected(category),
+                  selected: widget.selectedCategories.contains(category),
+                  onSelected: (_) => widget.onCategorySelected(category),
                 );
               }).toList(),
             ),
@@ -283,13 +319,18 @@ class FilterDrawer extends StatelessWidget {
               children: [
                 const Text("Price Range"),
                 RangeSlider(
-                  values: RangeValues(minPrice, maxPrice),
+                  values: RangeValues(localMinPrice, localMaxPrice),
                   min: 0.0,
-                  max: maxProductPrice,
-                  divisions: 20,
-                  onChanged: (values) => onPriceChanged(values.start, values.end),
+                  max: widget.maxProductPrice,
+                  onChanged: (values) {
+                    setState(() {
+                      localMinPrice = values.start;
+                      localMaxPrice = values.end;
+                    });
+                    widget.onPriceChanged(values.start, values.end);
+                  },
                 ),
-                Text('Selected Price Range: ₹${minPrice.toStringAsFixed(2)} - ₹${maxPrice.toStringAsFixed(2)}'),
+                Text('Selected Price Range: ₹${localMinPrice.toStringAsFixed(2)} - ₹${localMaxPrice.toStringAsFixed(2)}'),
               ],
             ),
           ),
@@ -298,8 +339,8 @@ class FilterDrawer extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(onPressed: onApplyFilters, child: const Text('Apply Filters')),
-                ElevatedButton(onPressed: onClearFilters, child: const Text('Clear Filters')),
+                ElevatedButton(onPressed: widget.onApplyFilters, child: const Text('Apply Filters')),
+                ElevatedButton(onPressed: widget.onClearFilters, child: const Text('Clear Filters')),
               ],
             ),
           ),

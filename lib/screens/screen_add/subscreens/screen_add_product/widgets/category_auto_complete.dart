@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget buildCategoryAutocomplete(
-    List<String> categories, TextEditingController categoryController) {
+    List<String> categories, TextEditingController categoryController,String? productCategory) {
   return Expanded(
     child: Autocomplete<String>(
       optionsBuilder: (TextEditingValue textEditingValue) {
@@ -22,7 +22,7 @@ Widget buildCategoryAutocomplete(
             fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
-            labelText: 'Select Category', 
+            labelText: productCategory??'Select Category', 
             labelStyle: const TextStyle(
               fontSize: 14,
               color: Colors.blueGrey,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_profile/sub_screens/screen_edit_profile/screen_edit_profile.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
@@ -11,6 +12,7 @@ class EditProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppStyle appStyle=AppStyle();
     return SizedBox(
       width: double.infinity,
       height: 80,
@@ -25,7 +27,7 @@ class EditProfileButton extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  color: Colors.white,
+                  color: appStyle.BackgroundWhite,
                 ),
               )
             ],
@@ -45,7 +47,7 @@ class EditProfileButton extends StatelessWidget {
                 height: MediaQueryInfo.screenHeight * 0.055,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  color: const Color(0xFFEC00DD),
+                  color: appStyle.BackgroundPurple,
                 ),
                 child: Center(
                   child: Text(

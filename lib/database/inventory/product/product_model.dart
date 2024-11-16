@@ -17,7 +17,7 @@ class ProductModel extends HiveObject {
   final String unit;
 
   @HiveField(4)
-  final double price;
+  late final double price;
 
   @HiveField(5)
   late final double minlimit;

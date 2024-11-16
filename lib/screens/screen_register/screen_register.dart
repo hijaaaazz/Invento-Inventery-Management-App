@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
 import 'package:invento2/screens/screen_sign_in/screen_sign_in.dart';
 
@@ -118,9 +119,10 @@ class _ScreenRegisterState extends State<ScreenRegister> {
     final mediaQuery = MediaQuery.of(context);
     final keyboardVisible = mediaQuery.viewInsets.bottom > 0;
     final topPadding = keyboardVisible ? MediaQueryInfo.screenHeight * 0.05 : MediaQueryInfo.screenHeight * 0.1;
+    AppStyle appStyle =AppStyle();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: appStyle.BackgroundWhite,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
@@ -246,7 +248,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                 height: mediaQuery.size.height * 0.07,
                 width: mediaQuery.size.width * 0.9,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE500D6),
+                  color: appStyle.BackgroundPurple,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Center(

@@ -49,6 +49,7 @@ class _ScreenMainState extends State<ScreenMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
 

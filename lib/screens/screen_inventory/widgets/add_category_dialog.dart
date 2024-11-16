@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
-import 'package:lottie/lottie.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
 Future<void> showAddCategoryDialog(BuildContext context, String userId) async {
   showDialog(
@@ -26,6 +26,7 @@ class AddCategoryDialog extends StatefulWidget {
   const AddCategoryDialog({super.key, required this.onConfirm});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddCategoryDialogState createState() => _AddCategoryDialogState();
 }
 
@@ -40,19 +41,16 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
+    AppStyle appStyle = AppStyle();
 
     return Dialog(
       child: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: appStyle.BackgroundWhite,
             borderRadius: BorderRadius.circular(25),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          constraints: BoxConstraints(
-            maxHeight: screenHeight * 0.8,
-          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -64,18 +62,33 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
-                    border: OutlineInputBorder(),
+                padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3F3F3),
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: TextFormField(
+                    controller: nameController,
+                    style: GoogleFonts.outfit(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 129, 129, 129),
+                    ),
+                    cursorColor: Colors.grey,
+                    cursorHeight: 15,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color(0xFFF3F3F3),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                                  ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: screenHeight * 0.2,
-                child: Lottie.asset('assets/gifs/logout.json'),
               ),
               const SizedBox(height: 10),
               GestureDetector(

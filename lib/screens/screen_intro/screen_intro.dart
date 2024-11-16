@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_register/screen_register.dart';
 import 'package:invento2/screens/screen_sign_in/screen_sign_in.dart';
 import 'package:lottie/lottie.dart';
-
 import '../../helpers/media_query_helper/media_query_helper.dart';
 
 
@@ -12,8 +12,9 @@ class ScreenIntro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppStyle appStyle = AppStyle();
     return  Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: appStyle.BackgroundWhite,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth*0.07),
         child: Column(
@@ -27,9 +28,9 @@ class ScreenIntro extends StatelessWidget {
 
               height: MediaQueryInfo.screenHeight*0.5,
               width: double.infinity,
-              decoration: const BoxDecoration(
-                  color: Color(0xFFE500D6),
-                  borderRadius: BorderRadius.all(
+              decoration: BoxDecoration(
+                  color: appStyle.BackgroundPurple,
+                  borderRadius: const BorderRadius.all(
                       Radius.circular(20)
                   )
               ),
@@ -72,9 +73,9 @@ class ScreenIntro extends StatelessWidget {
                   child: Container(
                     width: MediaQueryInfo.screenWidth*0.43,
                     height: MediaQueryInfo.screenHeight*0.08,
-                    decoration: const BoxDecoration(
-                        color: Color(0xFFE500D6),
-                        borderRadius: BorderRadius.horizontal(
+                    decoration:  BoxDecoration(
+                        color: appStyle.BackgroundPurple,
+                        borderRadius: const BorderRadius.horizontal(
                             left: Radius.circular(15)
                         )
                     ),

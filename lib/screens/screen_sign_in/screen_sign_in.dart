@@ -6,6 +6,7 @@ import 'package:invento2/database/inventory/inventory_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_main_scaffold/screen_main_scaffold.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
 
@@ -82,11 +83,13 @@ class ScreenSignInState extends State<ScreenSignIn> {
 
       userFound = true;
       // ignore: use_build_context_synchronously
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => ScreenMain(userdetails: element),
         ),
+        (Route<dynamic> route) => false, 
       );
+
       break;
     }
     }
@@ -103,8 +106,9 @@ class ScreenSignInState extends State<ScreenSignIn> {
 
   @override
   Widget build(BuildContext context) {
+    AppStyle appStyle=AppStyle();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor:appStyle.BackgroundWhite,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.07),
@@ -159,7 +163,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
                         width: MediaQueryInfo.screenWidth * 0.9,
                         height: MediaQueryInfo.screenHeight * 0.07,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE500D6),
+                          color: appStyle.BackgroundPurple,
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Center(

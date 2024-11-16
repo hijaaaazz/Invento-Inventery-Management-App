@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_profile/sub_screens/screen_edit_profile/widgets/edit_fields.dart';
 
 class ScreenEditProfile extends StatefulWidget {
@@ -37,8 +38,9 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> { // Declare the 
 
   @override
   Widget build(BuildContext context) {
+    AppStyle appStyle = AppStyle();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: appStyle.BackgroundWhite,
       body: SingleChildScrollView(
         child: Column(
           children: [

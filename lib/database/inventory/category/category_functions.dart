@@ -7,6 +7,7 @@ import 'category_model.dart';
 ValueNotifier<List<CategoryModel>> categoryListNotifier = ValueNotifier<List<CategoryModel>>([]);
 
 
+// ignore: constant_identifier_names
 const CATEGORY_DB_NAME = 'categoryBox';
 Box<InventoryModel>? inventoryBox;
 
@@ -41,9 +42,11 @@ Future<void> addCategory({
     await inventoryBox!.put(userId, existingInventory);
 
     categoryListNotifier.value = existingInventory.categories!;
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     categoryListNotifier.notifyListeners();
 
 
+  // ignore: empty_catches
   } catch (e) {
     
   }
@@ -64,8 +67,10 @@ Future<void> deleteCategory(
       await inventoryBox!.put(userId, existingInventory);
 
       categoryListNotifier.value = existingInventory.categories!;
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       categoryListNotifier.notifyListeners();
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Category deleted successfully')),
       );
@@ -73,6 +78,7 @@ Future<void> deleteCategory(
   } catch (e) {
     log("Error deleting category: $e");
 
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Error deleting category')),
     );

@@ -7,6 +7,7 @@ import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_category_list/screen_category.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/screen_product.dart';
 import 'package:invento2/screens/screen_inventory/widgets/delete_category.dart';
@@ -15,7 +16,6 @@ Widget buildCategorySection(
     CategoryModel category, int index, UserModel userData, BuildContext ctx) {
   if (category.name == null || category.name!.isEmpty) return Container();
 
-  // Create a ValueNotifier for products in the current category
   ValueNotifier<List<ProductModel>> productsInCategoryNotifier = ValueNotifier(
     ProductListNotifier.value
         .where((product) =>
@@ -23,21 +23,21 @@ Widget buildCategorySection(
         .toList(),
   );
 
-  // Function to update the notifier whenever changes occur
   void updateCategoryNotifier() {
     productsInCategoryNotifier.value = ProductListNotifier.value
         .where((product) =>
             product.category == category.name && product.userId == userData.id)
         .toList();
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     productsInCategoryNotifier.notifyListeners();
   }
 
-  // Listen for changes in the main product list
   ProductListNotifier.addListener(updateCategoryNotifier);
 
   return ValueListenableBuilder<List<ProductModel>>(
     valueListenable: productsInCategoryNotifier,
     builder: (context, productsInCategory, _) {
+      AppStyle appStyle = AppStyle();
       if (productsInCategory.isEmpty) {
         return GestureDetector(
           onLongPress: () {
@@ -68,33 +68,30 @@ Widget buildCategorySection(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) {
-                  return ScreenProductList(
-                    title: category.name ?? '',
-                    
-                  );
-                }));
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      category.name ?? '',
-                      style: GoogleFonts.outfit(
-                          fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 16,
-                    ),
-                  ],
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  category.name ?? '',
+                  style: GoogleFonts.outfit(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
-              ),
+                IconButton(
+                  onPressed: (){
+                    Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) {
+                return ScreenProductList(
+                  title: category.name!,
+                  
+                );
+              }));
+                  },
+                  icon: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 16,
+                  ),
+                ),
+              ],
             ),
           ),
           CarouselSlider(
@@ -113,8 +110,7 @@ Widget buildCategorySection(
                     child: Stack(
                       children: [
                         Positioned.fill(
-                          child: (product.productImage != null &&
-                                  product.productImage.isNotEmpty)
+                          child: (product.productImage.isNotEmpty)
                               ? Image.file(
                                   File(product.productImage),
                                   fit: BoxFit.cover,
@@ -130,8 +126,8 @@ Widget buildCategorySection(
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
                               colors: [
-                                Colors.black.withOpacity(0.8),
-                                Colors.black.withOpacity(0.1),
+                                appStyle.BackgroundBlack.withOpacity(0.8),
+                                appStyle.BackgroundBlack.withOpacity(0.1),
                               ],
                             ),
                           ),

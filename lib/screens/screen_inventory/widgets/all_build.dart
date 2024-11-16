@@ -23,7 +23,7 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 221, 251, 255),
+          color: Color.fromARGB(47, 0, 225, 255),
         ),
         child: userSpecificProducts.isEmpty
             ? Column(
@@ -35,6 +35,7 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  
                   GestureDetector(
                     onTap: () {
                       Navigator.of(ctx).push(MaterialPageRoute(
@@ -55,34 +56,33 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(ctx).push(MaterialPageRoute(
-                        builder: (context) => ScreenProductList(
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "All Products",
+                          style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed:() {Navigator.of(ctx).push(MaterialPageRoute(
+                        builder: (context) => const ScreenProductList(
                           title: "All Products",
                           
                         ),
                       ));
-                    },
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, right: 20, bottom: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "All Products",
-                            style: GoogleFonts.outfit(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const Icon(
+                      },
+                          icon: const Icon(
                             Icons.arrow_forward_ios_rounded,
                             size: 16,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   CarouselSlider(

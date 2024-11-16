@@ -42,7 +42,7 @@ class CustomTextField extends StatelessWidget {
               child: TextFormField(
                 controller: controller,
                 obscureText: obscureText,
-                keyboardType: keyboardType, // Set keyboardType here
+                keyboardType: keyboardType, 
                 style: GoogleFonts.outfit(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

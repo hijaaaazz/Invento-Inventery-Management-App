@@ -7,13 +7,14 @@ ValueNotifier<UserModel> userDataNotifier = ValueNotifier(
   UserModel(id: '', name: '', email: '', phone: '', username: '', password: '')
 );
 
+// ignore: constant_identifier_names
 const USER_DB_NAME = 'user_db';
 
 Box<UserModel>? userBox;
 
 Future<void> initUserDB() async {
   try {
-    userBox ??= await Hive.openBox<UserModel>(USER_DB_NAME);
+    userBox= await Hive.openBox<UserModel>(USER_DB_NAME);
   } catch (e) {
     log('Error initializing userDB: $e');
   }
@@ -105,6 +106,7 @@ Future<void> getAllUser() async {
 
   final allUsers = userBox!.values.toList();
   log("All users in box: ${allUsers.map((user) => user.username).toList()}");
+  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
   userDataNotifier.notifyListeners();
 }
 

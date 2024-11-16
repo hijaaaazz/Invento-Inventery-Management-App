@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
-import 'package:invento2/screens/screen_inventory/subscreens/screenSearch/man_filter.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_inventory_list.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_search_section.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_appbar.dart';
@@ -38,7 +37,8 @@ class _ScreenInventoryState extends State<ScreenInventory> {
     final appStyle = AppStyle();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: appStyle.BackgroundWhite,
       appBar: InventoryAppBar(
         isSearchClicked: isSearchClicked,
         toggleSearch: toggleSearch,
@@ -47,9 +47,9 @@ class _ScreenInventoryState extends State<ScreenInventory> {
       body: Stack(
         children: [
           AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             child: isSearchClicked
-                ? SearchAndFilterSection(key: ValueKey('search')) 
+                ? const SearchAndFilterSection(key: ValueKey('search')) 
                 : build_inventory_list(context, widget.userData), 
             transitionBuilder: (child, animation) {
               const curve = Curves.easeInOut;
@@ -80,9 +80,9 @@ class _ScreenInventoryState extends State<ScreenInventory> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color.fromARGB(255, 255, 255, 255).withOpacity(0.0),
-                    const Color.fromARGB(255, 255, 255, 255).withOpacity(1.0),
-                    const Color.fromARGB(255, 255, 255, 255).withOpacity(1.0),
+                    appStyle.BackgroundWhite.withOpacity(0.0),
+                    appStyle.BackgroundWhite.withOpacity(1.0),
+                    appStyle.BackgroundWhite.withOpacity(1.0),
                   ],
                 ),
               ),

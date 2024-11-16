@@ -5,6 +5,7 @@ import 'package:invento2/database/inventory/inventory_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_intro/screen_intro.dart';
 import 'package:invento2/screens/screen_main_scaffold/screen_main_scaffold.dart';
 import 'package:lottie/lottie.dart';
@@ -87,8 +88,9 @@ class ScreenSplashState extends State<ScreenSplash> {
 
   @override
   Widget build(BuildContext context) {
+    AppStyle appStyle=AppStyle();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: appStyle.BackgroundWhite,
       body: Center(
         child: SizedBox(
           width: MediaQueryInfo.screenWidth * 0.5,

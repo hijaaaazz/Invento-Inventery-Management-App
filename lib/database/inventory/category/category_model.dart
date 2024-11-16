@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-part 'category_model.g.dart';  // Necessary for Hive to generate the adapter.
+part 'category_model.g.dart';  
 
 @HiveType(typeId: 2)
 class CategoryModel {
@@ -11,8 +11,8 @@ class CategoryModel {
   final String? name;  
 
   @HiveField(2)
-  final String? userId;  // Make this field nullable
+  final String? userId; 
 
-  // Constructor
+  
   CategoryModel({this.id,this.name, this.userId});
 }

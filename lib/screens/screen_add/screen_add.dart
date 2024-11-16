@@ -23,7 +23,7 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
   Widget build(BuildContext context) {
     final appStyle = AppStyle();
     return Scaffold(
-      backgroundColor: appStyle.secondaryColor,
+      backgroundColor: appStyle.BackgroundWhite,
       appBar: _buildAppBar(context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -130,8 +130,9 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
+    AppStyle appStyle = AppStyle();
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: appStyle.BackgroundWhite,
       title: Text(
         "Add Items",
         style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:invento2/database/users/user_model.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_intro/screen_intro.dart';
 import 'package:invento2/screens/screen_profile/sub_screens/screen_settings.dart/screen_settings.dart';
 import 'package:invento2/screens/screen_profile/widgets/edit_profile_button.dart';
@@ -16,8 +17,9 @@ class ScreenProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppStyle appStyle=AppStyle();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor:appStyle.BackgroundWhite,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

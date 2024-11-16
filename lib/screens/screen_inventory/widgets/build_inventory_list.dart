@@ -7,13 +7,14 @@ import 'package:invento2/screens/screen_inventory/widgets/add_category_dialog.da
 import 'package:invento2/screens/screen_inventory/widgets/all_build.dart';
 import 'package:invento2/screens/screen_inventory/widgets/gategory_build.dart';
 
+// ignore: non_constant_identifier_names
 Widget build_inventory_list(BuildContext ctx, dynamic userData) {
   return Column(
     children: [
       const SizedBox(height: 15),
       buildAllSection(userData, ctx),
       Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15, top: 20),
+        padding: const EdgeInsets.only(left: 20, right: 20,top: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -21,11 +22,11 @@ Widget build_inventory_list(BuildContext ctx, dynamic userData) {
               "Categories",
               style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500),
             ),
-            GestureDetector(
-              onTap: () {
+            IconButton(
+              onPressed: (){
                 showAddCategoryDialog(ctx, userData.id);
               },
-              child: const Icon(
+              icon: const Icon(
                 Icons.add_circle_outline_rounded,
                 size: 16,
               ),

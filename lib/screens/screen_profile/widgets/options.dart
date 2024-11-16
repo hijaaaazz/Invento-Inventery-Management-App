@@ -41,7 +41,7 @@ class OptionsList extends StatelessWidget {
                       height: 40,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(0xFFD9D9D9),
+                        color: Color.fromARGB(255, 240, 240, 240),
                       ),
                       child: Center(
                         child: Icon(
