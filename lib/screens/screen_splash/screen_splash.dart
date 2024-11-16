@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:invento2/database/inventory/category/category_functions.dart';
-import 'package:invento2/database/inventory/inventory_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
@@ -38,17 +36,7 @@ class ScreenSplashState extends State<ScreenSplash> {
         userDataNotifier.value = lastLoggedUser;
         // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
         userDataNotifier.notifyListeners();
-
-       final existingInventory = inventoryBox!.values.firstWhere(
-      (inventory) => inventory.userId == lastLoggedUser.id, 
-      orElse: () => InventoryModel(userId: lastLoggedUser.id, categories: []),
-    );
-    categoryListNotifier.value = existingInventory.categories!;
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-    categoryListNotifier.notifyListeners();
-
-
-        
+      
         // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
@@ -62,7 +50,6 @@ class ScreenSplashState extends State<ScreenSplash> {
             },
           ),
         );
-
 
         getAllUser();
       } else {

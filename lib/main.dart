@@ -1,9 +1,9 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
-import 'package:invento2/database/inventory/inventory_model.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
@@ -18,18 +18,17 @@ void main() async {
 
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(CategoryModelAdapter());
-  Hive.registerAdapter(InventoryModelAdapter());
   Hive.registerAdapter(ProductModelAdapter());
 
   try {
     await initUserDB();
     await initCategoryDB();
     await initProductDB();
-    await getAllUser();
   // ignore: empty_catches
   } catch (e) {
-    
+    log(e.toString());
   }
+  
 
   runApp(const MyApp());
 }

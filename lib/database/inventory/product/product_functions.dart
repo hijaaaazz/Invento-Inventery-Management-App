@@ -71,7 +71,7 @@ Future<void> updateProduct({
   required String name,
   required String description,
   required double minlimit,
-  required double maxlimit,
+  required double maxlimit, 
   required String productImage,
   required String category,
   required double price,

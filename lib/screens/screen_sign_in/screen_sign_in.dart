@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:invento2/database/inventory/category/category_functions.dart';
-import 'package:invento2/database/inventory/inventory_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
@@ -72,14 +70,6 @@ class ScreenSignInState extends State<ScreenSignIn> {
       userDataNotifier.value = element;
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       userDataNotifier.notifyListeners(); 
-
-      final existingInventory = inventoryBox!.values.firstWhere(
-    (inventory) => inventory.userId == element.id, 
-    orElse: () => InventoryModel(userId: element.id, categories: []),
-  );
-  categoryListNotifier.value = existingInventory.categories!;
-  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-  categoryListNotifier.notifyListeners();
 
       userFound = true;
       // ignore: use_build_context_synchronously

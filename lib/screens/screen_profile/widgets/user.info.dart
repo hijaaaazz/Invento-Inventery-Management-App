@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
@@ -29,6 +31,12 @@ class _UserInfoState extends State<UserInfo> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
                 width: double.infinity,
+              ),
+              CircleAvatar(
+                radius: 64, 
+                backgroundImage: FileImage(File(userData.profileImage)) ,
+
+                backgroundColor: Colors.grey[300], 
               ),
               const SizedBox(height: 10),
               Text(

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
@@ -14,10 +17,11 @@ class ScreenEditProfile extends StatefulWidget {
   State<ScreenEditProfile> createState() => _ScreenEditProfileState();
 }
 
-class _ScreenEditProfileState extends State<ScreenEditProfile> { // Declare the ValueNotifier
+class _ScreenEditProfileState extends State<ScreenEditProfile> { 
   late TextEditingController emailController;
   late TextEditingController nameController;
   late TextEditingController phoneController;
+  late String? imagePath;
 
   @override
   void initState() {
@@ -26,6 +30,13 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> { // Declare the 
     emailController = TextEditingController(text: userDataNotifier.value.email);
     nameController = TextEditingController(text: userDataNotifier.value.name);
     phoneController = TextEditingController(text: userDataNotifier.value.phone);
+    imagePath = userDataNotifier.value.profileImage;
+  }
+
+  void updateImage(pickedFile){
+    setState(() {
+      imagePath = pickedFile;
+    });
   }
 
   @override
@@ -39,6 +50,7 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> { // Declare the 
   @override
   Widget build(BuildContext context) {
     AppStyle appStyle = AppStyle();
+    
     return Scaffold(
       backgroundColor: appStyle.BackgroundWhite,
       body: SingleChildScrollView(
@@ -47,6 +59,31 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> { // Declare the 
             SizedBox(height: MediaQueryInfo.screenHeight * 0.07),
             _buildAppBar(context),
             SizedBox(height: MediaQueryInfo.screenHeight * 0.07),
+            GestureDetector(
+              onTap: () {
+                _pickImage(updateImage);
+              },
+              child: CircleAvatar(
+                radius: 64, 
+                backgroundImage: imagePath != null
+                    ? FileImage(File(imagePath!)) 
+                    : const AssetImage('assets/images/box.jpg') as ImageProvider, 
+                backgroundColor: Colors.grey[300], 
+                child: 
+                    const Center(
+                        child: Text(
+                          '''Add\nImage''',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.blueGrey,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
+                        ),
+                      )
+              ),
+            ),
             SizedBox(height: MediaQueryInfo.screenHeight * 0.07),
             _buildEditFields(),
           ],
@@ -68,10 +105,12 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> { // Declare the 
           GestureDetector(
             onTap: () {
               updateUser(
-                id: widget.userdata.id,
+                id: userDataNotifier.value.id,
                 email: emailController.text,
                 name: nameController.text,
-                phone: phoneController.text
+                phone: phoneController.text,
+                image: imagePath ?? userDataNotifier.value.profileImage
+                
                );
 
 
@@ -111,4 +150,12 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> { // Declare the 
       ),
     );
   }
+}
+
+
+Future<void> _pickImage(Function updateImage) async {
+  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    updateImage(pickedFile.path);
+  } 
 }

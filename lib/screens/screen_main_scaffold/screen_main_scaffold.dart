@@ -52,7 +52,6 @@ class _ScreenMainState extends State<ScreenMain> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-
           IndexedStack(
             index: _currentIndex,
             children: [

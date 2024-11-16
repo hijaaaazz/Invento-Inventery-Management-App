@@ -1,72 +1,111 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:invento2/database/inventory/inventory_model.dart';
 import 'category_model.dart';
 
 ValueNotifier<List<CategoryModel>> categoryListNotifier = ValueNotifier<List<CategoryModel>>([]);
 
-
-// ignore: constant_identifier_names
-const CATEGORY_DB_NAME = 'categoryBox';
-Box<InventoryModel>? inventoryBox;
+Box<CategoryModel>? categoryBox;
 
 Future<void> initCategoryDB() async {
   try {
-    inventoryBox = await Hive.openBox<InventoryModel>('inventoryBox');
-    await Hive.openBox<CategoryModel>(CATEGORY_DB_NAME);
+    if (categoryBox == null) {
+      categoryBox = await Hive.openBox<CategoryModel>('category_db');
+      categoryListNotifier.value = categoryBox!.values.toList();
+    }
   } catch (e) {
-    log("Error initializing category DB: $e");
+    log('Error initializing category DB: $e');
   }
 }
 
-Future<void> addCategory({
-  required String userId,
-  required String categoryName,
+Future<bool> addCategory({
   required String categoryId,
+  required String categoryName,
+  required String userId,
 }) async {
-  try {
-    await initCategoryDB();
-    if (inventoryBox == null) {
-     
-      return;
-    }
+  await initCategoryDB();
 
-    final existingInventory = inventoryBox!.values.firstWhere(
-      (inventory) => inventory.userId == userId,
-      orElse: () => InventoryModel(userId: userId, categories: []),
+  final newCategory = CategoryModel(
+    id: categoryId,
+    name: categoryName,
+    userId: userId,
+  );
+
+  try {
+    await categoryBox!.put(categoryId, newCategory); 
+    log("Category added: $categoryName");
+
+    categoryListNotifier.value = categoryBox!.values.toList();
+    return true;
+  } catch (e) {
+    log("Error adding category: $e");
+    return false;
+  }
+}
+
+Future<void> updateCategory({
+  required String categoryId,
+  required String categoryName,
+  required String userId,
+}) async {
+  await initCategoryDB();
+
+  if (categoryBox == null) {
+    log("Category database is not initialized.");
+    return;
+  }
+
+  final category = categoryBox?.get(categoryId);
+  if (category != null) {
+    final updatedCategory = CategoryModel(
+      id: categoryId,
+      name: categoryName,
+      userId: userId,
     );
 
-    final newCategory = CategoryModel(name: categoryName, userId: userId, id: categoryId);
-    existingInventory.categories?.add(newCategory);
-    await inventoryBox!.put(userId, existingInventory);
+    try {
+      await categoryBox?.put(categoryId, updatedCategory);
+      log("Category updated successfully: ${updatedCategory.name}");
 
-    categoryListNotifier.value = existingInventory.categories!;
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-    categoryListNotifier.notifyListeners();
-
-
-  // ignore: empty_catches
-  } catch (e) {
-    
+      categoryListNotifier.value = [...categoryBox!.values];
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      categoryListNotifier.notifyListeners();
+    } catch (e) {
+      log("Error updating category: $e");
+    }
+  } else {
+    log("Category with ID $categoryId not found.");
   }
 }
+
+Future<List<CategoryModel>> getAllCategories() async {
+  await initCategoryDB();
+  return categoryBox!.values.toList();
+}
+
+Future<bool> categoryExists(String categoryId) async {
+  await initCategoryDB();
+  return categoryBox!.containsKey(categoryId);
+}
+
 Future<void> deleteCategory(
   String categoryId,
   String userId,
   BuildContext context,
 ) async {
-  try {
-    await initCategoryDB();
-    if (inventoryBox == null) return;
-    final existingInventory = inventoryBox!.get(userId);
+  await initCategoryDB();
 
-    if (existingInventory != null) {
-      existingInventory.categories?.removeWhere((category) => category.id == categoryId);
+  if (categoryBox == null) {
+    log("Category box is not initialized");
+    return;
+  }
 
-      await inventoryBox!.put(userId, existingInventory);
+  if (await categoryExists(categoryId)) {
+    try {
+      await categoryBox!.delete(categoryId);
+      log("Category with ID $categoryId deleted successfully");
 
-      categoryListNotifier.value = existingInventory.categories!;
+      categoryListNotifier.value = categoryBox!.values.toList();
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       categoryListNotifier.notifyListeners();
 
@@ -74,13 +113,15 @@ Future<void> deleteCategory(
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Category deleted successfully')),
       );
-    }
-  } catch (e) {
-    log("Error deleting category: $e");
+    } catch (e) {
+      log("Error deleting category: $e");
 
-    // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Error deleting category')),
-    );
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error deleting category')),
+      );
+    }
+  } else {
+    log("Category with ID $categoryId not found.");
   }
 }

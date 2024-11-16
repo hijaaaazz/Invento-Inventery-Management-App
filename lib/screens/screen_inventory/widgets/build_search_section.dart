@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
@@ -46,33 +45,34 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
         .animate(CurvedAnimation(parent: filterDrawerAnimationController, curve: Curves.easeInOut));
 
     categories = categoryListNotifier.value
-        .where((category) => category.name != null)
         .map((category) => category.name!)
         .toList();
 
     filteredProductsNotifier = ValueNotifier(
-  ProductListNotifier.value
-      .where((product) => product.userId == userDataNotifier.value.id)  // Filter products by user ID
+      ProductListNotifier.value
+      .where((product) => product.userId == userDataNotifier.value.id)  
       .toList(),);  
 
       _clearFilters();
   }
 
   void filterProducts(String query) {
-    filteredProductsNotifier.value = ProductListNotifier.value.where((product) {
-      return product.userId == userDataNotifier.value.id &&
-          product.name.toLowerCase().contains(query.toLowerCase()) &&
-          (selectedCategories.isEmpty || selectedCategories.contains(product.category)) &&
-          product.price >= minPrice &&
-          product.price <= maxPrice;
-    }).toList();
-  }
+  filteredProductsNotifier.value = ProductListNotifier.value
+      .where((product) {
+        return product.userId == userDataNotifier.value.id &&
+            product.name.toLowerCase().contains(query.toLowerCase()) &&
+            (selectedCategories.isEmpty || selectedCategories.contains(product.category)) &&
+            product.price >= minPrice &&
+            product.price <= maxPrice;
+      })
+      .toList()
+    ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+}
+
 
   double getMaxPrice() {
   double maxPrice = ProductListNotifier.value.fold(
       0.0, (max, product) => product.price > max ? product.price : max);
-  log("Calculated Max Price: $maxPrice");
-
   return maxPrice;
 }
 

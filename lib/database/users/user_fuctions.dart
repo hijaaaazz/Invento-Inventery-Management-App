@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:invento2/database/users/user_model.dart';
 
 ValueNotifier<UserModel> userDataNotifier = ValueNotifier(
-  UserModel(id: '', name: '', email: '', phone: '', username: '', password: '')
+  UserModel(id: '', name: '', email: '', phone: '', username: '', password: '',profileImage: '')
 );
 
 // ignore: constant_identifier_names
@@ -27,6 +27,7 @@ Future<bool> addUser({
   required String phone,
   required String username,
   required String pass,
+  
 }) async {
   await initUserDB();
 
@@ -42,6 +43,7 @@ Future<bool> addUser({
     phone: phone,
     username: username,
     password: pass,
+    profileImage: "assets/images/box.jpg"
   );
 
   try {
@@ -60,40 +62,43 @@ Future<void> updateUser({
   required String name,
   required String email,
   required String phone,
+  required String image,
 }) async {
   await initUserDB();
 
-  final user = userBox?.get(id);
+  final user = userBox?.get(id); 
   if (user != null) {
     final updatedUser = UserModel(
       id: id,
       name: name,
       email: email,
       phone: phone,
-      username: user.username,
-      password: user.password, 
+      username: user.username, 
+      password: user.password,
+      profileImage: image, 
     );
 
     try {
-      await userBox!.put(id, updatedUser); 
+      await userBox!.put(id, updatedUser);
+      userDataNotifier.value = updatedUser; 
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      userDataNotifier.notifyListeners(); 
+      var sessionBox = await Hive.openBox('sessionBox'); 
+      await sessionBox.put('lastLoggedUser', updatedUser);
 
-  
-        userDataNotifier.value = updatedUser;
-        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-        userDataNotifier.notifyListeners();
       
 
       log("User updated: ${updatedUser.name}");
 
-      final retrievedUser = userBox!.get(id);
-      log("Retrieved User After Update: ${retrievedUser?.name}");
     } catch (e) {
       log("Error updating user: $e");
     }
   } else {
     log("User with ID $id not found.");
   }
-}
+  }
+   
+
 
 Future<bool> userExists(String username) async {
   await initUserDB();
@@ -105,7 +110,7 @@ Future<void> getAllUser() async {
   await initUserDB();
 
   final allUsers = userBox!.values.toList();
-  log("All users in box: ${allUsers.map((user) => user.username).toList()}");
+  log("All users in box: ${allUsers.map((user) => user.name).toList()}");
   // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
   userDataNotifier.notifyListeners();
 }
