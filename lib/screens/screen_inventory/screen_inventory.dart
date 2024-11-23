@@ -6,6 +6,7 @@ import 'package:invento2/screens/screen_inventory/widgets/build_inventory_list.d
 import 'package:invento2/screens/screen_inventory/widgets/build_search_section.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_appbar.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/screens/widgets/app_bar.dart';
 
 class ScreenInventory extends StatefulWidget {
   final UserModel userData;
@@ -35,15 +36,22 @@ class _ScreenInventoryState extends State<ScreenInventory> {
 
   @override
   Widget build(BuildContext context) {
-    final appStyle = AppStyle();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: appStyle.BackgroundWhite,
-      appBar: InventoryAppBar(
-        isSearchClicked: isSearchClicked,
-        toggleSearch: toggleSearch,
-        appStyle: appStyle,
+      backgroundColor: AppStyle.BackgroundWhite,
+      appBar: appBarHelper("inventory",actions:[ Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: IconButton(
+            icon: isSearchClicked
+                ? const Icon(Icons.close,)
+                : const Icon(Icons.search,),
+            onPressed: () {
+              toggleSearch(); 
+            },
+          ),
+        ),]
+       
       ),
       body: Stack(
         children: [
@@ -91,9 +99,9 @@ class _ScreenInventoryState extends State<ScreenInventory> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    appStyle.BackgroundWhite.withOpacity(0.0),
-                    appStyle.BackgroundWhite.withOpacity(1.0),
-                    appStyle.BackgroundWhite.withOpacity(1.0),
+                    AppStyle.BackgroundWhite.withOpacity(0.0),
+                    AppStyle.BackgroundWhite.withOpacity(1.0),
+                    AppStyle.BackgroundWhite.withOpacity(1.0),
                   ],
                 ),
               ),

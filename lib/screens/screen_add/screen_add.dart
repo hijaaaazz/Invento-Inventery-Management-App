@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/screen_add_product.dart';
+import 'package:invento2/screens/screen_add/subscreens/screen_add_purchses/screen_add_purchses.dart';
+import 'package:invento2/screens/screen_add/subscreens/screen_add_sales/screen_add_sales.dart';
+import 'package:invento2/screens/widgets/app_bar.dart';
 import 'package:lottie/lottie.dart';
 
 class ScreenAddOrder extends StatefulWidget {
@@ -21,10 +24,9 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
 
   @override
   Widget build(BuildContext context) {
-    final appStyle = AppStyle();
     return Scaffold(
-      backgroundColor: appStyle.BackgroundWhite,
-      appBar: _buildAppBar(context),
+      backgroundColor: AppStyle.BackgroundWhite,
+      appBar: appBarHelper("add items"),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
@@ -37,7 +39,7 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
                right: 10,
               bottom: 20,
               lottieSize: MediaQueryInfo.screenWidth*0.3,
-              screen: const ScreenAddProduct()
+              screen: const ScreenAddSales()
 
             ),
             const SizedBox(height: 20),
@@ -49,7 +51,7 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
                right: -10,
               bottom: -70,
               lottieSize: MediaQueryInfo.screenWidth*0.4,
-              screen: const ScreenAddProduct()
+              screen: const ScreenAddPurchases()
             ),
             const SizedBox(height: 20),
             _buildCustomContainer(
@@ -129,15 +131,4 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    AppStyle appStyle = AppStyle();
-    return AppBar(
-      backgroundColor: appStyle.BackgroundWhite,
-      title: Text(
-        "Add Items",
-        style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold),
-      ),
-     
-    );
-  }
 }

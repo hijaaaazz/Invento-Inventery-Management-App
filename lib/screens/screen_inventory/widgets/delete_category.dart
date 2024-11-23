@@ -19,7 +19,7 @@ void longPressEmptyCategory(BuildContext context, CategoryModel category) {
           child: Container(
            
             decoration: BoxDecoration(
-              color: appStyle.BackgroundWhite,
+              color:AppStyle.BackgroundWhite,
               borderRadius: BorderRadius.circular(15)
             ),
             child: Padding(

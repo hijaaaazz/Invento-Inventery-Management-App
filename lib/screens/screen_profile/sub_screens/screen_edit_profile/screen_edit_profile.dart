@@ -52,7 +52,7 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> {
     AppStyle appStyle = AppStyle();
     
     return Scaffold(
-      backgroundColor: appStyle.BackgroundWhite,
+      backgroundColor: AppStyle.BackgroundWhite,
       body: SingleChildScrollView(
         child: Column(
           children: [

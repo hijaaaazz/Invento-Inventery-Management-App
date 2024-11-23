@@ -16,7 +16,7 @@ class LogoutDialog extends StatelessWidget {
       child: Container(
       
         decoration: BoxDecoration(
-          color: appStyle.BackgroundWhite,
+          color: AppStyle.BackgroundWhite,
           borderRadius: BorderRadius.circular(25)
         ),
         child: Column(

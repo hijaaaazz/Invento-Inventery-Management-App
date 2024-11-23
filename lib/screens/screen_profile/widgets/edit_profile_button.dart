@@ -27,7 +27,7 @@ class EditProfileButton extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  color: appStyle.BackgroundWhite,
+                  color: AppStyle.BackgroundWhite,
                 ),
               )
             ],
@@ -47,7 +47,7 @@ class EditProfileButton extends StatelessWidget {
                 height: MediaQueryInfo.screenHeight * 0.055,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  color: appStyle.BackgroundPurple,
+                  color: AppStyle.BackgroundPurple,
                 ),
                 child: Center(
                   child: Text(

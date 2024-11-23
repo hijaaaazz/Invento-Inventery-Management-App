@@ -10,6 +10,7 @@ import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widget
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/error_dialog.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/text_fiels.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/unit_dropdown.dart';
+import 'package:invento2/screens/widgets/app_bar.dart';
 
 class ScreenAddProduct extends StatefulWidget {
 
@@ -127,7 +128,13 @@ Future<void> _addProduct() async {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: build_appbar(_addProduct),
+      appBar: appBarHelper("Add Product",actions: [Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: const Icon(Icons.check),
+              onPressed: _addProduct, 
+            ),
+          ),]),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -222,7 +229,6 @@ const SizedBox(height: 15,),
       imagePath = pickedFile.path;
     });
   } else {
-    // ignore: use_build_context_synchronously
     showErrorDialog(context,"No image selected.","Please Select an Image");
   }
 }
@@ -238,7 +244,7 @@ const SizedBox(height: 15,),
 // ignore: non_constant_identifier_names
 AppBar build_appbar(VoidCallback addProduct) {
   return AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         backgroundColor: Colors.white,
         title: Padding(
           padding: const EdgeInsets.only(left: 10),
@@ -248,13 +254,7 @@ AppBar build_appbar(VoidCallback addProduct) {
           ),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: addProduct, 
-            ),
-          ),
+          
         ],
       );
 }

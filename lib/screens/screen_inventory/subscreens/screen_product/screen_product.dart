@@ -43,7 +43,7 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
     AppStyle appStyle = AppStyle();
 
     return Scaffold(
-      backgroundColor: appStyle.BackgroundWhite,
+      backgroundColor: AppStyle.BackgroundWhite,
       appBar: build_product_page_appbar(
           () => showProductDeleteDialog(context, productDetailsNotifier.value, widget.Gridviewnotifier)
 ,
@@ -142,40 +142,36 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                             style: GoogleFonts.lato(
                                 fontSize: 16, fontWeight: FontWeight.w300)),
                         SizedBox(height: MediaQueryInfo.screenHeight * 0.02),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: MediaQueryInfo.screenHeight * 0.045,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 226, 60, 255),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: MediaQueryInfo.screenWidth * 0.04),
-                                child: Center(
-                                  child: Text(
-                                    "Current Stock : ${updatedProduct.stock} ${updatedProduct.unit}",
-                                    style: GoogleFonts.lato(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: appStyle.BackgroundWhite,
-                                    ),
-                                  ),
-                                ),
+                        Container(
+                          height: MediaQueryInfo.screenHeight * 0.045,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 226, 60, 255),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: MediaQueryInfo.screenWidth * 0.04),
+                            child: Center(
+                              child: Text(
+                                "Current Stock : ${updatedProduct.stock} ${updatedProduct.unit}",
+                                style: GoogleFonts.lato(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppStyle.BackgroundWhite,
+                                ),overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                             ),
-                            Text(
-                              "₹ ${updatedProduct.price.toString()}",
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                              " Price ₹ ${updatedProduct.price.toString()}",
                               style: GoogleFonts.inter(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                               ),
-                            )
-                          ],
-                        ),
+                            ),
                         SizedBox(height: MediaQueryInfo.screenHeight * 0.01),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

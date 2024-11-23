@@ -56,7 +56,7 @@ final ValueNotifier<List<ProductModel>> filteredProductsNotifier;
                           borderRadius: BorderRadius.circular(15),
                           child: Image.file(
                             File(product.productImage),
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                             width: double.infinity,
                           ),
                         ),

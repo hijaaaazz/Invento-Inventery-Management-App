@@ -9,7 +9,7 @@ AppBar build_product_page_appbar(
 ){
   
   return AppBar(
-    backgroundColor: appstyle.BackgroundWhite,
+    backgroundColor: AppStyle.BackgroundWhite,
     leading: Padding(
       padding: const EdgeInsets.only(left:  15.0),
       child: IconButton(

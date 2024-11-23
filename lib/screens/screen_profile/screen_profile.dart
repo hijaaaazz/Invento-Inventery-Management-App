@@ -19,7 +19,7 @@ class ScreenProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     AppStyle appStyle=AppStyle();
     return Scaffold(
-      backgroundColor:appStyle.BackgroundWhite,
+      backgroundColor:AppStyle.BackgroundWhite,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

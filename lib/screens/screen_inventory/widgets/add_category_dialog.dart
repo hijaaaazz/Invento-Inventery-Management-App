@@ -47,7 +47,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
       child: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-            color: appStyle.BackgroundWhite,
+            color: AppStyle.BackgroundWhite,
             borderRadius: BorderRadius.circular(25),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),

@@ -130,14 +130,7 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
             child: ProductGridView(filteredProductsNotifier: filteredProductsNotifier,getMaxPrice: getMaxPrice,clearfilter: _clearFilters,),
           ),
         ),
-        if (showFilterDrawer)
-          Positioned.fill(
-            top: 60,
-            child: GestureDetector(
-              onTap: toggleFilterDrawer,
-              child: Container(color: Colors.black.withOpacity(0.5)),
-            ),
-          ),
+
         if (showFilterDrawer)
           Positioned(
             top: 0,

@@ -96,83 +96,80 @@ class ScreenSignInState extends State<ScreenSignIn> {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle=AppStyle();
     return Scaffold(
-      backgroundColor:appStyle.BackgroundWhite,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.07),
-          child: SizedBox(
-            height: MediaQueryInfo.screenHeight,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: MediaQueryInfo.screenHeight * 0.1),
-                    Center(
-                      child: Text(
-                        "Welcome Back",
-                        style: GoogleFonts.outfit(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(255, 84, 81, 81),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "Thank you for returning! Please log in to access your inventory and streamline your management process.",
+      backgroundColor:AppStyle.BackgroundWhite,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.07),
+        child: SizedBox(
+          height: MediaQueryInfo.screenHeight,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: MediaQueryInfo.screenHeight * 0.1),
+                  Center(
+                    child: Text(
+                      "Welcome Back",
                       style: GoogleFonts.outfit(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 84, 81, 81),
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 40),
-                    CustomTextField(
-                      controller: _usernameController,
-                      hintText: "Username",
-                      errorText: _usernameError,
+                  ),
+                  Text(
+                    "Thank you for returning! Please log in to access your inventory and streamline your management process.",
+                    style: GoogleFonts.outfit(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      color: const Color.fromARGB(255, 0, 0, 0),
                     ),
-                    const SizedBox(height: 5),
-                    CustomTextField(
-                      controller: _passwordController,
-                      hintText: "Password",
-                      obscureText: true,
-                      errorText: _passwordError,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: _validateAndLogin,
-                      child: Container(
-                        width: MediaQueryInfo.screenWidth * 0.9,
-                        height: MediaQueryInfo.screenHeight * 0.07,
-                        decoration: BoxDecoration(
-                          color: appStyle.BackgroundPurple,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Sign In",
-                            style: GoogleFonts.outfit(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                            ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 40),
+                  CustomTextField(
+                    controller: _usernameController,
+                    hintText: "Username",
+                    errorText: _usernameError,
+                  ),
+                  const SizedBox(height: 5),
+                  CustomTextField(
+                    controller: _passwordController,
+                    hintText: "Password",
+                    obscureText: true,
+                    errorText: _passwordError,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: _validateAndLogin,
+                    child: Container(
+                      width: MediaQueryInfo.screenWidth * 0.9,
+                      height: MediaQueryInfo.screenHeight * 0.07,
+                      decoration: BoxDecoration(
+                        color: AppStyle.BackgroundPurple,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Sign In",
+                          style: GoogleFonts.outfit(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: const Color.fromARGB(255, 255, 255, 255),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: MediaQueryInfo.screenHeight * 0.06),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  SizedBox(height: MediaQueryInfo.screenHeight * 0.06),
+                ],
+              ),
+            ],
           ),
         ),
       ),

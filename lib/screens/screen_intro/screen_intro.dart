@@ -14,7 +14,7 @@ class ScreenIntro extends StatelessWidget {
   Widget build(BuildContext context) {
     AppStyle appStyle = AppStyle();
     return  Scaffold(
-      backgroundColor: appStyle.BackgroundWhite,
+      backgroundColor: AppStyle.BackgroundWhite,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth*0.07),
         child: Column(
@@ -29,7 +29,7 @@ class ScreenIntro extends StatelessWidget {
               height: MediaQueryInfo.screenHeight*0.5,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: appStyle.BackgroundPurple,
+                  color: AppStyle.BackgroundPurple,
                   borderRadius: const BorderRadius.all(
                       Radius.circular(20)
                   )
@@ -74,7 +74,7 @@ class ScreenIntro extends StatelessWidget {
                     width: MediaQueryInfo.screenWidth*0.43,
                     height: MediaQueryInfo.screenHeight*0.08,
                     decoration:  BoxDecoration(
-                        color: appStyle.BackgroundPurple,
+                        color: AppStyle.BackgroundPurple,
                         borderRadius: const BorderRadius.horizontal(
                             left: Radius.circular(15)
                         )

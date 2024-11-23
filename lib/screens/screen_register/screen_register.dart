@@ -122,7 +122,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
     AppStyle appStyle =AppStyle();
 
     return Scaffold(
-      backgroundColor: appStyle.BackgroundWhite,
+      backgroundColor: AppStyle.BackgroundWhite,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
@@ -248,7 +248,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                 height: mediaQuery.size.height * 0.07,
                 width: mediaQuery.size.width * 0.9,
                 decoration: BoxDecoration(
-                  color: appStyle.BackgroundPurple,
+                  color: AppStyle.BackgroundPurple,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Center(

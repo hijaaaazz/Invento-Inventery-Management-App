@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
+import 'package:invento2/database/inventory/purchase/purchase_model.dart';
 
 // ignore: non_constant_identifier_names
 ValueNotifier<List<ProductModel>> ProductListNotifier = ValueNotifier([]);
@@ -76,6 +77,7 @@ Future<void> updateProduct({
   required String category,
   required double price,
   required double rate,
+  double? stock
 }) async {
   await initProductDB();
 
@@ -101,14 +103,14 @@ Future<void> updateProduct({
       rate: rate,
       minlimit: minlimit,
       maxlimit: maxlimit,
-      stock: product.stock, 
+      stock: stock??product.stock, 
       userId: product.userId,
       productImage: productImage,
     );
 
     try {
       await productBox?.put(id, updatedProduct);
-      log("Product updated successfully: ${updatedProduct.name}");
+      log("Product updated successfully: ${updatedProduct.stock}");
 
       ProductListNotifier.value = [...productBox!.values];
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
@@ -158,4 +160,42 @@ Future<void> deleteProduct(String id) async {
   } else {
     log("Product with ID $id not found.");
   }
+}
+
+
+Future<void> updateProductStocks(List<PurchaseProduct> purchasedProducts) async {
+  await initProductDB();
+
+  if (productBox == null) {
+    log("Product database is not initialized.");
+    return;
+  }
+
+  for (final purchasedProduct in purchasedProducts) {
+    final productId = purchasedProduct.product.productId;
+    final quantityToAdd = purchasedProduct.quantity;
+
+    final existingProduct = productBox?.get(productId);
+
+    if (existingProduct != null) {
+      double updatedStock = (existingProduct.stock) + (quantityToAdd);
+        updateProduct(
+          id: existingProduct.productId,
+         name:existingProduct.name,
+         description: existingProduct.category,
+         minlimit: existingProduct.minlimit,
+         maxlimit: existingProduct.maxlimit,
+         productImage: existingProduct.productImage,
+         category:existingProduct.category,
+         price: existingProduct.price,
+         rate: existingProduct.rate,
+         stock: updatedStock);
+
+    } 
+  }
+  ProductListNotifier.value = productBox!.values.toList();
+  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+  ProductListNotifier.notifyListeners();
+
+  log("All stocks updated successfully.");
 }

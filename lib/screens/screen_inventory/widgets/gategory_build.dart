@@ -54,9 +54,12 @@ Widget buildCategorySection(
                       fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'No products available in this category',
-                  style: TextStyle(color: Colors.grey),
+                const Center(
+                  child: Text(
+                    'No products available in this category\nHold for delete Category',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ),
               ],
             ),
@@ -126,8 +129,8 @@ Widget buildCategorySection(
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
                               colors: [
-                                appStyle.BackgroundBlack.withOpacity(0.8),
-                                appStyle.BackgroundBlack.withOpacity(0.1),
+                                AppStyle.BackgroundBlack.withOpacity(0.8),
+                                AppStyle.BackgroundPurple.withOpacity(0.1),
                               ],
                             ),
                           ),

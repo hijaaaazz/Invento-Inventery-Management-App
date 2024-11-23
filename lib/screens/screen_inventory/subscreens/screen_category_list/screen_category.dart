@@ -20,7 +20,7 @@ class ScreenProductList extends StatelessWidget {
   Widget build(BuildContext context) {
     AppStyle appStyle = AppStyle();
     return Scaffold(
-      backgroundColor: appStyle.BackgroundWhite,
+      backgroundColor: AppStyle.BackgroundWhite,
       appBar: categorylistAppBar(title,context),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.04),
@@ -55,8 +55,8 @@ class ScreenProductList extends StatelessWidget {
                     );
                   },
                   child: Card(
-                    surfaceTintColor: appStyle.BackgroundWhite,
-                    color: appStyle.BackgroundWhite,
+                    surfaceTintColor: AppStyle.BackgroundWhite,
+                    color: AppStyle.BackgroundWhite,
                     shadowColor: Colors.black,
                     elevation: 5,
                     margin: EdgeInsets.symmetric(vertical: MediaQueryInfo.screenHeight * 0.01),
@@ -68,7 +68,7 @@ class ScreenProductList extends StatelessWidget {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: appStyle.BackgroundWhite.withOpacity(0.2),
+                              color: AppStyle.BackgroundWhite.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(13),
                             ),
                             height: MediaQueryInfo.screenHeight * 0.1,
@@ -143,9 +143,8 @@ class ScreenProductList extends StatelessWidget {
 }
 
 AppBar categorylistAppBar(String title,BuildContext context){
-  AppStyle appStyle= AppStyle();
  return AppBar(
-        backgroundColor: appStyle.BackgroundWhite,
+        backgroundColor: AppStyle.BackgroundWhite,
         automaticallyImplyLeading: true,
         leading: Padding(
           padding: EdgeInsets.only(left: MediaQueryInfo.screenWidth * 0.04),

@@ -7,13 +7,15 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final String? errorText;
   final TextInputType? keyboardType; // Added keyboardType parameter
+  IconData? icon;
 
-  const CustomTextField({super.key, 
+   CustomTextField({super.key, 
     required this.controller,
     required this.hintText,
     this.obscureText = false,
     this.errorText,
     this.keyboardType, // Accept keyboardType in constructor
+    this.icon
   });
 
   @override
@@ -38,31 +40,38 @@ class CustomTextField extends StatelessWidget {
           ),
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: TextFormField(
-                controller: controller,
-                obscureText: obscureText,
-                keyboardType: keyboardType, 
-                style: GoogleFonts.outfit(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 129, 129, 129),
-                ),
-                cursorColor: Colors.grey,
-                cursorHeight: 15,
-                decoration: InputDecoration(
-                  hintText: hintText,
-                  hintStyle: GoogleFonts.outfit(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 129, 129, 129),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: controller,
+                      obscureText: obscureText,
+                      keyboardType: keyboardType, 
+                      style: GoogleFonts.outfit(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 129, 129, 129),
+                      ),
+                      cursorColor: Colors.grey,
+                      cursorHeight: 15,
+                      decoration: InputDecoration(
+                        hintText: hintText,
+                        hintStyle: GoogleFonts.outfit(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 129, 129, 129),
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFF3F3F3),
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                      ),
+                    ),
                   ),
-                  filled: true,
-                  fillColor: const Color(0xFFF3F3F3),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                ),
+                  Icon(icon,color: Colors.grey,)
+                ],
               ),
             ),
           ),

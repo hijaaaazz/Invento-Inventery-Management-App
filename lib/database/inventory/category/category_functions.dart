@@ -13,6 +13,7 @@ Future<void> initCategoryDB() async {
       categoryBox = await Hive.openBox<CategoryModel>('category_db');
       categoryListNotifier.value = categoryBox!.values.toList();
     }
+    
   } catch (e) {
     log('Error initializing category DB: $e');
   }

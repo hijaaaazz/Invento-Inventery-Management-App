@@ -32,17 +32,17 @@ class FilterDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle= AppStyle();
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: MediaQueryInfo.screenHeight*0.47,
       decoration: BoxDecoration(
-        color: appStyle.BackgroundWhite,
+        color: AppStyle.BackgroundWhite,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.5),
             blurRadius: 10,
-            offset: const Offset(0, 5),
+            spreadRadius: 10,
+            offset: const Offset(0,10),
           ),
         ],
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(15)),
@@ -60,30 +60,41 @@ class FilterDrawer extends StatelessWidget {
                 fontWeight: FontWeight.w500
                ),),
 
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 4.0,
-              children: categories.map((category) {
-                return FilterChip(
-                  showCheckmark: false,
-                   shape: StadiumBorder(side: BorderSide(color: appStyle.BackgroundPurple, width: 1)),
-                   backgroundColor: appStyle.BackgroundWhite,
-                   selectedColor: appStyle.BackgroundPurple,
-                   elevation: 2,
-                    
-                  label: Text(category,style: GoogleFonts.inter(
-                    fontWeight: FontWeight.bold,
-                    color:selectedCategories.contains(category)?appStyle.BackgroundWhite:appStyle.BackgroundPurple,
-                  ),),
-                  selected: selectedCategories.contains(category),
-                  onSelected: (_) {
-                    
-                    // ignore: void_checks
-                    return onCategorySelected(category);
-                  } ,
-                );
-              }).toList(),
+            Container(
+              height: 50,
+              width: double.infinity,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal, 
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index]; 
+                  final isSelected = selectedCategories.contains(category); // Check if it's selected
+              
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0), // Add space between chips
+                    child: FilterChip(
+                      showCheckmark: false,
+                      shape: StadiumBorder(side: BorderSide(color: AppStyle.BackgroundPurple, width: 1)),
+                      backgroundColor: AppStyle.BackgroundWhite,
+                      selectedColor: AppStyle.BackgroundPurple,
+                      elevation: 2,
+                      label: Text(
+                        category,
+                        style: GoogleFonts.inter(
+              fontWeight: FontWeight.bold,
+              color: isSelected ? AppStyle.BackgroundWhite : AppStyle.BackgroundPurple,
+                        ),
+                      ),
+                      selected: isSelected,
+                      onSelected: (_) {
+                        onCategorySelected(category); // Call the provided function when selected
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
+
             const SizedBox(height: 10,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +104,7 @@ class FilterDrawer extends StatelessWidget {
                 fontWeight: FontWeight.w500
                ),),
                 RangeSlider(
-                  activeColor: appStyle.BackgroundPurple,
+                  activeColor: AppStyle.BackgroundPurple,
                   values: RangeValues(minPrice, maxPrice),
                   min: 0.0,
                   max: getMaxPrice(),
@@ -114,7 +125,7 @@ class FilterDrawer extends StatelessWidget {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: appStyle.BackgroundWhite, 
+                    backgroundColor: AppStyle.BackgroundWhite, 
                     textStyle: GoogleFonts.lato(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -129,12 +140,12 @@ class FilterDrawer extends StatelessWidget {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: appStyle.BackgroundWhite, 
+                    backgroundColor: AppStyle.BackgroundWhite, 
                     textStyle: GoogleFonts.lato(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
-                    foregroundColor: appStyle.BackgroundPurple,
+                    foregroundColor: AppStyle.BackgroundPurple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20), 
                     ),
