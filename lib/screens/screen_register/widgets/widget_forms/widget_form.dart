@@ -7,15 +7,20 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final String? errorText;
   final TextInputType? keyboardType; // Added keyboardType parameter
-  IconData? icon;
+  final IconData? icon;
+  final ValueChanged<String>? onChanged;
+  final TextCapitalization? capital;
 
-   CustomTextField({super.key, 
+  const CustomTextField({
+    super.key,
     required this.controller,
     required this.hintText,
     this.obscureText = false,
     this.errorText,
     this.keyboardType, // Accept keyboardType in constructor
-    this.icon
+    this.icon,
+    this.onChanged,
+    this.capital,
   });
 
   @override
@@ -45,14 +50,16 @@ class CustomTextField extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      textCapitalization: capital ?? TextCapitalization.none, // Provide default value
                       controller: controller,
                       obscureText: obscureText,
-                      keyboardType: keyboardType, 
+                      keyboardType: keyboardType,
                       style: GoogleFonts.outfit(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: const Color.fromARGB(255, 129, 129, 129),
                       ),
+                      onChanged: onChanged,
                       cursorColor: Colors.grey,
                       cursorHeight: 15,
                       decoration: InputDecoration(
@@ -70,7 +77,7 @@ class CustomTextField extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Icon(icon,color: Colors.grey,)
+                  Icon(icon, color: Colors.grey),
                 ],
               ),
             ),

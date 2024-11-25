@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:invento2/database/inventory/product/product_functions.dart';
+import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/inventory/sales/sales_functions.dart';
 import 'package:invento2/database/inventory/sales/sales_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
@@ -22,17 +24,35 @@ class _ScreenAddSalesState extends State<ScreenAddSales> {
   TextEditingController discountController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController contactController = TextEditingController();
-  int discountType = 0; // 0 for Percentage, 1 for Specific Amount
+  int discountType = 0;
   double grandTotal = 0;
   bool isFinished = false;
    String? customerName;
   late int customerNumber;
   ValueNotifier<double> grandTotalNotifier = ValueNotifier<double>(0.0);
+  Map<ProductModel, double> temporaryStock = {};
 
+  @override
+  void initState() {
+    super.initState();
+    initializeStock();
+  }
+
+void initializeStock() {
+    for (var product in ProductListNotifier.value) {
+      temporaryStock[product] = product.stock;
+    }
+  }
+
+  void updateTemporaryStock(ProductModel product, double quantity) {
+    setState(() {
+      temporaryStock[product] = (temporaryStock[product] ?? 0) - quantity;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -112,14 +132,18 @@ class _ScreenAddSalesState extends State<ScreenAddSales> {
                                  children: [
                                    Text("Items",style: GoogleFonts.outfit(
                                     fontWeight: FontWeight.w500,
-                                    color: AppStyle.TextBlack,
+                                    color: AppStyle.textBlack,
                                     fontSize: 18
                                    ),),
                                    IconButton(onPressed:(){
                                     Navigator.of(context).push(
-                                     MaterialPageRoute(builder: (ctx) => const ScreenAddSalesItem()),
+                                     MaterialPageRoute(builder: (ctx) =>  ScreenAddSalesItem(
+                                       onAdd: (ProductModel product,double quantity) {
+                                              updateTemporaryStock(product, quantity);
+                                            },temporaryStock: temporaryStock,
+                                     )),
                                    );
-                                   } , icon: const Icon(Icons.add,color: AppStyle.TextBlack,))
+                                   } , icon: const Icon(Icons.add,color: AppStyle.textBlack,))
                                  ],
                                ),
                                const Divider(height: 0),
@@ -180,14 +204,23 @@ class _ScreenAddSalesState extends State<ScreenAddSales> {
                                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                                ),
                                                IconButton(
-                                                 onPressed: () {
-                                                   setState(() {
-                                                     // Remove item from the list
-                                                     salesAddedProductsList.value.removeAt(index);
-                                                   });
-                                                 },
-                                                 icon: const Icon(Icons.close),
-                                               ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    final removedProduct = salesAddedProductsList.value[index];
+                                                    final product = removedProduct.product;
+                                                    final quantity = removedProduct.quantity;
+
+                                                    if (temporaryStock.containsKey(product)) {
+                                                      temporaryStock[product] =
+                                                          temporaryStock[product]! + quantity;
+                                                    }
+
+                                                    salesAddedProductsList.value.removeAt(index);
+                                                  });
+                                                },
+                                                icon: const Icon(Icons.close),
+                                              ),
+
                                              ],
                                            ),
                                          ),
@@ -218,7 +251,7 @@ class _ScreenAddSalesState extends State<ScreenAddSales> {
                                    Row(
                                      children: [
                                        Radio<int>(
-                                        activeColor: AppStyle.BackgroundPurple,
+                                        activeColor: AppStyle.backgroundPurple,
                                          value: 0,
                                          groupValue: discountType,
                                          onChanged: (value) {
@@ -230,7 +263,7 @@ class _ScreenAddSalesState extends State<ScreenAddSales> {
                                        ),
                                        const Text("%"),
                                        Radio<int>(
-                                        activeColor: AppStyle.BackgroundPurple,
+                                        activeColor: AppStyle.backgroundPurple,
                                          value: 1,
                                          groupValue: discountType,
                                          onChanged: (value) {
@@ -271,9 +304,9 @@ class _ScreenAddSalesState extends State<ScreenAddSales> {
                                                    buttonText: "${totalAmount-discountAmount}",
                                                    buttonWidget: const Icon(
                                Icons.arrow_forward_ios_rounded,
-                               color: AppStyle.BackgroundPurple,
+                               color: AppStyle.backgroundPurple,
                                                    ),
-                                                   activeColor: AppStyle.BackgroundPurple,
+                                                   activeColor: AppStyle.backgroundPurple,
                                                    isFinished: isFinished,
                                                    onWaitingProcess: () {
                                Future.delayed(const Duration(microseconds: 200), () {
@@ -305,53 +338,4 @@ class _ScreenAddSalesState extends State<ScreenAddSales> {
     );
   }
 
-  Widget _buildProductImage(String imagePath) {
-    return SizedBox(
-      height: 50,
-      width: 50,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: Image(
-          image: FileImage(File(imagePath)),
-          width: 50,
-          height: 50,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProductInfo(SaleProduct purchaseProduct) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            purchaseProduct.product.name,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text("${purchaseProduct.quantity} x ₹${purchaseProduct.product.rate}"),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProductTotal(SaleProduct purchaseProduct) {
-    return Text(
-      "₹${purchaseProduct.getTotalPrice().toStringAsFixed(2)}",
-      style: const TextStyle(fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget _buildRemoveButton(int index) {
-    return IconButton(
-      onPressed: () {
-        setState(() {
-          salesAddedProductsList.value.removeAt(index);
-          salesAddedProductsList.notifyListeners();
-        });
-      },
-      icon: const Icon(Icons.close),
-    );
-  }
 }

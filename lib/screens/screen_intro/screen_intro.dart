@@ -12,9 +12,8 @@ class ScreenIntro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle = AppStyle();
     return  Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth*0.07),
         child: Column(
@@ -28,9 +27,9 @@ class ScreenIntro extends StatelessWidget {
 
               height: MediaQueryInfo.screenHeight*0.5,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: AppStyle.BackgroundPurple,
-                  borderRadius: const BorderRadius.all(
+              decoration: const BoxDecoration(
+                  color: AppStyle.backgroundPurple,
+                  borderRadius: BorderRadius.all(
                       Radius.circular(20)
                   )
               ),
@@ -73,9 +72,9 @@ class ScreenIntro extends StatelessWidget {
                   child: Container(
                     width: MediaQueryInfo.screenWidth*0.43,
                     height: MediaQueryInfo.screenHeight*0.08,
-                    decoration:  BoxDecoration(
-                        color: AppStyle.BackgroundPurple,
-                        borderRadius: const BorderRadius.horizontal(
+                    decoration:  const BoxDecoration(
+                        color: AppStyle.backgroundPurple,
+                        borderRadius: BorderRadius.horizontal(
                             left: Radius.circular(15)
                         )
                     ),

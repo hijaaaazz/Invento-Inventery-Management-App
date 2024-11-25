@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/inventory/sales/sales_functions.dart';
@@ -12,7 +13,12 @@ import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_for
 import 'package:invento2/screens/widgets/app_bar.dart';
 
 class ScreenAddSalesItem extends StatefulWidget {  
-  const ScreenAddSalesItem({super.key});  
+   final void Function(ProductModel, double)? onAdd;
+   final Map<ProductModel, double> temporaryStock;
+
+   
+ 
+   const ScreenAddSalesItem({super.key,required this.onAdd, required this.temporaryStock});  
 
   @override
   State<ScreenAddSalesItem> createState() => _ScreenAddSalesItemState(); 
@@ -22,14 +28,15 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
   TextEditingController quantityController = TextEditingController();
   ProductModel? selectedProduct;
   List<ProductModel> filteredProducts = [];
-  Map<String, double> temporaryStock = {}; 
-  ValueNotifier<double> quantityNotifier = ValueNotifier<double>(1);
+  ValueNotifier<double> quantityNotifier = ValueNotifier<double>(0);
+  
 
   @override
   void initState() {
     super.initState();
     searchController.addListener(_onSearchChanged);
     filteredProducts = ProductListNotifier.value.where((a) => a.userId == userDataNotifier.value.id).toList();
+
 
     quantityController.text = quantityNotifier.value.toString();
   }
@@ -44,9 +51,6 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
     });
   }
 
-  double getAvailableStock(ProductModel product) {
-    return temporaryStock[product.productId] ?? product.stock;
-  }
 
   @override
   void dispose() {
@@ -59,14 +63,13 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       appBar: appBarHelper("Add Sale Item"),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Search Field
             CustomTextField(
               controller: searchController,
               hintText: "Search Product....",
@@ -126,8 +129,7 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Stock Availability
-          Container(
+          SizedBox(
             width: MediaQueryInfo.screenWidth*0.35,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +143,9 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
                   ),
                 ),
                 Text(
-                  '${selectedProduct?.stock ?? 0} units',
+                  selectedProduct == null
+                      ? "0 units"
+                      : '${widget.temporaryStock[selectedProduct!]} units',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -150,11 +154,12 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
+
               ],
             ),
           ),
 
-          // Quantity Control
           Row(
             children: [
               IconButton(
@@ -215,20 +220,19 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
 
               const SizedBox(height: 20),
           
-            ElevatedButton(
-              onPressed: () {
+            
+            GestureDetector(
+            onTap: (){
                 if (selectedProduct != null) {
-                  final availableStock = getAvailableStock(selectedProduct!);
-                  if (quantityNotifier.value > availableStock) {
+                  final availableStock = widget.temporaryStock[selectedProduct!];
+                  if (quantityNotifier.value > availableStock!) {
                     // Show Error Message
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Insufficient stock!')),
                     );
                     return;
                   }
-
-                  temporaryStock[selectedProduct!.productId] =
-                      availableStock - quantityNotifier.value;
+                  widget.onAdd!(selectedProduct!, quantityNotifier.value);
 
                   salesAddedProductsList.value.add(
                     SaleProduct(
@@ -236,6 +240,7 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
                       quantity: quantityNotifier.value,
                     ),
                   );
+                  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
                   salesAddedProductsList.notifyListeners();
 
                   selectedProduct = null;
@@ -243,8 +248,31 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Add Sale Item'),
-            ),
+             child: Padding(
+               padding: const EdgeInsets.symmetric(vertical: 10),
+               child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                 color: AppStyle.backgroundPurple,
+                 boxShadow: [
+                  BoxShadow(color: AppStyle.backgroundBlack.withOpacity(0.2),
+                  offset: const Offset(2,4),
+                  blurRadius: 5,
+                  spreadRadius: 1
+                 )]
+             
+                ),
+                height: MediaQueryInfo.screenHeight*0.08,
+                child: Center(
+                  child: Text("Add Item",style: GoogleFonts.outfit(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: AppStyle.textWhite
+                  ),),
+                ),
+               ),
+             ),
+           )
           ]
         ),
       ),

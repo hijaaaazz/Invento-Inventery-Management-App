@@ -17,9 +17,8 @@ class ScreenProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle=AppStyle();
     return Scaffold(
-      backgroundColor:AppStyle.BackgroundWhite,
+      backgroundColor:AppStyle.backgroundWhite,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

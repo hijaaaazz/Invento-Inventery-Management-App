@@ -7,7 +7,7 @@ void showCustomSnackbar(String message, BuildContext ctx,Color color,{LottieBuil
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(
   borderRadius: BorderRadius.circular(100)),   
-    duration: Duration(seconds: 3),
+    duration: const Duration(seconds: 3),
     elevation: 5,
     content: Row(
       children: [
@@ -22,7 +22,7 @@ void showCustomSnackbar(String message, BuildContext ctx,Color color,{LottieBuil
             ),
           ),
         ),
-        SizedBox(width: 10), // Spacing between animation and text
+        const SizedBox(width: 10), // Spacing between animation and text
         Expanded(
           child: Center(
             child: Text(

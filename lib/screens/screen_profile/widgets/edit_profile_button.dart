@@ -12,7 +12,6 @@ class EditProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle=AppStyle();
     return SizedBox(
       width: double.infinity,
       height: 80,
@@ -27,7 +26,7 @@ class EditProfileButton extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  color: AppStyle.BackgroundWhite,
+                  color: AppStyle.backgroundWhite,
                 ),
               )
             ],
@@ -47,7 +46,7 @@ class EditProfileButton extends StatelessWidget {
                 height: MediaQueryInfo.screenHeight * 0.055,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  color: AppStyle.BackgroundPurple,
+                  color: AppStyle.backgroundPurple,
                 ),
                 child: Center(
                   child: Text(

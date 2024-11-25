@@ -25,16 +25,16 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       appBar: appBarHelper("add items"),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
           children: [
-            _buildCustomContainer(
+            buildCustomContainer(
               context,
               title: "Add Sales",
-              gradientColors: [const Color(0xFF2DA811), const Color(0xFF78F439)],
+              gradientColors: AppStyle.gradientGreen,
               lottieFile: "assets/gifs/add_sales.json",
                right: 10,
               bottom: 20,
@@ -43,10 +43,10 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
 
             ),
             const SizedBox(height: 20),
-            _buildCustomContainer(
+            buildCustomContainer(
               context,
               title: "Add Purchases",
-              gradientColors: [const Color(0xFF0C48A3), const Color(0xFF3577D9)],
+              gradientColors: AppStyle.gradientblue,
               lottieFile: "assets/gifs/add_purchases.json",
                right: -10,
               bottom: -70,
@@ -54,10 +54,10 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
               screen: const ScreenAddPurchases()
             ),
             const SizedBox(height: 20),
-            _buildCustomContainer(
+            buildCustomContainer(
               context,
               title: "Add Product",
-              gradientColors: [const Color(0xFFFF9B15), const Color(0xFFFFC86F)],
+              gradientColors: AppStyle.gradientorange,
               lottieFile: "assets/gifs/box.json",
               right: 0,
               bottom: 0,
@@ -71,7 +71,7 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
     );
   }
 
-  Widget _buildCustomContainer(BuildContext context,
+  Widget buildCustomContainer(BuildContext context,
       {required String title,
       required List<Color> gradientColors,
       required String lottieFile,

@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:hive/hive.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
@@ -20,14 +19,22 @@ class PurchaseModel extends HiveObject {
   final String userId;
 
   @HiveField(4)
-  final double GrandTotal ;
+  final double grandTotal ;
+
+  @HiveField(5)
+  final String? supplierName ;
+
+  @HiveField(6)
+  final int? supplierPhone ;
 
   PurchaseModel({
     required this.id,
     required this.purchaseNumber,
     required this.purchaseProducts,
     required this.userId,
-    required this.GrandTotal,
+    required this.grandTotal,
+    this.supplierName,
+    this.supplierPhone
   });
 
   double getTotalPurchasePrice() {

@@ -7,6 +7,7 @@ import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/screen_product.dart';
+import 'package:invento2/screens/widgets/app_bar.dart';
 
 class ScreenProductList extends StatelessWidget {
   final String title;
@@ -18,10 +19,9 @@ class ScreenProductList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle = AppStyle();
     return Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
-      appBar: categorylistAppBar(title,context),
+      backgroundColor: AppStyle.backgroundWhite,
+      appBar: appBarHelper(title),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.04),
         child: ValueListenableBuilder(
@@ -55,8 +55,8 @@ class ScreenProductList extends StatelessWidget {
                     );
                   },
                   child: Card(
-                    surfaceTintColor: AppStyle.BackgroundWhite,
-                    color: AppStyle.BackgroundWhite,
+                    surfaceTintColor: AppStyle.backgroundWhite,
+                    color: AppStyle.backgroundWhite,
                     shadowColor: Colors.black,
                     elevation: 5,
                     margin: EdgeInsets.symmetric(vertical: MediaQueryInfo.screenHeight * 0.01),
@@ -68,7 +68,7 @@ class ScreenProductList extends StatelessWidget {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: AppStyle.BackgroundWhite.withOpacity(0.2),
+                              color: AppStyle.backgroundWhite.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(13),
                             ),
                             height: MediaQueryInfo.screenHeight * 0.1,
@@ -140,25 +140,4 @@ class ScreenProductList extends StatelessWidget {
       ),
     );
   }
-}
-
-AppBar categorylistAppBar(String title,BuildContext context){
- return AppBar(
-        backgroundColor: AppStyle.BackgroundWhite,
-        automaticallyImplyLeading: true,
-        leading: Padding(
-          padding: EdgeInsets.only(left: MediaQueryInfo.screenWidth * 0.04),
-          child: IconButton(
-            iconSize: 16,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back_ios),
-          ),
-        ),
-        title: Text(
-          title,
-          style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      );
 }

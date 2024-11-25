@@ -43,7 +43,7 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
     AppStyle appStyle = AppStyle();
 
     return Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       appBar: build_product_page_appbar(
           () => showProductDeleteDialog(context, productDetailsNotifier.value, widget.Gridviewnotifier)
 ,
@@ -157,14 +157,14 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                                 style: GoogleFonts.lato(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: AppStyle.BackgroundWhite,
+                                  color: AppStyle.backgroundWhite,
                                 ),overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                               " Price ₹ ${updatedProduct.price.toString()}",
                               style: GoogleFonts.inter(

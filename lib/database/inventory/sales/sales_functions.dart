@@ -1,21 +1,21 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
-import 'package:invento2/database/inventory/sales/sales_model.dart';  // Assume SalesModel is used instead of ProductModel
-import 'package:invento2/database/inventory/purchase/purchase_model.dart'; // Assuming PurchaseModel still used
-import 'package:invento2/database/users/user_fuctions.dart';  // Assuming you have some user functions to manage user data
+import 'package:invento2/database/inventory/sales/sales_model.dart'; 
+import 'package:invento2/database/users/user_fuctions.dart'; 
 
-// Value notifiers to update UI
 ValueNotifier<List<SaleProduct>> salesAddedProductsList = ValueNotifier([]);
 ValueNotifier<List<SalesModel>> salesList = ValueNotifier([]);
 
 late Box<SalesModel> salesBox;
 late Box<int> counterBox;
 
+// ignore: non_constant_identifier_names
 int SalesinvoiceCounter = 1; 
 
-// Initialize Sales Database
 Future<void> initSalesDatabase() async {
   try {
     if (!Hive.isBoxOpen('salesBox')) {
@@ -28,6 +28,7 @@ Future<void> initSalesDatabase() async {
     SalesinvoiceCounter = counterBox.get('invoiceCounter') ?? 1;
 
   salesList.value = salesBox.values.toList();
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     salesList.notifyListeners();
 
     log("Sales Database initialized with ${salesList.value.length} sales");
@@ -74,19 +75,18 @@ Future<void> addSale(
     await counterBox.put('invoiceCounter', SalesinvoiceCounter);
 
     salesList.value = salesBox.values.toList();
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     salesList.notifyListeners();
 
     showSuccessSnackbar("Sale added successfully!", ctx);
-    Navigator.of(ctx).pop(); // Close the screen after success
+    Navigator.of(ctx).pop();
   } catch (e) {
     log("Error in addSale: $e");
     showErrorSnackbar("Error occurred: $e", ctx);
   }
 }
 
-// Update Sales Product Stocks after sal
 Future<void> updateProductStocks(List<SaleProduct> soldProducts) async {
-  // Assuming SalesProduct is a class similar to PurchaseProduct but related to sales
   await initSalesDatabase();
 
   for (final soldProduct in soldProducts) {
@@ -103,7 +103,6 @@ Future<void> updateProductStocks(List<SaleProduct> soldProducts) async {
         continue;
       }
 
-      // Update the product stock after the sale
       await updateProduct(
         id: existingProduct.productId,
         name: existingProduct.name,
@@ -112,7 +111,7 @@ Future<void> updateProductStocks(List<SaleProduct> soldProducts) async {
         maxlimit: existingProduct.maxlimit,
         productImage: existingProduct.productImage,
         category: existingProduct.category,
-        price: existingProduct.price,  // We use price here instead of rate for sales
+        price: existingProduct.price, 
         stock: updatedStock,
         rate: existingProduct.rate
       );
@@ -122,12 +121,11 @@ Future<void> updateProductStocks(List<SaleProduct> soldProducts) async {
   log("All stocks updated successfully after sale.");
 }
 
-// Show error snackbar
+
 void showErrorSnackbar(String message, BuildContext ctx) {
   ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(message)));
 }
 
-// Show success snackbar
 void showSuccessSnackbar(String message, BuildContext ctx) {
   ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(message)));
 }

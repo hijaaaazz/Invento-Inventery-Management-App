@@ -62,7 +62,7 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       appBar: appBarHelper("Add Purchase Item"),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -234,7 +234,13 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
                child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                 color: AppStyle.BackgroundPurple,
+                 color: AppStyle.backgroundPurple,
+                 boxShadow: [
+                  BoxShadow(color: AppStyle.backgroundBlack.withOpacity(0.2),
+                  offset: const Offset(2,4),
+                  blurRadius: 5,
+                  spreadRadius: 1
+                 )]
              
                 ),
                 height: MediaQueryInfo.screenHeight*0.08,
@@ -242,7 +248,7 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
                   child: Text("Add Item",style: GoogleFonts.outfit(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    color: AppStyle.TextWhite
+                    color: AppStyle.textWhite
                   ),),
                 ),
                ),

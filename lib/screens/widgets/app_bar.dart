@@ -6,16 +6,16 @@ AppBar appBarHelper(String title, {List<Widget>? actions}) {
   return AppBar(
     leadingWidth: 30,
     elevation: 0,
-    backgroundColor: AppStyle.BackgroundWhite,
+    backgroundColor: AppStyle.backgroundWhite,
     title: Text(
       title,
       style: GoogleFonts.inter(
-        color: AppStyle.TextPurple,
+        color: AppStyle.textPurple,
         fontWeight: FontWeight.bold,
       ),
     ),
-    iconTheme: IconThemeData(
-      color: AppStyle.TextPurple, // Set the leading icon color
+    iconTheme: const IconThemeData(
+      color: AppStyle.textPurple, // Set the leading icon color
     ),
     actions: actions,
   );

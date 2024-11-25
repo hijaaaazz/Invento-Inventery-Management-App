@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:hive/hive.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 
@@ -19,8 +18,8 @@ class SalesModel extends HiveObject {
   final String userId;
 
   @HiveField(4)
-  final String? customerName; // Added customer name
-
+  final String? customerName; 
+  
   @HiveField(5)
   final double grandTotal;
 

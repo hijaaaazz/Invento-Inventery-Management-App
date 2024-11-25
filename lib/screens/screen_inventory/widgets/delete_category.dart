@@ -9,7 +9,6 @@ import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:lottie/lottie.dart';
 
 void longPressEmptyCategory(BuildContext context, CategoryModel category) {
-  AppStyle appStyle = AppStyle();
   showDialog(
     context: context,
     builder: (ctx) {
@@ -19,7 +18,7 @@ void longPressEmptyCategory(BuildContext context, CategoryModel category) {
           child: Container(
            
             decoration: BoxDecoration(
-              color:AppStyle.BackgroundWhite,
+              color:AppStyle.backgroundWhite,
               borderRadius: BorderRadius.circular(15)
             ),
             child: Padding(

@@ -4,7 +4,6 @@ import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_inventory_list.dart';
 import 'package:invento2/screens/screen_inventory/widgets/build_search_section.dart';
-import 'package:invento2/screens/screen_inventory/widgets/build_appbar.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
 
@@ -39,7 +38,7 @@ class _ScreenInventoryState extends State<ScreenInventory> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       appBar: appBarHelper("inventory",actions:[ Padding(
           padding: const EdgeInsets.only(right: 10),
           child: IconButton(
@@ -99,9 +98,9 @@ class _ScreenInventoryState extends State<ScreenInventory> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppStyle.BackgroundWhite.withOpacity(0.0),
-                    AppStyle.BackgroundWhite.withOpacity(1.0),
-                    AppStyle.BackgroundWhite.withOpacity(1.0),
+                    AppStyle.backgroundWhite.withOpacity(0.0),
+                    AppStyle.backgroundWhite.withOpacity(1.0),
+                    AppStyle.backgroundWhite.withOpacity(1.0),
                   ],
                 ),
               ),

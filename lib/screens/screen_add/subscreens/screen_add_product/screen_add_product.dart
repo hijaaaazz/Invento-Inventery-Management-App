@@ -229,6 +229,7 @@ const SizedBox(height: 15,),
       imagePath = pickedFile.path;
     });
   } else {
+    // ignore: use_build_context_synchronously
     showErrorDialog(context,"No image selected.","Please Select an Image");
   }
 }
@@ -239,22 +240,4 @@ const SizedBox(height: 15,),
 
  
     
-}
-
-// ignore: non_constant_identifier_names
-AppBar build_appbar(VoidCallback addProduct) {
-  return AppBar(
-        automaticallyImplyLeading: true,
-        backgroundColor: Colors.white,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            "Add Product",
-            style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w600),
-          ),
-        ),
-        actions: [
-          
-        ],
-      );
 }

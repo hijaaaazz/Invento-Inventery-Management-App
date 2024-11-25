@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_add/screen_add.dart';
 import 'package:invento2/screens/screen_dashboard/screen_dashboard.dart';
 import '../screen_inventory/screen_inventory.dart';
@@ -114,7 +115,7 @@ class _ScreenMainState extends State<ScreenMain> {
                               child: Icon(
                                 icons[index],
                                 color: _currentIndex == index
-                                    ? const Color(0xFF8C8C8C)
+                                    ? AppStyle.backgroundPurple
                                     : Colors.white,
                                 size: _currentIndex == index ? 40 : 25,
                               ),

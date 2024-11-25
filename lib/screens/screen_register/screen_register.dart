@@ -119,10 +119,9 @@ class _ScreenRegisterState extends State<ScreenRegister> {
     final mediaQuery = MediaQuery.of(context);
     final keyboardVisible = mediaQuery.viewInsets.bottom > 0;
     final topPadding = keyboardVisible ? MediaQueryInfo.screenHeight * 0.05 : MediaQueryInfo.screenHeight * 0.1;
-    AppStyle appStyle =AppStyle();
 
     return Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
@@ -248,7 +247,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                 height: mediaQuery.size.height * 0.07,
                 width: mediaQuery.size.width * 0.9,
                 decoration: BoxDecoration(
-                  color: AppStyle.BackgroundPurple,
+                  color: AppStyle.backgroundPurple,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Center(

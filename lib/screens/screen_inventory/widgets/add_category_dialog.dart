@@ -41,13 +41,12 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle = AppStyle();
 
     return Dialog(
       child: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-            color: AppStyle.BackgroundWhite,
+            color: AppStyle.backgroundWhite,
             borderRadius: BorderRadius.circular(25),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),

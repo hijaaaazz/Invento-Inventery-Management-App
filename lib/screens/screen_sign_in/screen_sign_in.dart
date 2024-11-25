@@ -97,7 +97,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:AppStyle.BackgroundWhite,
+      backgroundColor:AppStyle.backgroundWhite,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.07),
         child: SizedBox(
@@ -151,7 +151,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
                       width: MediaQueryInfo.screenWidth * 0.9,
                       height: MediaQueryInfo.screenHeight * 0.07,
                       decoration: BoxDecoration(
-                        color: AppStyle.BackgroundPurple,
+                        color: AppStyle.backgroundPurple,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Center(

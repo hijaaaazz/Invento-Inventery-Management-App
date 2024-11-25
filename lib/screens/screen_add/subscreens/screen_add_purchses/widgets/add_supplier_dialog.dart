@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
 
-void showAddCustomerDialog(
+void showAddSupplierDialog(
   BuildContext context,
   Function(String name, int contact) onAddCustomer, {
   required TextEditingController nameController,
@@ -49,7 +49,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -70,14 +70,14 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 
                   keyboardType: TextInputType.text,
                   capital: TextCapitalization.words,
-                  hintText: "Customer's Name",
+                  hintText: "Supplier's Name",
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
                 child: CustomTextField(
                   controller: widget.contactController,
-                hintText: "Customer's Contact",
+                hintText: "Supplier's Contact",
                 keyboardType: TextInputType.phone,)
                 
               ),

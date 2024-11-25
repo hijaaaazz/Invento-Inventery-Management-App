@@ -21,7 +21,8 @@ class SalesModelAdapter extends TypeAdapter<SalesModel> {
       saleNumber: fields[1] as String,
       saleProducts: (fields[2] as List).cast<SaleProduct>(),
       userId: fields[3] as String,
-      customerName: fields[4] as String,
+      customerName: fields[4] as String?,
+      customerNumber: fields[6] as int?,
       grandTotal: fields[5] as double,
     );
   }
@@ -29,7 +30,7 @@ class SalesModelAdapter extends TypeAdapter<SalesModel> {
   @override
   void write(BinaryWriter writer, SalesModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class SalesModelAdapter extends TypeAdapter<SalesModel> {
       ..writeByte(4)
       ..write(obj.customerName)
       ..writeByte(5)
-      ..write(obj.grandTotal);
+      ..write(obj.grandTotal)
+      ..writeByte(6)
+      ..write(obj.customerNumber);
   }
 
   @override

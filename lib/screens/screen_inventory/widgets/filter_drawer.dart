@@ -36,7 +36,7 @@ class FilterDrawer extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       height: MediaQueryInfo.screenHeight*0.47,
       decoration: BoxDecoration(
-        color: AppStyle.BackgroundWhite,
+        color: AppStyle.backgroundWhite,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
@@ -60,7 +60,7 @@ class FilterDrawer extends StatelessWidget {
                 fontWeight: FontWeight.w500
                ),),
 
-            Container(
+            SizedBox(
               height: 50,
               width: double.infinity,
               child: ListView.builder(
@@ -74,15 +74,15 @@ class FilterDrawer extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 8.0), // Add space between chips
                     child: FilterChip(
                       showCheckmark: false,
-                      shape: StadiumBorder(side: BorderSide(color: AppStyle.BackgroundPurple, width: 1)),
-                      backgroundColor: AppStyle.BackgroundWhite,
-                      selectedColor: AppStyle.BackgroundPurple,
+                      shape: const StadiumBorder(side: BorderSide(color: AppStyle.backgroundPurple, width: 1)),
+                      backgroundColor: AppStyle.backgroundWhite,
+                      selectedColor: AppStyle.backgroundPurple,
                       elevation: 2,
                       label: Text(
                         category,
                         style: GoogleFonts.inter(
               fontWeight: FontWeight.bold,
-              color: isSelected ? AppStyle.BackgroundWhite : AppStyle.BackgroundPurple,
+              color: isSelected ? AppStyle.backgroundWhite : AppStyle.backgroundPurple,
                         ),
                       ),
                       selected: isSelected,
@@ -104,7 +104,7 @@ class FilterDrawer extends StatelessWidget {
                 fontWeight: FontWeight.w500
                ),),
                 RangeSlider(
-                  activeColor: AppStyle.BackgroundPurple,
+                  activeColor: AppStyle.backgroundPurple,
                   values: RangeValues(minPrice, maxPrice),
                   min: 0.0,
                   max: getMaxPrice(),
@@ -125,7 +125,7 @@ class FilterDrawer extends StatelessWidget {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppStyle.BackgroundWhite, 
+                    backgroundColor: AppStyle.backgroundWhite, 
                     textStyle: GoogleFonts.lato(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -140,12 +140,12 @@ class FilterDrawer extends StatelessWidget {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppStyle.BackgroundWhite, 
+                    backgroundColor: AppStyle.backgroundWhite, 
                     textStyle: GoogleFonts.lato(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
-                    foregroundColor: AppStyle.BackgroundPurple,
+                    foregroundColor: AppStyle.backgroundPurple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20), 
                     ),

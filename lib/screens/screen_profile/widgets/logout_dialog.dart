@@ -11,12 +11,11 @@ class LogoutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle =AppStyle();
     return Dialog(
       child: Container(
       
         decoration: BoxDecoration(
-          color: AppStyle.BackgroundWhite,
+          color: AppStyle.backgroundWhite,
           borderRadius: BorderRadius.circular(25)
         ),
         child: Column(

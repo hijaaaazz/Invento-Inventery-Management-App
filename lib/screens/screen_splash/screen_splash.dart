@@ -75,9 +75,8 @@ class ScreenSplashState extends State<ScreenSplash> {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle=AppStyle();
     return Scaffold(
-      backgroundColor: AppStyle.BackgroundWhite,
+      backgroundColor: AppStyle.backgroundWhite,
       body: Center(
         child: SizedBox(
           width: MediaQueryInfo.screenWidth * 0.5,

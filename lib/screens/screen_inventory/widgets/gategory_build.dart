@@ -37,7 +37,6 @@ Widget buildCategorySection(
   return ValueListenableBuilder<List<ProductModel>>(
     valueListenable: productsInCategoryNotifier,
     builder: (context, productsInCategory, _) {
-      AppStyle appStyle = AppStyle();
       if (productsInCategory.isEmpty) {
         return GestureDetector(
           onLongPress: () {
@@ -129,8 +128,8 @@ Widget buildCategorySection(
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
                               colors: [
-                                AppStyle.BackgroundBlack.withOpacity(0.8),
-                                AppStyle.BackgroundPurple.withOpacity(0.1),
+                                AppStyle.backgroundBlack.withOpacity(0.8),
+                                AppStyle.backgroundPurple.withOpacity(0.1),
                               ],
                             ),
                           ),
