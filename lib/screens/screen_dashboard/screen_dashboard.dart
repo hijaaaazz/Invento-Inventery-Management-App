@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_dashboard/subscreens/screen_purchases/screen_purchases.dart';
+import 'package:invento2/screens/screen_dashboard/subscreens/screen_revenue/screen_revenue.dart';
 import 'package:invento2/screens/screen_dashboard/subscreens/screen_sales/screen_sales.dart';
 import 'package:invento2/screens/screen_dashboard/subscreens/screen_stock/screen_stock.dart';
 import 'package:invento2/screens/screen_dashboard/widgets/dashboard_container.dart';
@@ -49,7 +50,7 @@ class ScreenDashboard extends StatelessWidget {
               buildDashboardContainer(context,
                    title: "Revenue",
                     gradientColors: [const Color.fromARGB(255, 15, 0, 112), const Color.fromARGB(255, 45, 26, 255)],
-                    screen: const ScreenPurchases(),
+                    screen: const ScreenRevenue(),
                     description: "PROFIT TRACKER: MONITORING YOUR GAINS"),
             
             ]

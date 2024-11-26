@@ -202,7 +202,7 @@ void initializeStock() {
                                                Text(
                                                  "\$${purchaseProduct.getTotalPrice().toStringAsFixed(2)}",
                                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                               ),
+                                               ), 
                                                IconButton(
                                                 onPressed: () {
                                                   setState(() {

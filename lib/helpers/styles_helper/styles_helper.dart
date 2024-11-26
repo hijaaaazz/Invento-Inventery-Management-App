@@ -8,9 +8,11 @@ class AppStyle {
   static const Color backgroundBlack = Color.fromARGB(255, 0, 0, 0);
   static const Color backgroundWhite = Color.fromARGB(255, 255, 255, 255);
   static const Color backgroundPurple =  Colors.purple;
+  static Color? backgroundGrey =  Colors.grey[200];
   static const Color textBlack= Colors.black;
   static const Color textPurple= Colors.purple;
   static const Color textWhite= Colors.white;
+  static const Color textGreen= Colors.green;
   static const List<Color> gradientGreen =[ Color(0xFF2DA811), Color(0xFF78F439)];
   static const List<Color> gradientblue =[Color(0xFF0C48A3), Color(0xFF3577D9)];
   static const List<Color> gradientorange =[Color(0xFFFF9B15), Color(0xFFFFC86F)];
