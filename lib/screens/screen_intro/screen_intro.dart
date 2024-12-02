@@ -27,9 +27,9 @@ class ScreenIntro extends StatelessWidget {
 
               height: MediaQueryInfo.screenHeight*0.5,
               width: double.infinity,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                   color: AppStyle.backgroundPurple,
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                       Radius.circular(20)
                   )
               ),
@@ -48,7 +48,7 @@ class ScreenIntro extends StatelessWidget {
               style: GoogleFonts.outfit(
                   fontSize: 27,
                   fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 70, 68, 68)
+                  color: AppStyle.textBlack
               ),
             ),
 
@@ -58,6 +58,7 @@ class ScreenIntro extends StatelessWidget {
               style:GoogleFonts.outfit(
                 fontSize: 12,
                 fontWeight: FontWeight.w300,
+                color: AppStyle.textBlack
               ),),
             const SizedBox(
               width: double.infinity,
@@ -72,9 +73,9 @@ class ScreenIntro extends StatelessWidget {
                   child: Container(
                     width: MediaQueryInfo.screenWidth*0.43,
                     height: MediaQueryInfo.screenHeight*0.08,
-                    decoration:  const BoxDecoration(
+                    decoration:  BoxDecoration(
                         color: AppStyle.backgroundPurple,
-                        borderRadius: BorderRadius.horizontal(
+                        borderRadius: const BorderRadius.horizontal(
                             left: Radius.circular(15)
                         )
                     ),
@@ -83,7 +84,7 @@ class ScreenIntro extends StatelessWidget {
                         style:GoogleFonts.outfit(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white
+                            color: AppStyle.textWhite
                         ),),
                     ),
                   ),
@@ -97,7 +98,7 @@ class ScreenIntro extends StatelessWidget {
                     width: MediaQueryInfo.screenWidth*0.43,
                     height: MediaQueryInfo.screenHeight*0.08,
                     decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: AppStyle.backgroundGrey,
                         borderRadius: const BorderRadius.horizontal(
                             right: Radius.circular(15)
                         )
@@ -107,7 +108,7 @@ class ScreenIntro extends StatelessWidget {
                         style:GoogleFonts.outfit(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 84, 81, 81)
+                            color: AppStyle.textBlack
                         ),),
                     ),
                   ),

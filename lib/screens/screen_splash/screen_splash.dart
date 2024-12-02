@@ -20,6 +20,7 @@ class ScreenSplashState extends State<ScreenSplash> {
   void initState() {
     super.initState();
     checkLoggedUser();
+    
   }
 
   Future<void> checkLoggedUser() async {
@@ -53,7 +54,7 @@ class ScreenSplashState extends State<ScreenSplash> {
 
         getAllUser();
       } else {
-        // ignore: use_build_context_synchronously
+        
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => const ScreenIntro(),

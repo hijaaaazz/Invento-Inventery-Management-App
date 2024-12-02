@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
 
 void showAddCustomerDialog(
@@ -46,7 +47,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       child: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppStyle.backgroundWhite,
             borderRadius: BorderRadius.circular(25),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -54,9 +55,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Add Supplier",
+                "Add Customer",
                 style: GoogleFonts.outfit(
                   fontSize: 20,
+                  color: AppStyle.textBlack,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -110,9 +112,9 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                   ),
                 ),
               ),
-              const Divider(
+              Divider(
                 height: 25,
-                color: Color.fromARGB(255, 231, 231, 231),
+                color: AppStyle.backgroundGrey,
               ),
               GestureDetector(
                 onTap: () {
@@ -120,7 +122,9 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 },
                 child: Text(
                   "Cancel",
-                  style: GoogleFonts.outfit(),
+                  style: GoogleFonts.outfit(
+                    color: AppStyle.textBlack
+                  ),
                 ),
               ),
               const SizedBox(height: 10),

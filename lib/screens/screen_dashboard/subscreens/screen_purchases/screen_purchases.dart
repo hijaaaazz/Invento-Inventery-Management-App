@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/purchase/purchase_functions.dart';
 import 'package:invento2/database/inventory/purchase/purchase_model.dart';
+import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_dashboard/subscreens/screen_purchases/purchase_tile.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
@@ -21,16 +23,25 @@ class _ScreenPurchasesState extends State<ScreenPurchases> {
   List<PurchaseModel> filteredPurchases = [];
   String filterOption = 'invoice';
   DateTime selectedDate = DateTime.now();
+  String _currencySymbol="";
 
 @override
 void initState() {
   super.initState();
 
-  filteredPurchases = List.from(purchasesList.value)..sort((a, b) {
+  filteredPurchases = List.from(purchasesList.value.where((purchase)=>purchase.userId==userDataNotifier.value.id))..sort((a, b) {
     return b.id.compareTo(a.id);
   });
-}
+_loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
+  }
 
+  // Asynchronous function to load the currency symbol
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      _currencySymbol = symbol;  // Update the state with the fetched symbol
+    });
+  }
 
 
   @override
@@ -38,32 +49,33 @@ void initState() {
     _searchController.dispose();
     super.dispose();
   }
+void _filterPurchases(String query) {
+  final filtered = purchasesList.value.where((purchase) {
+    if (purchase.userId != userDataNotifier.value.id) return false; // Ensure only current user's purchases are filtered.
 
-  void _filterPurchases(String query) {
-    final filtered = purchasesList.value.where((purchase) {
-      if (filterOption == 'invoice') {
-        return purchase.purchaseNumber.toLowerCase().contains(query.toLowerCase());
-      } else if (filterOption == 'supplier' && purchase.supplierName != null) {
-        return purchase.supplierName!.toLowerCase().contains(query.toLowerCase());
-      } else if (filterOption == 'customerNumber' && purchase.supplierPhone != null) {
-        return purchase.supplierPhone!.toString().contains(query);
-      } else if (filterOption == 'date') {
-        int? microseconds = int.tryParse(purchase.id.toString());
-        if (microseconds != null) {
-          DateTime purchaseDate = DateTime.fromMicrosecondsSinceEpoch(microseconds);
+    if (filterOption == 'invoice') {
+      return purchase.purchaseNumber.toLowerCase().contains(query.toLowerCase());
+    } else if (filterOption == 'supplier' && purchase.supplierName != null) {
+      return purchase.supplierName!.toLowerCase().contains(query.toLowerCase());
+    } else if (filterOption == 'customerNumber' && purchase.supplierPhone != null) {
+      return purchase.supplierPhone!.toString().contains(query);
+    } else if (filterOption == 'date') {
+      int? microseconds = int.tryParse(purchase.id.toString());
+      if (microseconds != null) {
+        DateTime purchaseDate = DateTime.fromMicrosecondsSinceEpoch(microseconds);
 
-          return purchaseDate.year == selectedDate.year &&
-              purchaseDate.month == selectedDate.month &&
-              purchaseDate.day == selectedDate.day;
-        }
+        return purchaseDate.year == selectedDate.year &&
+            purchaseDate.month == selectedDate.month &&
+            purchaseDate.day == selectedDate.day;
       }
-      return false;
-    }).toList();
+    }
+    return false;
+  }).toList();
 
-    setState(() {
-      filteredPurchases = filtered;
-    });
-  }
+  setState(() {
+    filteredPurchases = filtered;
+  });
+}
 
   void _showFilterDialog() {
     showDialog(
@@ -111,8 +123,8 @@ void initState() {
                 title: const Text("Purchase Date"),
                 onTap: () {
                   setState(() {
-                    filterOption = 'date';
                     FocusScope.of(context).unfocus();
+                    filterOption = 'date';
                   });
                   Navigator.pop(context);
                   _pickDate(); 
@@ -147,7 +159,10 @@ void initState() {
       return ValueListenableBuilder<List<PurchaseModel>>(
         valueListenable: purchasesList,
         builder: (context, purchase, child) {
-         double totalPurchaseValue = purchase.fold(0, (a, b) => a + b.grandTotal);
+        double totalPurchaseValue = purchase.fold(0, (a, b) => 
+          b.userId == userDataNotifier.value.id ? a + b.grandTotal : a
+        );
+
           return Scaffold(
             backgroundColor: AppStyle.backgroundWhite,
             appBar: appBarHelper("purchases"),
@@ -160,9 +175,9 @@ void initState() {
                       margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
                       decoration:  BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        gradient:const LinearGradient(
+                        gradient:LinearGradient(
                           
-                          colors: AppStyle.gradientorange,
+                          colors: AppStyle.gradientOrange,
                           ) 
                       ),
                       height: MediaQueryInfo.screenHeight*0.15,
@@ -187,7 +202,7 @@ void initState() {
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Text(
-                                    "₹ ${totalPurchaseValue.toString()}",
+                                    "$_currencySymbol ${totalPurchaseValue.toString()}",
                                     style: GoogleFonts.outfit(
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold,
@@ -204,9 +219,6 @@ void initState() {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: SizedBox(
-                      height: 60,
-                      width: double.infinity,
                       child: Row(
                         children: [
                           Expanded(
@@ -227,20 +239,24 @@ void initState() {
                           ),
                         ],
                       ),
-                                        ),
                     ),
 
                     SizedBox(
                       height: MediaQueryInfo.screenHeight * 0.785,
                       child: filteredPurchases.isEmpty
-                          ? const Center(child: Text("No sales found"))
+                          ? const Center(
+                          child: Text("No Puchases Recorded Yet",style:TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                          ),),
+                        )
                           : Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                             child: ListView.builder(
                                 itemCount: filteredPurchases.length,
                                 itemBuilder: (context, index) {
                                   final purchase = filteredPurchases[index];
-                                  return PurchaseItemWidget(purchase: purchase);
+                                  return PurchaseItemWidget(purchase: purchase,currencySymbol: _currencySymbol,);
                                 },
                               ),
                           ),

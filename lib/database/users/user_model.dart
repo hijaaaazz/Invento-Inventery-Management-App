@@ -23,7 +23,7 @@ class UserModel {
   final String password;
 
   @HiveField(6)
-  final String profileImage;
+  final String? profileImage ;
 
 
 
@@ -34,6 +34,6 @@ class UserModel {
     required this.phone,
     required this.username,
     required this.password,
-    required this.profileImage
+     this.profileImage
   });
 }

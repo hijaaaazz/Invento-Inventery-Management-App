@@ -4,6 +4,7 @@ import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_inventory/widgets/filter_drawer.dart';
 import 'package:invento2/screens/screen_inventory/widgets/filtered_grid_view.dart';
 
@@ -170,7 +171,7 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
   Widget _buildSearchBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      color: Colors.white,
+      color: AppStyle.backgroundWhite,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

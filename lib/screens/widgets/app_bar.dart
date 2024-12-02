@@ -14,8 +14,8 @@ AppBar appBarHelper(String title, {List<Widget>? actions}) {
         fontWeight: FontWeight.bold,
       ),
     ),
-    iconTheme: const IconThemeData(
-      color: AppStyle.textPurple, // Set the leading icon color
+    iconTheme: IconThemeData(
+      color: AppStyle.textPurple, 
     ),
     actions: actions,
   );

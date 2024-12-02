@@ -1,9 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
 class UserInfo extends StatefulWidget {
   final UserModel user;
@@ -23,44 +23,54 @@ class _UserInfoState extends State<UserInfo> {
         if (userData == null) {
           return const Center(child: Text('No user data available'));
         }
-        
+
         return Container(
-          color: const Color(0xFFD9D9D9),
+          color: AppStyle.backgroundGrey,
           child: Column(
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
                 width: double.infinity,
               ),
-              CircleAvatar(
-                radius: 64, 
-                backgroundImage: FileImage(File(userData.profileImage)) ,
+              
+              userData.profileImage !=null &&userData.profileImage!.isNotEmpty
+      ? CircleAvatar(
+          radius: 64,
+          backgroundImage: FileImage(File(userData.profileImage!)),
+          backgroundColor: Colors.grey[500],
+        )
+      : const SizedBox.shrink(),
 
-                backgroundColor: Colors.grey[300], 
-              ),
+                
               const SizedBox(height: 10),
               Text(
-                userData.name,  
+                userData.name,
                 style: GoogleFonts.montserrat(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: AppStyle.textBlack,
+                  
                 ),
               ),
               const SizedBox(height: 20),
-              Text(
-                userData.email,  // Safely access userData
-                style: GoogleFonts.lato(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+              if (userData.email.isNotEmpty)
+                Text(
+                  userData.email,
+                  style: GoogleFonts.lato(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: AppStyle.textBlack,
+                  ),
                 ),
-              ),
-              Text(
-                userData.phone,  // Safely access userData
-                style: GoogleFonts.lato(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+              if (userData.phone.isNotEmpty)
+                Text(
+                  userData.phone,
+                  style: GoogleFonts.lato(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: AppStyle.textBlack,
+                  ),
                 ),
-              ),
             ],
           ),
         );

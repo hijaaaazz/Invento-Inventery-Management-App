@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/category_auto_complete.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/error_dialog.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/text_fiels.dart';
@@ -35,15 +38,13 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
   TextStyle headStyle= GoogleFonts.inter(
      fontSize: 15,
      fontWeight: FontWeight.bold,
-     color: const Color.fromARGB(255, 0, 0, 0)
+     color: AppStyle.textBlack
   );
 
   
 
   final _categories = categoryListNotifier.value
     .map((category) => category.name)
-    .where((name) => name != null) 
-    .cast<String>() 
     .toList();
 
   @override
@@ -57,55 +58,107 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
     _categoryController.dispose();
     super.dispose();
   }
-Future<void> _addProduct() async {
-  if (_itemNameController.text.isEmpty ||
-      _descriptionController.text.isEmpty ||
-      _rateController.text.isEmpty ||
-      _mrpController.text.isEmpty ||
-      _minStockController.text.isEmpty ||
-      _maxStockController.text.isEmpty ||
-      _categoryController.text.isEmpty ||
-      _selectedUnit == null ||
-      imagePath == "assets/images/box.jpg") {
-    showErrorDialog(context,"Fields Seems Empty","Please fill all fields and select an image",);
-    return;
+
+  Uint8List? webImageBytes;
+  XFile? _pickedFile;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    
+    try {
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 500,
+        imageQuality: 80
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _pickedFile = pickedFile;
+        });
+
+        if (kIsWeb) {
+          // Web image handling
+          final webImage = await pickedFile.readAsBytes();
+          setState(() {
+            webImageBytes = webImage;
+            imagePath = null;
+          });
+        } else {
+          // Mobile image handling
+          setState(() {
+            imagePath = pickedFile.path;
+            webImageBytes = null;
+          });
+        }
+      } else {
+        showErrorDialog(
+          context, 
+          "No image selected", 
+          "Please select an image to proceed"
+        );
+      }
+    } catch (e) {
+      showErrorDialog(
+        context, 
+        "Image Selection Error", 
+        "An error occurred while selecting the image: ${e.toString()}"
+      );
+    }
   }
 
-  final productId = DateTime.now().millisecondsSinceEpoch.toString();
-  final name = _itemNameController.text;
-  final description = _descriptionController.text;
-  final rate = double.tryParse(_rateController.text) ?? 0;
-  final price = double.tryParse(_mrpController.text) ?? 0;
-  final minStock = double.tryParse(_minStockController.text) ?? 0;
-  final maxStock = double.tryParse(_maxStockController.text) ?? 0;
-  final category = _categoryController.text;
-  final unit = _selectedUnit ?? '';
-  final productImage = imagePath;
+  Future<void> _addProduct() async {
+    if (_itemNameController.text.isEmpty ||
+        _descriptionController.text.isEmpty ||
+        _rateController.text.isEmpty ||
+        _mrpController.text.isEmpty ||
+        _minStockController.text.isEmpty ||
+        _maxStockController.text.isEmpty ||
+        _categoryController.text.isEmpty ||
+        _selectedUnit == null ||
+        (_pickedFile == null)) {  // Changed this condition
+      showErrorDialog(context, "Fields Seems Empty", "Please fill all fields and select an image");
+      return;
+    }
 
-  final success = await addProduct(
+    final productId = DateTime.now().millisecondsSinceEpoch.toString();
+    final name = _itemNameController.text;
+    final description = _descriptionController.text;
+    final rate = double.tryParse(_rateController.text) ?? 0;
+    final price = double.tryParse(_mrpController.text) ?? 0;
+    final minStock = double.tryParse(_minStockController.text) ?? 0;
+    final maxStock = double.tryParse(_maxStockController.text) ?? 0;
+    final category = _categoryController.text;
+    final unit = _selectedUnit ?? '';
 
-    id: productId,
-    name: name,
-    category: category,
-    description: description,
-    unit: unit,
-    price: price,
-    minlimit: minStock,
-    rate: rate,
-    maxlimit: maxStock,
-    userId: userDataNotifier.value.id,
-    productImage: productImage!,
-  );
+    String? productImage;
+    if (kIsWeb && webImageBytes != null) {
+      productImage = base64Encode(webImageBytes!);
+    } else if (!kIsWeb && imagePath != null) {
+      productImage = imagePath;
+    }
 
-  if (success) {
-    _clearForm();
-    // ignore: use_build_context_synchronously
-    Navigator.of(context).pop();
+    final success = await addProduct(
+      id: productId,
+      name: name,
+      category: category,
+      description: description,
+      unit: unit,
+      price: price,
+      minlimit: minStock,
+      rate: rate,
+      maxlimit: maxStock,
+      userId: userDataNotifier.value.id,
+      productImage: productImage!,
+    );
+
+    if (success) {
+      _clearForm();
+      Navigator.of(context).pop();
+    }
   }
-}
 
-
- void _clearForm() {
+  void _clearForm() {
     _itemNameController.clear();
     _descriptionController.clear();
     _rateController.clear();
@@ -116,18 +169,19 @@ Future<void> _addProduct() async {
     setState(() {
       _selectedUnit = null;
       imagePath = null;
+      webImageBytes = null;
+      _pickedFile = null;
     });
   }
-
-
- 
 
   @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+     Uint8List? webImageBytes;
+
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor:AppStyle.backgroundWhite,
       appBar: appBarHelper("Add Product",actions: [Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
@@ -146,31 +200,33 @@ Future<void> _addProduct() async {
               ],
             ),
             const SizedBox(height: 20),
-            GestureDetector(
-  onTap: () {
-    _pickImage();
-  },
-  child: CircleAvatar(
-    radius: 64, 
-    backgroundImage: imagePath != null
-        ? FileImage(File(imagePath!)) 
-        : const AssetImage('assets/images/box.jpg') as ImageProvider, 
-    backgroundColor: Colors.grey[300], 
-    child: 
-         const Center(
-            child: Text(
-              '''Add\nImage''',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.blueGrey,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                height: 1.2,
+           GestureDetector(
+              onTap: _pickImage,
+              child: CircleAvatar(
+                radius: 64,
+                backgroundImage: webImageBytes != null
+                    ? MemoryImage(webImageBytes!)
+                    : (imagePath != null
+                        ? FileImage(File(imagePath!))
+                        : const AssetImage('assets/images/box.jpg') as ImageProvider),
+                backgroundColor: Colors.grey[300],
+                child: (_pickedFile == null)
+                    ? const Center(
+                        child: Text(
+                          'Add\nImage',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.blueGrey,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
+                        ),
+                      )
+                    : null,
               ),
             ),
-          )
-  ),
-),
+      
 const SizedBox(height: 15,),
 
             buildTextField(label: "Item Name", controller: _itemNameController),
@@ -222,22 +278,6 @@ const SizedBox(height: 15,),
   });
 }
   
-  Future<void> _pickImage() async {
-  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-  if (pickedFile != null) {
-    setState(() {
-      imagePath = pickedFile.path;
-    });
-  } else {
-    // ignore: use_build_context_synchronously
-    showErrorDialog(context,"No image selected.","Please Select an Image");
-  }
-}
-
-
-
-
-
  
     
 }

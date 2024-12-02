@@ -1,19 +1,24 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/app_bar.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/edit_product_details.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/edit_stock_managment.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/product_delete_diallog.dart';
+import 'package:pinch_to_zoom_scrollable/pinch_to_zoom_scrollable.dart';
 class ScreenProductDetails extends StatefulWidget {
   final ProductModel product;
   // ignore: non_constant_identifier_names
   final ValueNotifier<List<ProductModel>>? Gridviewnotifier;
   final VoidCallback? getMaxPrice;
    final VoidCallback? clearfilter;
+   
 
 
   // ignore: non_constant_identifier_names
@@ -25,11 +30,21 @@ class ScreenProductDetails extends StatefulWidget {
 
 class _ScreenProductDetailsState extends State<ScreenProductDetails> {
   late ValueNotifier<ProductModel> productDetailsNotifier;
+   String currencysymbol= "";
+  
 
   @override
   void initState() {
     super.initState();
     productDetailsNotifier = ValueNotifier(widget.product);
+    _loadCurrencySymbol();
+  }
+
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      currencysymbol = symbol;  // Update the state with the fetched symbol
+    });
   }
 
   @override
@@ -80,10 +95,22 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                           ),
                         ),
                         Center(
-                          child: ClipRRect(
-                            child: Image(
-                              image: FileImage(File(updatedProduct.productImage)),
-                              fit: BoxFit.contain,
+                          child: PinchToZoomScrollableWidget(
+                            child: ClipRRect(
+                              child:  updatedProduct.productImage.isNotEmpty
+                              ? (kIsWeb
+                                  ? Image.memory(
+                                      base64Decode( updatedProduct.productImage),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File( updatedProduct.productImage),
+                                      fit: BoxFit.cover,
+                                    ))
+                              : Image.asset(
+                                  'assets/images/box.jpg',
+                                  fit: BoxFit.cover,
+                                ),
                             ),
                           ),
                         )
@@ -166,7 +193,7 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                              " Price ₹ ${updatedProduct.price.toString()}",
+                              " Price $currencysymbol ${updatedProduct.price.toString()}",
                               style: GoogleFonts.inter(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -178,7 +205,7 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                           children: [
                             Row(
                               children: [
-                                const Text("Rate : ₹"),
+                                 Text("Rate : $currencysymbol "),
                                 Text(
                                   updatedProduct.rate.toString(),
                                   style: GoogleFonts.lato(

@@ -108,7 +108,7 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> {
                 email: emailController.text,
                 name: nameController.text,
                 phone: phoneController.text,
-                image: imagePath ?? userDataNotifier.value.profileImage
+                image: imagePath ?? userDataNotifier.value.profileImage ?? ""
                 
                );
 

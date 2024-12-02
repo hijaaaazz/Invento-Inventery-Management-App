@@ -7,8 +7,9 @@ import 'package:invento2/screens/screen_dashboard/subscreens/screen_sales/sale_d
 
 class SaleItem extends StatelessWidget {
   final SalesModel sale;
+  final String currencySymbol;
 
-  const SaleItem({super.key, required this.sale});
+  const SaleItem({super.key, required this.sale,required this.currencySymbol});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class SaleItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SalesDetails(sale: sale),
+              builder: (context) => SalesDetails(sale: sale ,currencySymbol: currencySymbol,),
             ),
           );
         },
@@ -26,7 +27,7 @@ class SaleItem extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [AppStyle.lightShadow],
+            boxShadow: [BoxShadow()],
             color: AppStyle.backgroundWhite
           ),
           height: MediaQueryInfo.screenHeight*0.1,
@@ -36,9 +37,9 @@ class SaleItem extends StatelessWidget {
             children: [
             Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   backgroundColor: AppStyle.backgroundWhite,
-                  child: Icon(Icons.person)),
+                  child: const Icon(Icons.person)),
                   const SizedBox(width: 10,),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +53,7 @@ class SaleItem extends StatelessWidget {
             ),
              SizedBox(
               width: MediaQueryInfo.screenWidth*0.3,
-               child: Text("Total: \$${sale.grandTotal.toStringAsFixed(2)}",
+               child: Text("Total: $currencySymbol${sale.grandTotal.toStringAsFixed(2)}",
                overflow: TextOverflow.ellipsis,
                textAlign: TextAlign.right,
                maxLines: 1,),

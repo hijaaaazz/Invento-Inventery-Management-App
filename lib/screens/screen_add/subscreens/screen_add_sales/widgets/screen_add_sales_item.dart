@@ -9,6 +9,7 @@ import 'package:invento2/database/inventory/sales/sales_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
 
@@ -29,6 +30,7 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
   ProductModel? selectedProduct;
   List<ProductModel> filteredProducts = [];
   ValueNotifier<double> quantityNotifier = ValueNotifier<double>(0);
+  String _currencySymbol ="";
   
 
   @override
@@ -39,8 +41,16 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
 
 
     quantityController.text = quantityNotifier.value.toString();
+  _loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
   }
 
+  // Asynchronous function to load the currency symbol
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      _currencySymbol = symbol;  // Update the state with the fetched symbol
+    });
+  }
   void _onSearchChanged() {
     final query = searchController.text.toLowerCase();
     setState(() {
@@ -91,7 +101,7 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
                           backgroundImage: FileImage(File(product.productImage)),
                         ),
                         title: Text(product.name),
-                        subtitle: Text("\$${product.rate}"),
+                        subtitle: Text("$_currencySymbol ${product.rate}"),
                         onTap: () {
                           setState(() {
                             searchController.text = product.name;
@@ -115,11 +125,11 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
     return Container(
       padding: const EdgeInsets.only(left: 10,top: 10,bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:AppStyle.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color:AppStyle.backgroundGrey!.withOpacity(0.4),
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, 3), // Shadow position
@@ -179,7 +189,7 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey[100],
+                  color:AppStyle.backgroundGrey,
                 ),
                 child: Center(
                   child: TextField(

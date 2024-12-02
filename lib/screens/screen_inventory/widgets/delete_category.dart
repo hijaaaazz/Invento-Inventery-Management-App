@@ -63,7 +63,7 @@ void longPressEmptyCategory(BuildContext context, CategoryModel category) {
                       ),),
                       TextButton(
                       onPressed: () async {
-                      deleteCategory(category.id!,userDataNotifier.value.id, context,);
+                      deleteCategory(category.id!, context,);
                       Navigator.of(context).pop();
                       },
                       child: Text(

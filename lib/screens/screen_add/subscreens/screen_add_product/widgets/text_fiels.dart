@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
  Widget buildTextField({
     required String label,
@@ -12,7 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
       children: [
         Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.w600,color: Colors.blueGrey),
+          style:  TextStyle(fontWeight: FontWeight.w600,color: AppStyle.blueGrey),
         ),
         TextFormField(
           cursorColor: Colors.grey,
@@ -21,7 +22,7 @@ import 'package:google_fonts/google_fonts.dart';
           keyboardType: keyboardType, 
           style: GoogleFonts.inter(
             fontSize: 13,
-            color:  Colors.blueGrey,
+            color:  AppStyle.blueGrey,
           ),
           decoration: const InputDecoration(
             border: UnderlineInputBorder(

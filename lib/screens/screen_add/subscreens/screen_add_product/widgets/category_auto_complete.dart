@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
 Widget buildCategoryAutocomplete(
     List<String> categories, TextEditingController categoryController,String? productCategory) {
@@ -29,7 +30,7 @@ Widget buildCategoryAutocomplete(
               fontWeight: FontWeight.w600,
             ),
             filled: true,
-            fillColor: Colors.grey[100], 
+            fillColor:AppStyle.backgroundGrey, 
             border: InputBorder.none, 
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15), 
@@ -54,7 +55,7 @@ Widget buildCategoryAutocomplete(
               width: MediaQuery.of(context).size.width * 0.41,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: Colors.blueGrey[100],
+                color: AppStyle.backgroundGrey,
               ),
               child: ListView.builder(
                 shrinkWrap: true, // Allows ListView to size itself based on content

@@ -4,12 +4,14 @@ class SettingsOptionTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final Widget? trailing;
+  final Color? textColor;
 
   const SettingsOptionTile({
     super.key,
     required this.icon,
     required this.title,
     this.trailing,
+    this.textColor
   });
 
   @override
@@ -25,12 +27,12 @@ class SettingsOptionTile extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Icon(icon),
+            child: Icon(icon,color: textColor,),
           ),
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style:  TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: textColor),
             ),
           ),
           if (trailing != null) Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: trailing),

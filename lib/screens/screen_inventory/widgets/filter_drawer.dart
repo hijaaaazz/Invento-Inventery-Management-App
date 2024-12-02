@@ -74,7 +74,7 @@ class FilterDrawer extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 8.0), // Add space between chips
                     child: FilterChip(
                       showCheckmark: false,
-                      shape: const StadiumBorder(side: BorderSide(color: AppStyle.backgroundPurple, width: 1)),
+                      shape: StadiumBorder(side: BorderSide(color: AppStyle.backgroundPurple, width: 1)),
                       backgroundColor: AppStyle.backgroundWhite,
                       selectedColor: AppStyle.backgroundPurple,
                       elevation: 2,

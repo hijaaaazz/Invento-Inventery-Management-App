@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
 Widget buildUnitDropdown(
     List<String> units, String? selectedUnit, Function(String?) onChanged) {
@@ -10,10 +11,10 @@ Widget buildUnitDropdown(
           value: unit,
           child: Text(
             unit,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: Colors.black,
+              color:AppStyle.textBlack,
             ),
           ),
         );
@@ -21,9 +22,9 @@ Widget buildUnitDropdown(
       onChanged: onChanged, 
       decoration: InputDecoration(
         labelText: 'Select Unit',
-        labelStyle: const TextStyle(
+        labelStyle: TextStyle(
           fontSize: 14,
-          color: Colors.blueGrey,
+          color: AppStyle.blueGrey,
           fontWeight: FontWeight.w600,
         ),
         border: InputBorder.none,
@@ -36,17 +37,17 @@ Widget buildUnitDropdown(
           borderSide: const BorderSide(color: Colors.blueGrey, width: 1.5),
         ),
         filled: true,
-        fillColor: Colors.grey[100],
+        fillColor:AppStyle.backgroundGrey,
         contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
-      dropdownColor: Colors.white,
-      icon: const Icon(Icons.arrow_drop_down, color: Colors.blueGrey),
+      dropdownColor:AppStyle.backgroundWhite,
+      icon: Icon(Icons.arrow_drop_down, color: AppStyle.blueGrey),
       iconSize: 28,
-      hint: const Text(
+      hint: Text(
         "Select Unit",
         style: TextStyle(
           fontSize: 14,
-          color: Colors.grey,
+          color: AppStyle.textBlack,
         ),
       ),
     ),

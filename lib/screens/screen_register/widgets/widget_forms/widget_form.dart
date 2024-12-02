@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -32,7 +33,7 @@ class CustomTextField extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.07,
           decoration: BoxDecoration(
-            color: const Color(0xFFF3F3F3),
+            color:AppStyle.backgroundGrey,
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
@@ -57,7 +58,7 @@ class CustomTextField extends StatelessWidget {
                       style: GoogleFonts.outfit(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: const Color.fromARGB(255, 129, 129, 129),
+                        color: const Color.fromARGB(255, 148, 144, 144),
                       ),
                       onChanged: onChanged,
                       cursorColor: Colors.grey,
@@ -70,14 +71,14 @@ class CustomTextField extends StatelessWidget {
                           color: const Color.fromARGB(255, 129, 129, 129),
                         ),
                         filled: true,
-                        fillColor: const Color(0xFFF3F3F3),
+                        fillColor:AppStyle.backgroundGrey,
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                       ),
                     ),
                   ),
-                  Icon(icon, color: Colors.grey),
+                  Icon(icon, color:AppStyle.backgroundGrey),
                 ],
               ),
             ),

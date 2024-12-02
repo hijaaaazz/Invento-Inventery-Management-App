@@ -1,6 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:invento2/database/inventory/category/category_functions.dart';
+import 'package:invento2/database/inventory/product/product_functions.dart';
+import 'package:invento2/database/inventory/purchase/purchase_functions.dart';
+import 'package:invento2/database/inventory/sales/sales_functions.dart';
 import 'package:invento2/database/users/user_model.dart';
 
 ValueNotifier<UserModel> userDataNotifier = ValueNotifier(
@@ -43,7 +47,6 @@ Future<bool> addUser({
     phone: phone,
     username: username,
     password: pass,
-    profileImage: "assets/images/box.jpg"
   );
 
   try {
@@ -62,7 +65,7 @@ Future<void> updateUser({
   required String name,
   required String email,
   required String phone,
-  required String image,
+   String? image,
 }) async {
   await initUserDB();
 
@@ -123,5 +126,49 @@ Future<void> logOutUser(String id) async {
     log("User logged out: ${user.name}");
   } else {
     log("User with ID $id not found for logout.");
+  }
+}
+Future<bool> deleteUser(String id) async {
+  await initUserDB();
+
+  final user = userBox?.get(id);
+  if (user != null) {
+    try {
+      // Helper function to delete user-related data if the box is not empty
+      Future<void> deleteUserRelatedData(Box box, String userId) async {
+        if (box.isNotEmpty) { // Check if the box is not empty
+          final keysToDelete = box.keys.where((key) {
+            final item = box.get(key);
+            return item != null && item == userId; // Update this condition if schema differs
+          }).toList();
+
+          for (var key in keysToDelete) {
+            await box.delete(key);
+          }
+        }
+      }
+
+      if (salesBox != null) await deleteUserRelatedData(salesBox, id);
+      if (categoryBox != null) await deleteUserRelatedData(categoryBox!, id);
+      if (productBox != null) await deleteUserRelatedData(productBox!, id);
+      if (purchaseBox != null) await deleteUserRelatedData(purchaseBox, id);
+
+      
+
+       var sessionBox = await Hive.openBox('sessionBox');
+    await sessionBox.delete('lastLoggedUser');
+      await userBox!.delete(id);
+
+      await getAllUser(); 
+
+      log("User and associated data deleted: ${user.name}");
+      return true;
+    } catch (e) {
+      log("Error deleting user and associated data: $e");
+      return false;
+    }
+  } else {
+    log("User with ID $id not found.");
+    return false;
   }
 }

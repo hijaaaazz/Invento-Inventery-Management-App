@@ -21,7 +21,7 @@ class EditProfileButton extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  color: const Color(0xFFD9D9D9),
+                  color: AppStyle.backgroundGrey,
                 ),
               ),
               Expanded(
@@ -54,7 +54,7 @@ class EditProfileButton extends StatelessWidget {
                     style: GoogleFonts.montserrat(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppStyle.textWhite,
                     ),
                   ),
                 ),

@@ -46,7 +46,7 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
             buildCustomContainer(
               context,
               title: "Add Purchases",
-              gradientColors: AppStyle.gradientblue,
+              gradientColors: AppStyle.gradientBlue,
               lottieFile: "assets/gifs/add_purchases.json",
                right: -10,
               bottom: -70,
@@ -57,7 +57,7 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
             buildCustomContainer(
               context,
               title: "Add Product",
-              gradientColors: AppStyle.gradientorange,
+              gradientColors: AppStyle.gradientOrange,
               lottieFile: "assets/gifs/box.json",
               right: 0,
               bottom: 0,
@@ -96,18 +96,6 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
         ),
         child: Stack(
           children: [
-            Positioned(
-              right: right,
-              bottom: bottom,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Lottie.asset(
-                  fit: BoxFit.cover,
-                  lottieFile,
-                  width: lottieSize,
-                ),
-              ),
-            ),
             Align(
               alignment: Alignment.topLeft,
               
@@ -119,12 +107,29 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
                   style: GoogleFonts.inter(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppStyle.textWhite,
                   ),
                   overflow: TextOverflow.visible,
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                height: MediaQueryInfo.screenHeight*0.2,
+                width: MediaQueryInfo.screenWidth*0.2,
+                child: ClipRRect(
+                  
+                  borderRadius: BorderRadius.circular(10),
+                  child: Lottie.asset(
+                    fit: BoxFit.contain,
+                    lottieFile,
+                    width: lottieSize,
+                  ),
+                ),
+              ),
+            ),
+            
           ],
         ),
       ),

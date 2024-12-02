@@ -115,7 +115,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
                       style: GoogleFonts.outfit(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: const Color.fromARGB(255, 84, 81, 81),
+                        color: AppStyle.textBlack,
                       ),
                     ),
                   ),
@@ -124,7 +124,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
                     style: GoogleFonts.outfit(
                       fontSize: 12,
                       fontWeight: FontWeight.w300,
-                      color: const Color.fromARGB(255, 0, 0, 0),
+                      color:AppStyle.textBlack,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -160,7 +160,7 @@ class ScreenSignInState extends State<ScreenSignIn> {
                           style: GoogleFonts.outfit(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: const Color.fromARGB(255, 255, 255, 255),
+                            color:AppStyle.textWhite,
                           ),
                         ),
                       ),

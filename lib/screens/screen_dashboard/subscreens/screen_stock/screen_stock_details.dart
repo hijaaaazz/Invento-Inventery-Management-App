@@ -8,7 +8,8 @@ import 'package:invento2/screens/widgets/app_bar.dart';
 class ScreenStockDetails extends StatelessWidget {
   final List<ProductModel> products;
   final String title; 
-  const ScreenStockDetails({super.key, required this.products,required this.title});
+  final String currencySymbol;
+  const ScreenStockDetails({super.key, required this.products,required this.title,required this.currencySymbol});
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +94,7 @@ class ScreenStockDetails extends StatelessWidget {
                               style: const TextStyle(),
                             ),
                             Text(
-                              "₹${product.price.toInt()}",
+                              "$currencySymbol${product.price.toInt()}",
                               style: const TextStyle(
                                 color: Colors.purple,
                                 fontWeight: FontWeight.bold,

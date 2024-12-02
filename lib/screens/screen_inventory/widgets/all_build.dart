@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/screen_add_product.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_category_list/screen_category.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/screen_product.dart';
@@ -67,6 +70,7 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
+                            color: AppStyle.textBlack
                           ),
                         ),
                         IconButton(
@@ -77,9 +81,10 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
                         ),
                       ));
                       },
-                          icon: const Icon(
+                          icon:  Icon(
                             Icons.arrow_forward_ios_rounded,
                             size: 16,
+                            color: AppStyle.textBlack
                           ),
                         ),
                       ],
@@ -100,17 +105,22 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
                           borderRadius: BorderRadius.circular(12),
                           child: Stack(
                             children: [
-                              Positioned.fill(
-                                child: product.productImage.isNotEmpty
-                                    ? Image.file(
-                                        File(product.productImage),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.asset(
-                                        'assets/images/box.jpg',
-                                        fit: BoxFit.cover,
-                                      ),
-                              ),
+                            Positioned.fill(
+                            child: product.productImage.isNotEmpty
+                              ? (kIsWeb
+                                  ? Image.memory(
+                                      base64Decode(product.productImage),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(product.productImage),
+                                      fit: BoxFit.cover,
+                                    ))
+                              : Image.asset(
+                                  'assets/images/box.jpg',
+                                  fit: BoxFit.cover,
+                                ),
+                          ),
                               Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
@@ -140,7 +150,7 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
                                       style: GoogleFonts.inter(
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: AppStyle.textWhite,
                                         shadows: [
                                           Shadow(
                                             offset: const Offset(0, 1),
@@ -155,7 +165,7 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
                                       style: GoogleFonts.inter(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.white,
+                                        color: AppStyle.textWhite,
                                         shadows: [
                                           Shadow(
                                             offset: const Offset(0, 1),

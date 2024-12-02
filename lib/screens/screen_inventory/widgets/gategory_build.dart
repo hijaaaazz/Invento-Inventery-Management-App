@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
@@ -14,7 +16,7 @@ import 'package:invento2/screens/screen_inventory/widgets/delete_category.dart';
 
 Widget buildCategorySection(
     CategoryModel category, int index, UserModel userData, BuildContext ctx) {
-  if (category.name == null || category.name!.isEmpty) return Container();
+  if (category.name.isEmpty) return Container();
 
   ValueNotifier<List<ProductModel>> productsInCategoryNotifier = ValueNotifier(
     ProductListNotifier.value
@@ -48,16 +50,17 @@ Widget buildCategorySection(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  category.name ?? '',
+                  category.name ,
                   style: GoogleFonts.outfit(
+                    color: AppStyle.textBlack,
                       fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 10),
-                const Center(
+                Center(
                   child: Text(
                     'No products available in this category\nHold for delete Category',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color:AppStyle.backgroundGrey),
                   ),
                 ),
               ],
@@ -75,8 +78,9 @@ Widget buildCategorySection(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  category.name ?? '',
+                  category.name ,
                   style: GoogleFonts.outfit(
+                    color: AppStyle.textBlack,
                       fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 IconButton(
@@ -88,7 +92,8 @@ Widget buildCategorySection(
                 );
               }));
                   },
-                  icon: const Icon(
+                  icon:  Icon(
+                    color: AppStyle.textBlack,
                     Icons.arrow_forward_ios_rounded,
                     size: 16,
                   ),
@@ -112,13 +117,18 @@ Widget buildCategorySection(
                     child: Stack(
                       children: [
                         Positioned.fill(
-                          child: (product.productImage.isNotEmpty)
-                              ? Image.file(
-                                  File(product.productImage),
-                                  fit: BoxFit.cover,
-                                )
+                          child:  product.productImage.isNotEmpty
+                              ? (kIsWeb
+                                  ? Image.memory(
+                                      base64Decode(product.productImage),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(product.productImage),
+                                      fit: BoxFit.cover,
+                                    ))
                               : Image.asset(
-                                  'assets/images/placeholder.png',
+                                  'assets/images/box.jpg',
                                   fit: BoxFit.cover,
                                 ),
                         ),

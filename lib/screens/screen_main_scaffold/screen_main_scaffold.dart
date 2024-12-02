@@ -76,54 +76,60 @@ class _ScreenMainState extends State<ScreenMain> {
                 },
                 itemBuilder: (context, index) {
                   double scale = _currentIndex == index ? 0.7 : 0.5;
-                  return TweenAnimationBuilder(
-                    tween: Tween<double>(begin: scale, end: scale),
-                    duration: const Duration(milliseconds: 300),
-                    builder: (context, double scale, child) {
-                      return Transform.scale(
-                        scale: scale,
-                        child: GestureDetector(
-                          onTap: () {
-                            _pageController.animateToPage(index,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut);
-                            setState(() {
-                              _currentIndex = index;
-                            });
-                          },
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            margin: const EdgeInsets.symmetric(horizontal: 0),
-                            decoration: BoxDecoration(
-                              boxShadow: _currentIndex == index
-                                  ? [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                        blurRadius: 10,
-                                        spreadRadius: 1,
-                                      ),
-                                    ]
-                                  : [],
-                              shape: BoxShape.circle,
-                              color: _currentIndex == index
-                                  ? Colors.white
-                                  : const Color.fromRGBO(184, 182, 182, 0.4),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                icons[index],
+                  return ValueListenableBuilder(
+                    valueListenable:AppStyle.isDarkThemeNotifier ,
+                    builder: (context, isDark, _){
+                      return TweenAnimationBuilder(
+                      tween: Tween<double>(begin: scale, end: scale),
+                      duration: const Duration(milliseconds: 300),
+                      builder: (context, double scale, child) {
+                        return Transform.scale(
+                          scale: scale,
+                          child: GestureDetector(
+                            onTap: () {
+                              _pageController.animateToPage(index,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut);
+                              setState(() {
+                                _currentIndex = index;
+                              });
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              margin: const EdgeInsets.symmetric(horizontal: 0),
+                              decoration: BoxDecoration(
+                                boxShadow: _currentIndex == index
+                                    ? [
+                                        BoxShadow(
+                                          color: AppStyle.backgroundBlack.withOpacity(.5),
+                                          offset: const Offset(0, 2),
+                                          blurRadius: 20,
+                                          spreadRadius: 6,
+                                        ),
+                                      ]
+                                    : [],
+                                shape: BoxShape.circle,
                                 color: _currentIndex == index
-                                    ? AppStyle.backgroundPurple
-                                    : Colors.white,
-                                size: _currentIndex == index ? 40 : 25,
+                                    ? AppStyle.backgroundWhite
+                                    : AppStyle.backgroundGrey,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  icons[index],
+                                  color: _currentIndex == index
+                                      ?  AppStyle.textPurple
+                                      : AppStyle.backgroundWhite,
+                                  size: _currentIndex == index ? 40 : 25,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
+                        );
+                      },
+                    );
                     },
+                  
                   );
                 },
               ),

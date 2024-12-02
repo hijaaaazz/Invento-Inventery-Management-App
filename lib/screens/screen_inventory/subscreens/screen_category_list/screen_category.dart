@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
@@ -6,10 +8,11 @@ import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/screen_product.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
 
-class ScreenProductList extends StatelessWidget {
+class ScreenProductList extends StatefulWidget {
   final String title;
 
   const ScreenProductList({
@@ -18,10 +21,31 @@ class ScreenProductList extends StatelessWidget {
   });
 
   @override
+  State<ScreenProductList> createState() => _ScreenProductListState();
+}
+
+class _ScreenProductListState extends State<ScreenProductList> {
+  String currencysymbol="";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadCurrencySymbol();
+  }
+
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      currencysymbol = symbol;  // Update the state with the fetched symbol
+    });
+  }
+  @override
   Widget build(BuildContext context) {
+    
+    
     return Scaffold(
       backgroundColor: AppStyle.backgroundWhite,
-      appBar: appBarHelper(title),
+      appBar: appBarHelper(widget.title),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.04),
         child: ValueListenableBuilder(
@@ -29,7 +53,7 @@ class ScreenProductList extends StatelessWidget {
           builder: (context, List<ProductModel> productList, _) {
             final userProducts = productList.where((product) {
               return product.userId == userDataNotifier.value.id &&
-                  (title == "All Products" || product.category == title);
+                  (widget.title == "All Products" || product.category == widget.title);
             }).toList();
 
 
@@ -79,11 +103,19 @@ class ScreenProductList extends StatelessWidget {
                                 children: [
                                   Positioned.fill(
                                     child: product.productImage.isNotEmpty
-                                        ? Image.file(
-                                            File(product.productImage),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Image.asset('assets/images/box.jpg', fit: BoxFit.cover),
+                              ? (kIsWeb
+                                  ? Image.memory(
+                                      base64Decode(product.productImage),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(product.productImage),
+                                      fit: BoxFit.cover,
+                                    ))
+                              : Image.asset(
+                                  'assets/images/box.jpg',
+                                  fit: BoxFit.cover,
+                                ),
                                   ),
                                 ],
                               ),
@@ -97,18 +129,19 @@ class ScreenProductList extends StatelessWidget {
                               children: [
                                 Text(
                                   product.name,
-                                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.outfit(color: AppStyle.textBlack, fontWeight: FontWeight.bold),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   product.description,
+
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.lato(),
+                                  style: GoogleFonts.lato(color: AppStyle.textBlack),
                                 ),
                                 Text(
-                                  "₹${product.price.toInt()}",
+                                  "$currencysymbol ${product.price.toInt()}",
                                   style: GoogleFonts.outfit(
                                     color: Colors.purple,
                                     fontWeight: FontWeight.bold,
@@ -118,6 +151,7 @@ class ScreenProductList extends StatelessWidget {
                             ),
                           ),
                           IconButton(
+                            color: AppStyle.textBlack,
                             iconSize: 15,
                             onPressed: () {
                               Navigator.of(context).push(

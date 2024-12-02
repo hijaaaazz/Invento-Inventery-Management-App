@@ -12,8 +12,10 @@ import 'package:invento2/screens/widgets/app_bar.dart';
 
 class PurchaseDetailsScreen extends StatelessWidget {
   final PurchaseModel purchase;
+    final String currencySymbol;
 
-  const PurchaseDetailsScreen({super.key, required this.purchase});
+
+  const PurchaseDetailsScreen({super.key, required this.purchase,required this.currencySymbol});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +74,7 @@ class PurchaseDetailsScreen extends StatelessWidget {
               Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [AppStyle.lightShadow],
+            boxShadow: [BoxShadow()],
             color: const Color.fromARGB(255, 248, 208, 255)
           ),
           height: MediaQueryInfo.screenHeight*0.1,
@@ -82,9 +84,9 @@ class PurchaseDetailsScreen extends StatelessWidget {
             children: [
             Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   backgroundColor: AppStyle.backgroundWhite,
-                  child: Icon(Icons.person)),
+                  child: const Icon(Icons.person)),
                   const SizedBox(width: 10,),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -179,7 +181,7 @@ class PurchaseDetailsScreen extends StatelessWidget {
                                                  ),
                                                ),
                                                Text(
-                                                 "\$${product.getTotalPrice().toStringAsFixed(2)}",
+                                                 "$currencySymbol${product.getTotalPrice().toStringAsFixed(2)}",
                                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                                ),
                                                
@@ -232,7 +234,7 @@ class PurchaseDetailsScreen extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold
                                           ),),
-                      Text(purchase.grandTotal.toString(),
+                      Text("$currencySymbol ${purchase.grandTotal.toString()}",
                       style:  GoogleFonts.outfit(
                         fontSize: 18,
                         color: AppStyle.textPurple,

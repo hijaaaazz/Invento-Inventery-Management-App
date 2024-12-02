@@ -5,11 +5,35 @@ import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_dashboard/subscreens/screen_stock/screen_stock_details.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
 
-class ScreenStock extends StatelessWidget {
+
+
+class ScreenStock extends StatefulWidget {
   const ScreenStock({super.key});
+
+  @override
+  State<ScreenStock> createState() => _ScreenStockState();
+}
+
+class _ScreenStockState extends State<ScreenStock> {
+  String _currencySymbol="";
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
+  }
+
+  // Asynchronous function to load the currency symbol
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      _currencySymbol = symbol;  // Update the state with the fetched symbol
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +51,11 @@ class ScreenStock extends StatelessWidget {
                       ? total + (product.stock * product.price)
                       : total,
                 );
+
+                int noOfProducts = products
+                .where((product) => product.userId == userDataNotifier.value.id)
+                .length.toInt();
+
                 List<ProductModel> fullStockCount =
                     products.where((product) => product.stock >= product.maxlimit && product.userId== userDataNotifier.value.id).toList();
                 List<ProductModel> lowStockCount = products
@@ -67,7 +96,7 @@ class ScreenStock extends StatelessWidget {
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Text(
-                                    "₹ ${totalStockValue.toString()}",
+                                    "$_currencySymbol ${totalStockValue.toString()}",
                                     style: GoogleFonts.outfit(
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold,
@@ -93,7 +122,7 @@ class ScreenStock extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              products.length.toString(),
+                              noOfProducts.toString(),
                               style: GoogleFonts.outfit(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -109,9 +138,9 @@ class ScreenStock extends StatelessWidget {
                             stockCategoryCard("Full Stock Products", fullStockCount,
                                 AppStyle.gradientGreen,context),
                             stockCategoryCard("Low Stock Products", lowStockCount,
-                                AppStyle.gradientorange,context),
+                                AppStyle.gradientOrange,context),
                             stockCategoryCard("Zero Stock Products", zeroStockCount,
-                                AppStyle.gradientred,context),
+                                AppStyle.gradientRed,context),
                           ],
                         ),
                       ),
@@ -123,11 +152,12 @@ class ScreenStock extends StatelessWidget {
       ),
     );
   }
+
   Widget stockCategoryCard(String title, List<ProductModel> stockType, List<Color> gradientColors,BuildContext context,) {
                   return Expanded(
                     child: GestureDetector(
                       onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ScreenStockDetails(products: stockType,title: title,) ));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ScreenStockDetails(products: stockType,title: title,currencySymbol:  _currencySymbol) ));
                       },
                       child: Container(
                         width: double.infinity,

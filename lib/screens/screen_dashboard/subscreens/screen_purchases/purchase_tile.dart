@@ -7,10 +7,12 @@ import 'package:invento2/screens/screen_dashboard/subscreens/screen_purchases/sc
 
 class PurchaseItemWidget extends StatelessWidget {
   final PurchaseModel purchase;
+  final String currencySymbol;
 
   const PurchaseItemWidget({
     super.key,
     required this.purchase,
+    required this.currencySymbol
   });
 
   @override
@@ -20,7 +22,7 @@ class PurchaseItemWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PurchaseDetailsScreen(purchase: purchase),
+            builder: (context) => PurchaseDetailsScreen(purchase: purchase,currencySymbol: currencySymbol,),
           ),
         );
       },
@@ -29,7 +31,7 @@ class PurchaseItemWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [AppStyle.lightShadow],
+            boxShadow: [BoxShadow()],
             color: AppStyle.backgroundWhite,
           ),
           height: MediaQueryInfo.screenHeight * 0.1,
@@ -39,9 +41,9 @@ class PurchaseItemWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     backgroundColor: AppStyle.backgroundWhite,
-                    child: Icon(Icons.person),
+                    child: const Icon(Icons.person),
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -61,7 +63,7 @@ class PurchaseItemWidget extends StatelessWidget {
               SizedBox(
                 width: MediaQueryInfo.screenWidth * 0.3,
                 child: Text(
-                  "Total: \$${(purchase.grandTotal).toStringAsFixed(2)}",
+                  "Total: $currencySymbol${(purchase.grandTotal).toStringAsFixed(2)}",
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.right,
                   maxLines: 1,

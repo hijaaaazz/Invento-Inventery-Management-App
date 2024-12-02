@@ -10,8 +10,9 @@ import 'package:invento2/screens/widgets/app_bar.dart';
 
 class SalesDetails extends StatelessWidget {
   final SalesModel sale;
+  final String currencySymbol;
 
-  const SalesDetails({super.key, required this.sale});
+  const SalesDetails({super.key, required this.sale,required this.currencySymbol});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,7 @@ class SalesDetails extends StatelessWidget {
               Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [AppStyle.lightShadow],
+            boxShadow: [BoxShadow()],
             color: const Color.fromARGB(255, 248, 208, 255)
           ),
           height: MediaQueryInfo.screenHeight*0.1,
@@ -80,9 +81,9 @@ class SalesDetails extends StatelessWidget {
             children: [
             Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   backgroundColor: AppStyle.backgroundWhite,
-                  child: Icon(Icons.person)),
+                  child: const Icon(Icons.person)),
                   const SizedBox(width: 10,),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +178,7 @@ class SalesDetails extends StatelessWidget {
                                                  ),
                                                ),
                                                Text(
-                                                 "\$${product.getTotalPrice().toStringAsFixed(2)}",
+                                                 "$currencySymbol${product.getTotalPrice().toStringAsFixed(2)}",
                                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                                ),
                                                
@@ -230,7 +231,7 @@ class SalesDetails extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold
                                           ),),
-                      Text(sale.grandTotal.toString(),
+                      Text("$currencySymbol  ${sale.grandTotal.toString()}",
                       style:  GoogleFonts.outfit(
                         fontSize: 18,
                         color: AppStyle.textPurple,

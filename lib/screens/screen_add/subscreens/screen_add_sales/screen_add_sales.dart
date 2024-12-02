@@ -8,6 +8,7 @@ import 'package:invento2/database/inventory/sales/sales_functions.dart';
 import 'package:invento2/database/inventory/sales/sales_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_sales/widgets/add_customer_dialog.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_sales/widgets/screen_add_sales_item.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
@@ -31,13 +32,22 @@ class _ScreenAddSalesState extends State<ScreenAddSales> {
   late int customerNumber;
   ValueNotifier<double> grandTotalNotifier = ValueNotifier<double>(0.0);
   Map<ProductModel, double> temporaryStock = {};
+  String _currencySymbol = "";
 
   @override
   void initState() {
     super.initState();
     initializeStock();
+  _loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
   }
 
+  // Asynchronous function to load the currency symbol
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      _currencySymbol = symbol;  // Update the state with the fetched symbol
+    });
+  }
 void initializeStock() {
     for (var product in ProductListNotifier.value) {
       temporaryStock[product] = product.stock;
@@ -143,7 +153,7 @@ void initializeStock() {
                                             },temporaryStock: temporaryStock,
                                      )),
                                    );
-                                   } , icon: const Icon(Icons.add,color: AppStyle.textBlack,))
+                                   } , icon: Icon(Icons.add,color: AppStyle.textBlack,))
                                  ],
                                ),
                                const Divider(height: 0),
@@ -237,7 +247,7 @@ void initializeStock() {
                                    ValueListenableBuilder<double>(
                                      valueListenable: grandTotalNotifier,
                                      builder: (context, grandTotal, _) {
-                                       return Text("₹${soldProducts.fold(0.0, (sum, item) => sum + item.getTotalPrice()).toStringAsFixed(2)}");
+                                       return Text("$_currencySymbol${soldProducts.fold(0.0, (sum, item) => sum + item.getTotalPrice()).toStringAsFixed(2)}");
                                      },
                                    ),
                                  ],
@@ -273,7 +283,7 @@ void initializeStock() {
                                            });
                                          },
                                        ),
-                                       const Text("₹"),
+                                        Text(_currencySymbol),
                                      ],
                                    ),
                                    SizedBox(
@@ -301,8 +311,9 @@ void initializeStock() {
                                ),
                                Center(
                                                  child: SwipeableButtonView(
+                                                  buttonColor: AppStyle.backgroundWhite,
                                                    buttonText: "${totalAmount-discountAmount}",
-                                                   buttonWidget: const Icon(
+                                                   buttonWidget: Icon(
                                Icons.arrow_forward_ios_rounded,
                                color: AppStyle.backgroundPurple,
                                                    ),

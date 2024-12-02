@@ -5,6 +5,7 @@ import 'package:invento2/database/inventory/sales/sales_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_dashboard/subscreens/screen_sales/sale_item.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
@@ -22,47 +23,59 @@ class _ScreenSalesState extends State<ScreenSales> {
   List<SalesModel> filteredSales = [];
   String filterOption = 'invoice';
   DateTime selectedDate = DateTime.now();
+  String _currencySymbol="";
 
 
   @override
   void initState() {
     super.initState();
-    filteredSales =List.from(salesList.value)..sort((a, b) {
-    return b.id.compareTo(a.id);
-  });
+   filteredSales = List.from(
+  salesList.value.where((sale) => sale.userId == userDataNotifier.value.id)
+)..sort((a, b) => b.id.compareTo(a.id));
+
+  _loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
   }
 
+  // Asynchronous function to load the currency symbol
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      _currencySymbol = symbol;  // Update the state with the fetched symbol
+    });
+  }
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
 
-  void _filterSales(String query) {
-    final filtered = salesList.value.where((sale) {
-      if (filterOption == 'invoice') {
-        return sale.saleNumber.toLowerCase().contains(query.toLowerCase());
-      } else if (filterOption == 'customer' && sale.customerName != null) {
-        return sale.customerName!.toLowerCase().contains(query.toLowerCase());
-      } else if (filterOption == 'customerNumber' && sale.customerNumber != null) {
-        return sale.customerNumber!.toString().contains(query);
-      } else if (filterOption == 'date') {
-        int? microseconds = int.tryParse(sale.id.toString());
-        if (microseconds != null) {
-          DateTime saleDate = DateTime.fromMicrosecondsSinceEpoch(microseconds);
+ void _filterSales(String query) {
+  final filtered = salesList.value.where((sale) {
+    if (sale.userId != userDataNotifier.value.id) return false;
 
-          return saleDate.year == selectedDate.year &&
-              saleDate.month == selectedDate.month &&
-              saleDate.day == selectedDate.day;
-        }
+    if (filterOption == 'invoice') {
+      return sale.saleNumber.toLowerCase().contains(query.toLowerCase());
+    } else if (filterOption == 'customer' && sale.customerName != null) {
+      return sale.customerName!.toLowerCase().contains(query.toLowerCase());
+    } else if (filterOption == 'customerNumber' && sale.customerNumber != null) {
+      return sale.customerNumber!.toString().contains(query);
+    } else if (filterOption == 'date') {
+      int? microseconds = int.tryParse(sale.id.toString());
+      if (microseconds != null) {
+        DateTime saleDate = DateTime.fromMicrosecondsSinceEpoch(microseconds);
+        return saleDate.year == selectedDate.year &&
+            saleDate.month == selectedDate.month &&
+            saleDate.day == selectedDate.day;
       }
-      return false;
-    }).toList();
+    }
+    return false;
+  }).toList();
 
-    setState(() {
-      filteredSales = filtered;
-    });
-  }
+  setState(() {
+    filteredSales = filtered;
+  });
+}
+
 
   void _showFilterDialog() {
     showDialog(
@@ -160,7 +173,7 @@ class _ScreenSalesState extends State<ScreenSales> {
                       margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
                       decoration:  BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        gradient:const LinearGradient(
+                        gradient:LinearGradient(
                           
                           colors: AppStyle.gradientGreen,
                           ) 
@@ -187,7 +200,7 @@ class _ScreenSalesState extends State<ScreenSales> {
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Text(
-                                    "₹ ${totalSaleValue.toString()}",
+                                    "$_currencySymbol ${totalSaleValue.toString()}",
                                     style: GoogleFonts.outfit(
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold,
@@ -204,9 +217,6 @@ class _ScreenSalesState extends State<ScreenSales> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: SizedBox(
-                      height: 60,
-                      width: double.infinity,
                       child: Row(
                         children: [
                           Expanded(
@@ -229,20 +239,22 @@ class _ScreenSalesState extends State<ScreenSales> {
                           ),
                         ],
                       ),
-                                        ),
                     ),
 
                     SizedBox(
                       height: MediaQueryInfo.screenHeight * 0.785,
                       child: filteredSales.isEmpty
-                          ? const Center(child: Text("No sales found"))
+                          ? const Center(child:Text("No Sales Recorded Yet",style:TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                          ),),)
                           : Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                             child: ListView.builder(
                                 itemCount: filteredSales.length,
                                 itemBuilder: (context, index) {
                                   final sale = filteredSales[index];
-                                  return SaleItem(sale: sale);
+                                  return SaleItem(sale: sale, currencySymbol: _currencySymbol,);
                                 },
                               ),
                           ),

@@ -2,6 +2,7 @@
   import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
+import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
 Widget buildDashboardContainer(BuildContext context,
       {required String title,
@@ -37,14 +38,14 @@ Widget buildDashboardContainer(BuildContext context,
                     Text(description,style:GoogleFonts.inter(
                         fontSize: 8,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                        color: AppStyle.textWhite,
                       ),),
                     Text(
                       title,
                       style: GoogleFonts.inter(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color:  AppStyle.textWhite,
                       ),
                       overflow: TextOverflow.visible,
                     ),

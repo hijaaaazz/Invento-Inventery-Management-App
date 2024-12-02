@@ -6,6 +6,7 @@ import 'package:invento2/database/inventory/purchase/purchase_functions.dart';
 import 'package:invento2/database/inventory/purchase/purchase_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_purchses/widgets/add_item_dialog.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_purchses/widgets/add_supplier_dialog.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
@@ -26,9 +27,23 @@ class _ScreenAddPurchasesState extends State<ScreenAddPurchases> {
   TextEditingController discountController = TextEditingController();
   int discountType = 0;
   bool isFinished = false;
+  String  _currencySymbol ="";
 
   ValueNotifier<double> grandTotalNotifier = ValueNotifier<double>(0.0);
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+_loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
+  }
 
+  // Asynchronous function to load the currency symbol
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      _currencySymbol = symbol;  // Update the state with the fetched symbol
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,7 +136,7 @@ class _ScreenAddPurchasesState extends State<ScreenAddPurchases> {
                                 Navigator.of(context).push(
                                  MaterialPageRoute(builder: (ctx) => const ScreenAddPurchaseItem()),
                                );
-                               } , icon: const Icon(Icons.add,color: AppStyle.textBlack,))
+                               } , icon: Icon(Icons.add,color: AppStyle.textBlack,))
                              ],
                            ),
                            const Divider(height: 0),
@@ -147,7 +162,7 @@ class _ScreenAddPurchasesState extends State<ScreenAddPurchases> {
                                  return Padding(
                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                                    child: Card(
-                                     color: const Color.fromARGB(255, 249, 218, 255),
+                                     color: AppStyle.backgroundPurple,
                                      child: Padding(
                                        padding: const EdgeInsets.all(8.0),
                                        child: Row(
@@ -198,15 +213,15 @@ class _ScreenAddPurchasesState extends State<ScreenAddPurchases> {
                                },
                              ),
                            ),
-                           const Divider(height: 0),
+                           const Divider(height: 5),
                            Row(
                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                              children: [
-                               const Text("Total"),
+                                Text("Total",style: GoogleFonts.lato(color: AppStyle.textBlack),),
                                ValueListenableBuilder<double>(
                                  valueListenable: grandTotalNotifier,
                                  builder: (context, grandTotal, _) {
-                                   return Text("₹${purchasedProducts.fold(0.0, (sum, item) => sum + item.getTotalPrice()).toStringAsFixed(2)}");
+                                   return Text("$_currencySymbol ${purchasedProducts.fold(0.0, (sum, item) => sum + item.getTotalPrice()).toStringAsFixed(2)}",style: GoogleFonts.lato(color: AppStyle.textBlack));
                                  },
                                ),
                              ],
@@ -216,7 +231,7 @@ class _ScreenAddPurchasesState extends State<ScreenAddPurchases> {
                            Row(
                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                              children: [
-                               const Text("Discount"),
+                                Text("Discount",style: GoogleFonts.lato(color: AppStyle.textBlack)),
                                Row(
                                  children: [
                                    Radio<int>(
@@ -240,7 +255,7 @@ class _ScreenAddPurchasesState extends State<ScreenAddPurchases> {
                                        });
                                      },
                                    ),
-                                   const Text("₹"),
+                                    Text(_currencySymbol),
                                  ],
                                ),
                                SizedBox(
@@ -268,8 +283,9 @@ class _ScreenAddPurchasesState extends State<ScreenAddPurchases> {
                            ),
                            Center(
                                              child: SwipeableButtonView(
+                                              buttonColor: AppStyle.backgroundWhite,
                                                buttonText: "${totalAmount-discountAmount}",
-                                               buttonWidget: const Icon(
+                                               buttonWidget: Icon(
                            Icons.arrow_forward_ios_rounded,
                            color: AppStyle.backgroundPurple,
                                                ),

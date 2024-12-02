@@ -8,6 +8,7 @@ import 'package:invento2/database/inventory/purchase/purchase_model.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_register/widgets/widget_forms/widget_form.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
 
@@ -23,7 +24,7 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
   TextEditingController quantityController = TextEditingController();
   ProductModel? selectedProduct;
   List<ProductModel> filteredProducts = [];
-
+  String _currencySymbol = "";
   // ValueNotifier for quantity
   ValueNotifier<double> quantityNotifier = ValueNotifier<double>(1);
 
@@ -36,8 +37,16 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
         .toList();
 
     quantityController.text = quantityNotifier.value.toString();
+_loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
   }
 
+  // Asynchronous function to load the currency symbol
+  _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    setState(() {
+      _currencySymbol = symbol;  // Update the state with the fetched symbol
+    });
+  }
   void _onSearchChanged() {
     final query = searchController.text.toLowerCase();
     setState(() {
@@ -89,10 +98,11 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
                       final product = filteredProducts[index];
                       return ListTile(
                         leading: CircleAvatar(
+                          backgroundColor: AppStyle.backgroundWhite,
                           backgroundImage: FileImage(File(product.productImage)),
                         ),
-                        title: Text(product.name),
-                        subtitle: Text("\$${product.rate}"),
+                        title: Text(product.name,style: GoogleFonts.inter(color: AppStyle.textBlack,fontSize: 15),),
+                        subtitle: Text("$_currencySymbol${product.rate}",style: GoogleFonts.inter(color: AppStyle.textBlack,fontSize: 12),),
                         onTap: () {
                           setState(() {
                             searchController.text = product.name;
@@ -115,14 +125,14 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
     return Container(
       padding: const EdgeInsets.only(left: 10,top: 10,bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:AppStyle.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+         BoxShadow(
+            color:AppStyle.backgroundGrey!.withOpacity(0.4),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: const Offset(0, 3), // Shadow position
+            offset: const Offset(0, 3), 
           ),
         ],
       ),
@@ -138,7 +148,7 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
                 Text(
                   'Available Stock:',
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color:AppStyle.textBlack,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
@@ -174,14 +184,14 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey[100],
+                    color: AppStyle.backgroundGrey,
                   ),
                   child: Center(
                     child: TextField(
                       controller: quantityController,
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
-                      style: const TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16,color: AppStyle.textBlack),
                       onChanged: (value) {
                         double newQuantity = double.tryParse(value) ?? 1;
                         if (newQuantity < 1) newQuantity = 1;
