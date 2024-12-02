@@ -35,7 +35,6 @@ class _EditProductState extends State<EditProduct> {
   late TextEditingController rateController;
   final _categories = categoryListNotifier.value
     .map((category) => category.name)
-    .where((name) => name != null) 
     .cast<String>() 
     .toList();
 

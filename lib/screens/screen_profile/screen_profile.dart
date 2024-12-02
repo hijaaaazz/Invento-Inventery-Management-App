@@ -23,7 +23,7 @@ class ScreenProfile extends StatelessWidget {
               children: [
                 UserInfo(user: user),
                 EditProfileButton(user: user),
-                OptionsList(),
+                const OptionsList(),
                 Center(
                   child: Text(
                     "v-1.0",

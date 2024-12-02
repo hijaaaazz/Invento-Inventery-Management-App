@@ -8,7 +8,6 @@ import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
-import 'package:invento2/helpers/user_prefs.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/category_auto_complete.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/error_dialog.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/text_fiels.dart';
@@ -93,6 +92,7 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
         }
       } else {
         showErrorDialog(
+          // ignore: use_build_context_synchronously
           context, 
           "No image selected", 
           "Please select an image to proceed"
@@ -100,6 +100,7 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
       }
     } catch (e) {
       showErrorDialog(
+        // ignore: use_build_context_synchronously
         context, 
         "Image Selection Error", 
         "An error occurred while selecting the image: ${e.toString()}"
@@ -154,6 +155,7 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
 
     if (success) {
       _clearForm();
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
     }
   }
@@ -204,8 +206,9 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
               onTap: _pickImage,
               child: CircleAvatar(
                 radius: 64,
+                // ignore: unnecessary_null_comparison
                 backgroundImage: webImageBytes != null
-                    ? MemoryImage(webImageBytes!)
+                    ? MemoryImage(webImageBytes)
                     : (imagePath != null
                         ? FileImage(File(imagePath!))
                         : const AssetImage('assets/images/box.jpg') as ImageProvider),

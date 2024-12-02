@@ -32,7 +32,6 @@ class _ScreenAddPurchasesState extends State<ScreenAddPurchases> {
   ValueNotifier<double> grandTotalNotifier = ValueNotifier<double>(0.0);
 @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 _loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
   }

@@ -22,7 +22,6 @@ class _ScreenStockState extends State<ScreenStock> {
   String _currencySymbol="";
 @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
   }

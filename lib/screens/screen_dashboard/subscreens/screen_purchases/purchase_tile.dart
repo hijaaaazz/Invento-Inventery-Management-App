@@ -31,7 +31,7 @@ class PurchaseItemWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [BoxShadow()],
+            boxShadow: const [BoxShadow()],
             color: AppStyle.backgroundWhite,
           ),
           height: MediaQueryInfo.screenHeight * 0.1,

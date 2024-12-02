@@ -71,7 +71,7 @@ class SalesDetails extends StatelessWidget {
               Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [BoxShadow()],
+            boxShadow: const [BoxShadow()],
             color: const Color.fromARGB(255, 248, 208, 255)
           ),
           height: MediaQueryInfo.screenHeight*0.1,

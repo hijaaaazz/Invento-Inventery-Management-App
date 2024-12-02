@@ -28,7 +28,6 @@ class _ScreenProductListState extends State<ScreenProductList> {
   String currencysymbol="";
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadCurrencySymbol();
   }

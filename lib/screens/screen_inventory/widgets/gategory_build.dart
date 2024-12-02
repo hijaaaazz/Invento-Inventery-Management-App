@@ -87,7 +87,7 @@ Widget buildCategorySection(
                   onPressed: (){
                     Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) {
                 return ScreenProductList(
-                  title: category.name!,
+                  title: category.name,
                   
                 );
               }));

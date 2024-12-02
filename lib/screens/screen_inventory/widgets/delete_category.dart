@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/category/category_model.dart';
-import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:lottie/lottie.dart';
@@ -63,7 +62,7 @@ void longPressEmptyCategory(BuildContext context, CategoryModel category) {
                       ),),
                       TextButton(
                       onPressed: () async {
-                      deleteCategory(category.id!, context,);
+                      deleteCategory(category.id, context,);
                       Navigator.of(context).pop();
                       },
                       child: Text(

@@ -8,10 +8,10 @@ void showRangeOptions(dynamic context,showCustomRangePicker,updateRange) async {
     context: context,
     builder: (context) {
       return Container(
-        padding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
         decoration: BoxDecoration(
           color: AppStyle.backgroundWhite,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30))
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(30))
         ),
         child: Column(
           
@@ -27,7 +27,7 @@ void showRangeOptions(dynamic context,showCustomRangePicker,updateRange) async {
                 Navigator.pop(context, "update");
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               title:  Text("Clear Range",
               style: GoogleFonts.outfit(

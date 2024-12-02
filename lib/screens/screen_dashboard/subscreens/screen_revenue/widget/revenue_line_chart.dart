@@ -12,9 +12,10 @@ import 'package:pinch_to_zoom_scrollable/pinch_to_zoom_scrollable.dart';
 class RevenueLineChart extends StatefulWidget {
   final int tabIndex;
 
-  const RevenueLineChart({Key? key, required this.tabIndex}) : super(key: key);
+  const RevenueLineChart({super.key, required this.tabIndex});
 
   @override
+  // ignore: library_private_types_in_public_api
   _RevenueLineChartState createState() => _RevenueLineChartState();
 }
 
@@ -23,7 +24,6 @@ class _RevenueLineChartState extends State<RevenueLineChart> {
   String currencySymbol="";
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadCurrencySymbol();
   }
@@ -93,7 +93,7 @@ class _RevenueLineChartState extends State<RevenueLineChart> {
         break;
 
       default:
-        spots.add(FlSpot(0, 0));
+        spots.add(const FlSpot(0, 0));
     }
     isEmptyChecker = spots;
     return spots;
@@ -111,7 +111,7 @@ double _calculateYInterval() {
     
     return LineChartData(
       
-      gridData: FlGridData(show: false),
+      gridData: const FlGridData(show: false),
       titlesData: FlTitlesData(
        
   
@@ -139,10 +139,10 @@ double _calculateYInterval() {
   ),
 ),
 
-        topTitles: AxisTitles(
+        topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),  
         ),
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),  
         ),
         bottomTitles: AxisTitles(
@@ -213,7 +213,7 @@ double _calculateYInterval() {
             final spot = touchedSpot; // You can get data like x and y from the spot
             return LineTooltipItem(
               "$currencySymbol${spot.y}", // Display the X and Y values in the tooltip
-              TextStyle(color: Colors.white), // Tooltip text style
+              const TextStyle(color: Colors.white), // Tooltip text style
             );
           }).toList();
         },

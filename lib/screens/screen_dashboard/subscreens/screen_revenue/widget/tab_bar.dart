@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
 
-buildTabBar(dynamic _tabController){
+buildTabBar(dynamic tabController){
   return  TabBar(
-                            controller: _tabController,
+                            controller: tabController,
                             textScaler: const TextScaler.linear(0.9),
                             unselectedLabelStyle: GoogleFonts.inter(
                               fontSize: 12,

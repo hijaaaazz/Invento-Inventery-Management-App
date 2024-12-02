@@ -11,14 +11,15 @@ class TotalRevenueCard extends StatefulWidget {
   final bool isGain;
 
   const TotalRevenueCard({
-    Key? key,
+    super.key,
     required this.totalRevenue,
     required this.tabController,
     required this.percentageChange,
     required this.isGain,
-  }) : super(key: key);
+  });
 
   @override
+  // ignore: library_private_types_in_public_api
   _TotalRevenueCardState createState() => _TotalRevenueCardState();
 }
 

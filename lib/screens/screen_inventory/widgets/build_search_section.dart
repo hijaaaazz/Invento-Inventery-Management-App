@@ -46,7 +46,7 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
         .animate(CurvedAnimation(parent: filterDrawerAnimationController, curve: Curves.easeInOut));
 
     categories = categoryListNotifier.value
-        .map((category) => category.name!)
+        .map((category) => category.name)
         .toList();
 
     filteredProductsNotifier = ValueNotifier(

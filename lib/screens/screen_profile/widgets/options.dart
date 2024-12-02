@@ -56,6 +56,7 @@ class OptionsList extends StatelessWidget {
   Future<void> logout(BuildContext context) async {
     var sessionBox = await Hive.openBox('sessionBox');
     await sessionBox.delete('lastLoggedUser');
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const ScreenIntro(),
@@ -65,7 +66,7 @@ class OptionsList extends StatelessWidget {
 
   navSettings(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ScreenSettings()),
+      MaterialPageRoute(builder: (context) => const ScreenSettings()),
     );
   }
 
@@ -116,7 +117,7 @@ class OptionsList extends StatelessWidget {
           itemCount: options.length,
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: options[index].onTap != null ? options[index].onTap! : null,
+              onTap: options[index].onTap,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 15),
                 child: Row(

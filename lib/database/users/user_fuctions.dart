@@ -148,10 +148,10 @@ Future<bool> deleteUser(String id) async {
         }
       }
 
-      if (salesBox != null) await deleteUserRelatedData(salesBox, id);
+      await deleteUserRelatedData(salesBox, id);
       if (categoryBox != null) await deleteUserRelatedData(categoryBox!, id);
       if (productBox != null) await deleteUserRelatedData(productBox!, id);
-      if (purchaseBox != null) await deleteUserRelatedData(purchaseBox, id);
+      await deleteUserRelatedData(purchaseBox, id);
 
       
 

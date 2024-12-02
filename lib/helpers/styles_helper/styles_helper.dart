@@ -188,8 +188,8 @@ static ThemeData get theme {
       isDarkTheme ? darkrevenueGradient : lightrevenueGradient;
 
   static Color get blueGrey => isDarkTheme
-      ? Color.fromARGB(255, 160, 183, 194)
-      : Color.fromARGB(255, 41, 67, 80);
+      ? const Color.fromARGB(255, 160, 183, 194)
+      : const Color.fromARGB(255, 41, 67, 80);
 
   static TextStyle get textStyle => GoogleFonts.outfit(
         fontWeight: FontWeight.bold,

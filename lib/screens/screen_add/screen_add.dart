@@ -115,7 +115,7 @@ class _ScreenAddOrderState extends State<ScreenAddOrder> {
             ),
             Align(
               alignment: Alignment.bottomRight,
-              child: Container(
+              child: SizedBox(
                 height: MediaQueryInfo.screenHeight*0.2,
                 width: MediaQueryInfo.screenWidth*0.2,
                 child: ClipRRect(

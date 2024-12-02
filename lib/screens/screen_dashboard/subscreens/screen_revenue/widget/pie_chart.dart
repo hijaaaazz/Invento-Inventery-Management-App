@@ -24,7 +24,7 @@ buildPieChart(dynamic pieChartSections, dynamic productData,finalEntries){
             color: AppStyle.textBlack,
           ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
           children: [
             Expanded(
@@ -39,7 +39,7 @@ buildPieChart(dynamic pieChartSections, dynamic productData,finalEntries){
               ),)
               :ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: finalEntries.length,
                 itemBuilder: (context, index) {
                   final entry = finalEntries.toList()[index];
@@ -55,7 +55,7 @@ buildPieChart(dynamic pieChartSections, dynamic productData,finalEntries){
                             shape: BoxShape.circle,
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         // Product name and value
                         Expanded(
                           child: Column(
@@ -87,7 +87,7 @@ buildPieChart(dynamic pieChartSections, dynamic productData,finalEntries){
             
             Expanded(
               flex: 3,
-              child: Container(
+              child: SizedBox(
                 height: MediaQueryInfo.screenHeight * 0.2,
                 child: PieChart(
                   PieChartData(

@@ -14,7 +14,6 @@ import 'package:invento2/screens/screen_dashboard/subscreens/screen_revenue/widg
 import 'package:invento2/screens/screen_dashboard/subscreens/screen_revenue/widget/total_revenue_card.dart';
 import 'package:invento2/screens/screen_dashboard/subscreens/screen_revenue/widget/total_sales_card.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
-import 'package:pinch_to_zoom_scrollable/pinch_to_zoom_scrollable.dart';
 
 class ScreenRevenue extends StatefulWidget {
   const ScreenRevenue({super.key});
@@ -257,7 +256,7 @@ return DefaultTabController(
         appBar: appBarHelper("Revenue"),
         body: 
         salesList.value.where((sale)=>sale.userId==userDataNotifier.value.id).isEmpty?
-        Center(
+        const Center(
           child: Text("No Sales Recorded Yet",style:TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold

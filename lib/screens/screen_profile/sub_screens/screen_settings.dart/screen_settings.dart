@@ -55,14 +55,14 @@ class _ScreenSettingsState extends State<ScreenSettings> {
       barrierDismissible: false, // User can't dismiss dialog by tapping outside
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Account'),
-          content: Text('Are you sure you want to delete your account? This action cannot be undone.'),
+          title: const Text('Delete Account'),
+          content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -71,7 +71,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
 
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Delete', style: TextStyle(color: Colors.red)),
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -84,6 +84,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
   final result = await deleteUser(userDataNotifier.value.id);
 
   if (result) {
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const ScreenIntro(),
@@ -94,6 +95,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
     // Log an error or show a dialog if deletion failed
     log("Error: Failed to delete user.");
     showDialog(
+      // ignore: use_build_context_synchronously
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Deletion Failed"),
@@ -138,7 +140,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
 
                     AppStyle.isDarkThemeNotifier.value = value;
 
-                    Future.delayed(Duration(milliseconds: 300), () {
+                    Future.delayed(const Duration(milliseconds: 300), () {
                       AppStyle.toggleTheme(value);
 
                       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -168,7 +170,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                   });
                   _prefs.setString('unit_preference', value!);
                 },
-                underline: SizedBox(),
+                underline: const SizedBox(),
               ),
             ),
             SizedBox(height: MediaQueryInfo.screenHeight * 0.015),
@@ -190,7 +192,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
                   });
                   _prefs.setString('currency_preference', value!);
                 },
-                underline: SizedBox(),
+                underline: const SizedBox(),
               ),
             ),
 
@@ -206,7 +208,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
               title: "Delete User",
               trailing: IconButton(
                 onPressed: _showDeleteConfirmationDialog,
-                icon:Icon(Icons.arrow_forward_ios_outlined, size: 20)) ,
+                icon:const Icon(Icons.arrow_forward_ios_outlined, size: 20)) ,
              
             ),
           ],

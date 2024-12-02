@@ -11,15 +11,14 @@ Box<CategoryModel>? categoryBox;
 
 Future<void> initCategoryDB() async {
   try {
-    if (categoryBox == null) {
-      categoryBox = await Hive.openBox<CategoryModel>('category_db');
-    }
+    categoryBox ??= await Hive.openBox<CategoryModel>('category_db');
     // Filter and update the list
     categoryListNotifier.value = categoryBox!.values
         .where((category) => category.userId == userDataNotifier.value.id)
         .toList();
     
     // Notify listeners explicitly
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     categoryListNotifier.notifyListeners();
   } catch (e) {
     log('Error initializing category DB: $e');
@@ -49,6 +48,7 @@ Future<bool> addCategory({
         .toList();
     
     // Notify listeners explicitly
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     categoryListNotifier.notifyListeners();
 
     return true;
@@ -93,14 +93,17 @@ Future<void> deleteCategory(
           .toList();
       
       // Notify listeners explicitly
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       categoryListNotifier.notifyListeners();
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Category deleted successfully')),
       );
     } catch (e) {
       log("Error deleting category: $e");
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error deleting category')),
       );
