@@ -19,7 +19,7 @@ buildTabBar(dynamic tabController){
                             labelPadding: const EdgeInsets.symmetric(vertical: 5),
                             dividerColor: Colors.transparent,
                             indicatorSize: TabBarIndicatorSize.tab,
-                            unselectedLabelColor: AppStyle.backgroundPurple,
+                            unselectedLabelColor:AppStyle.isDarkTheme? AppStyle.textBlack: AppStyle.backgroundPurple,
                             splashBorderRadius: BorderRadius.circular(30),
                             indicator: BoxDecoration(
                               color: AppStyle.backgroundPurple,

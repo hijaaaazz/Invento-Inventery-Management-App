@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -156,13 +158,24 @@ class SalesDetails extends StatelessWidget {
                                                SizedBox(
                                                  height: 70,
                                                  width: 70,
-                                                 child: ClipRRect(
-                                                   borderRadius: BorderRadius.circular(8.0),
-                                                   child: Image(
-                                                     image: FileImage(File(product.product.productImage)),
-                                                     fit: BoxFit.cover,
-                                                   ),
-                                                 ),
+                                                 child:  ClipRRect(
+                                                  borderRadius: BorderRadius.circular(8.0), 
+                                                  child: product.product.productImage.isNotEmpty
+                                                      ? (kIsWeb
+                                                          ? Image.memory(
+                                                              base64Decode(product.product.productImage),
+                                                              fit: BoxFit.cover,
+                                                            )
+                                                          : Image.file(
+                                                              File(product.product.productImage),
+                                                              fit: BoxFit.cover, 
+                                                            ))
+                                                      : Image.asset(
+                                                          'assets/images/box.jpg',
+                                                          fit: BoxFit.cover, 
+                                                        ),
+                                                ),
+
                                                ),
                                                const SizedBox(width: 10),
                                                Expanded(

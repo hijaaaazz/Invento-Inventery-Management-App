@@ -29,7 +29,7 @@ class ScreenProfile extends StatelessWidget {
                     "v-1.0",
                     style: GoogleFonts.montserrat(
                       fontSize: 12,
-                      color: AppStyle.textWhite,
+                      color: AppStyle.textBlack,
                     ),
                   ),
                 ),

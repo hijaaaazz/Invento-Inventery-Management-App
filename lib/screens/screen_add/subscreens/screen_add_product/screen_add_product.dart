@@ -13,15 +13,16 @@ import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widget
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/text_fiels.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/widgets/unit_dropdown.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScreenAddProduct extends StatefulWidget {
-
   const ScreenAddProduct({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
   _ScreenAddProductState createState() => _ScreenAddProductState();
 }
+
 class _ScreenAddProductState extends State<ScreenAddProduct> {
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -31,23 +32,32 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
   final TextEditingController _maxStockController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
   
-  String? imagePath;
+  final ValueNotifier<ImageData> _imageNotifier = ValueNotifier<ImageData>(
+    ImageData(
+      webImageBytes: null, 
+      imagePath: null, 
+      pickedFile: null
+    )
+  );
+
   String? _selectedUnit;
   final List<String> _units = ['Kg', 'Ltr', 'Pcs']; 
-  TextStyle headStyle= GoogleFonts.inter(
+
+  
+  TextStyle headStyle = GoogleFonts.inter(
      fontSize: 15,
      fontWeight: FontWeight.bold,
      color: AppStyle.textBlack
   );
 
-  
-
-  final _categories = categoryListNotifier.value
+  // Categories from existing list
+  late final List<String> _categories = categoryListNotifier.value
     .map((category) => category.name)
     .toList();
 
   @override
   void dispose() {
+    // Dispose all controllers
     _itemNameController.dispose();
     _descriptionController.dispose();
     _rateController.dispose();
@@ -55,11 +65,9 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
     _minStockController.dispose();
     _maxStockController.dispose();
     _categoryController.dispose();
+    _imageNotifier.dispose();
     super.dispose();
   }
-
-  Uint8List? webImageBytes;
-  XFile? _pickedFile;
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -72,23 +80,21 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
       );
 
       if (pickedFile != null) {
-        setState(() {
-          _pickedFile = pickedFile;
-        });
-
         if (kIsWeb) {
           // Web image handling
           final webImage = await pickedFile.readAsBytes();
-          setState(() {
-            webImageBytes = webImage;
-            imagePath = null;
-          });
+          _imageNotifier.value = ImageData(
+            webImageBytes: webImage,
+            imagePath: null,
+            pickedFile: pickedFile
+          );
         } else {
           // Mobile image handling
-          setState(() {
-            imagePath = pickedFile.path;
-            webImageBytes = null;
-          });
+          _imageNotifier.value = ImageData(
+            webImageBytes: null,
+            imagePath: pickedFile.path,
+            pickedFile: pickedFile
+          );
         }
       } else {
         showErrorDialog(
@@ -107,8 +113,16 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
       );
     }
   }
+  Future<void> _loadUnitPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _selectedUnit = prefs.getString("unit_preference") ?? "Pcs"; // Default to "Pcs"
+    });
+  }
 
   Future<void> _addProduct() async {
+    final imageData = _imageNotifier.value;
+
     if (_itemNameController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         _rateController.text.isEmpty ||
@@ -117,7 +131,7 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
         _maxStockController.text.isEmpty ||
         _categoryController.text.isEmpty ||
         _selectedUnit == null ||
-        (_pickedFile == null)) {  // Changed this condition
+        (imageData.pickedFile == null)) {
       showErrorDialog(context, "Fields Seems Empty", "Please fill all fields and select an image");
       return;
     }
@@ -133,10 +147,10 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
     final unit = _selectedUnit ?? '';
 
     String? productImage;
-    if (kIsWeb && webImageBytes != null) {
-      productImage = base64Encode(webImageBytes!);
-    } else if (!kIsWeb && imagePath != null) {
-      productImage = imagePath;
+    if (kIsWeb && imageData.webImageBytes != null) {
+      productImage = base64Encode(imageData.webImageBytes!);
+    } else if (!kIsWeb && imageData.imagePath != null) {
+      productImage = imageData.imagePath;
     }
 
     final success = await addProduct(
@@ -168,29 +182,49 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
     _minStockController.clear();
     _maxStockController.clear();
     _categoryController.clear();
+    
+    _imageNotifier.value = ImageData(
+      webImageBytes: null,
+      imagePath: null,
+      pickedFile: null
+    );
+    
     setState(() {
       _selectedUnit = null;
-      imagePath = null;
-      webImageBytes = null;
-      _pickedFile = null;
     });
+  }
+
+  void onChanged(String? newValue) {
+    setState(() {
+      _selectedUnit = newValue;
+    });
+
+  }
+  @override
+  void initState() {
+    
+    super.initState();
+    _loadUnitPreference();
   }
 
   @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-     Uint8List? webImageBytes;
-
 
     return Scaffold(
-      backgroundColor:AppStyle.backgroundWhite,
-      appBar: appBarHelper("Add Product",actions: [Padding(
+      backgroundColor: AppStyle.backgroundWhite,
+      appBar: appBarHelper(
+        "Add Product",
+        actions: [
+          Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               icon: const Icon(Icons.check),
               onPressed: _addProduct, 
             ),
-          ),]),
+          ),
+        ]
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -198,58 +232,64 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
           children: [
             Row(
               children: [
-                Text("General Information", style:headStyle),
+                Text("General Information", style: headStyle),
               ],
             ),
             const SizedBox(height: 20),
-           GestureDetector(
-              onTap: _pickImage,
-              child: CircleAvatar(
-                radius: 64,
-                // ignore: unnecessary_null_comparison
-                backgroundImage: webImageBytes != null
-                    ? MemoryImage(webImageBytes)
-                    : (imagePath != null
-                        ? FileImage(File(imagePath!))
-                        : const AssetImage('assets/images/box.jpg') as ImageProvider),
-                backgroundColor: Colors.grey[300],
-                child: (_pickedFile == null)
-                    ? const Center(
-                        child: Text(
-                          'Add\nImage',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.blueGrey,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            height: 1.2,
-                          ),
-                        ),
-                      )
-                    : null,
-              ),
+            
+            // Image Picker with ValueNotifier
+            ValueListenableBuilder<ImageData>(
+              valueListenable: _imageNotifier,
+              builder: (context, imageData, child) {
+                return GestureDetector(
+                  onTap: _pickImage,
+                  child: CircleAvatar(
+                    radius: 64,
+                    backgroundImage: imageData.webImageBytes != null
+                        ? MemoryImage(imageData.webImageBytes!)
+                        : (imageData.imagePath != null
+                            ? FileImage(File(imageData.imagePath!))
+                            : const AssetImage('assets/images/box.jpg') as ImageProvider),
+                    backgroundColor: Colors.grey[300],
+                    child: imageData.pickedFile == null
+                        ? const Center(
+                            child: Text(
+                              'Add\nImage',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                height: 1.2,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                );
+              },
             ),
       
-const SizedBox(height: 15,),
+            const SizedBox(height: 15),
 
             buildTextField(label: "Item Name", controller: _itemNameController),
             buildTextField(label: "Description", controller: _descriptionController),
             const SizedBox(height: 10),
             Row(
               children: [
-                Text("Pricing Information", style:headStyle),
+                Text("Pricing Information", style: headStyle),
               ],
             ),
             Row(
               children: [
                 Expanded(child: buildTextField(label: "Rate", controller: _rateController, keyboardType: TextInputType.number)),
-                Expanded(child: buildTextField(label: "Sales Prrice", controller: _mrpController, keyboardType: TextInputType.number)),
+                Expanded(child: buildTextField(label: "Sales Price", controller: _mrpController, keyboardType: TextInputType.number)),
               ],
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                Text("Stock Information", style:headStyle),
+                Text("Stock Information", style: headStyle),
               ],
             ),
             Row(
@@ -262,10 +302,12 @@ const SizedBox(height: 15,),
             const SizedBox(height: 10),            
             Row(
               children: [
-                buildCategoryAutocomplete(_categories, _categoryController,null),
+                Expanded(
+                  child: Container(
+                    child: buildCategoryAutocomplete(_categories, _categoryController, null)),
+                ),
                 const SizedBox(width: 20),
                 buildUnitDropdown(_units, _selectedUnit, onChanged)
-                
               ],
             ),
             SizedBox(height: keyboardHeight > 0 ? 100 : 0), 
@@ -275,12 +317,17 @@ const SizedBox(height: 15,),
       ),
     );
   }
-  void onChanged(String? newValue) {
-  setState(() {
-    _selectedUnit = newValue;
-  });
 }
-  
- 
-    
+
+// Helper class to manage image data
+class ImageData {
+  final Uint8List? webImageBytes;
+  final String? imagePath;
+  final XFile? pickedFile;
+
+  ImageData({
+    required this.webImageBytes,
+    required this.imagePath,
+    required this.pickedFile,
+  });
 }

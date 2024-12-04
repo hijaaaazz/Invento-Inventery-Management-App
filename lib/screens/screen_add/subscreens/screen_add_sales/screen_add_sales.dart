@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
@@ -172,7 +174,7 @@ void initializeStock() {
                                    shrinkWrap: true,
                                    itemCount: soldProducts.length,
                                    itemBuilder: (context, index) {
-                                     final purchaseProduct = soldProducts[index];
+                                     final soldProduct = soldProducts[index];
                                      if(soldProducts.isEmpty){
                                       return const Center(child: Text("NO Products Selected\nAdd Products"));
                                      }
@@ -188,13 +190,24 @@ void initializeStock() {
                                                SizedBox(
                                                  height: 70,
                                                  width: 70,
-                                                 child: ClipRRect(
-                                                   borderRadius: BorderRadius.circular(8.0),
-                                                   child: Image(
-                                                     image: FileImage(File(purchaseProduct.product.productImage)),
-                                                     fit: BoxFit.cover,
-                                                   ),
-                                                 ),
+                                                 child:  ClipRRect(
+  borderRadius: BorderRadius.circular(8.0), // Adjust the border radius as needed
+  child: soldProduct.product.productImage.isNotEmpty
+      ? (kIsWeb
+          ? Image.memory(
+              base64Decode(soldProduct.product.productImage),
+              fit: BoxFit.cover, // Adjust BoxFit if needed
+            )
+          : Image.file(
+              File(soldProduct.product.productImage),
+              fit: BoxFit.cover, // Adjust BoxFit if needed
+            ))
+      : Image.asset(
+          'assets/images/box.jpg',
+          fit: BoxFit.cover, // Adjust BoxFit if needed
+        ),
+),
+
                                                ),
                                                const SizedBox(width: 10),
                                                Expanded(
@@ -202,15 +215,15 @@ void initializeStock() {
                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                    children: [
                                                      Text(
-                                                       purchaseProduct.product.name,
+                                                       soldProduct.product.name,
                                                        style: const TextStyle(fontWeight: FontWeight.bold),
                                                      ),
-                                                     Text("${purchaseProduct.quantity} x ${purchaseProduct.product.rate}"),
+                                                     Text("${soldProduct.quantity} x ${soldProduct.product.rate}"),
                                                    ],
                                                  ),
                                                ),
                                                Text(
-                                                 "\$${purchaseProduct.getTotalPrice().toStringAsFixed(2)}",
+                                                 "\$${soldProduct.getTotalPrice().toStringAsFixed(2)}",
                                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                                ), 
                                                IconButton(

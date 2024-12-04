@@ -81,7 +81,7 @@ static ThemeData get theme {
   ];
 
   // Dark Theme Colors
-  static const Color darkBackgroundBlack = Color.fromARGB(255, 30, 30, 30);
+  static const Color darkBackgroundBlack = Color.fromARGB(255, 121, 121, 121);
   static const Color darkBackgroundWhite = Color.fromARGB(255, 20, 20, 20);
   static const Color darkBackgroundPurple = Color.fromARGB(255, 56, 13, 107);
   static Color? darkBackgroundGrey = Colors.grey[850];

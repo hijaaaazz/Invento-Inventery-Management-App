@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
@@ -62,14 +64,22 @@ class ScreenStockDetails extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           child: Stack(
                             children: [
-                              Positioned.fill(
-                                child: product.productImage.isNotEmpty
-                                    ? Image.file(
-                                        File(product.productImage),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.asset('assets/images/box.jpg', fit: BoxFit.cover),
-                              ),
+                              ClipRRect(
+                              child:  product.productImage.isNotEmpty
+                              ? (kIsWeb
+                                  ? Image.memory(
+                                      base64Decode( product.productImage),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File( product.productImage),
+                                      fit: BoxFit.cover,
+                                    ))
+                              : Image.asset(
+                                  'assets/images/box.jpg',
+                                  fit: BoxFit.cover,
+                                ),
+                            ),
                             ],
                           ),
                         ),

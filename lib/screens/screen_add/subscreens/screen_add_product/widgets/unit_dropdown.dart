@@ -44,7 +44,7 @@ Widget buildUnitDropdown(
       icon: Icon(Icons.arrow_drop_down, color: AppStyle.blueGrey),
       iconSize: 28,
       hint: Text(
-        "Select Unit",
+        selectedUnit?? "Select Unit",
         style: TextStyle(
           fontSize: 14,
           color: AppStyle.textBlack,

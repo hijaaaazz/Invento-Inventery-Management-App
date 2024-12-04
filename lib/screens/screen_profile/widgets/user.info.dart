@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
@@ -32,16 +33,7 @@ class _UserInfoState extends State<UserInfo> {
                 height: MediaQuery.of(context).size.height * 0.1,
                 width: double.infinity,
               ),
-              
-              userData.profileImage !=null &&userData.profileImage!.isNotEmpty
-      ? CircleAvatar(
-          radius: 64,
-          backgroundImage: FileImage(File(userData.profileImage!)),
-          backgroundColor: Colors.grey[500],
-        )
-      : const SizedBox.shrink(),
-
-                
+              _buildProfileImage(userData.profileImage),
               const SizedBox(height: 10),
               Text(
                 userData.name,
@@ -49,7 +41,6 @@ class _UserInfoState extends State<UserInfo> {
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: AppStyle.textBlack,
-                  
                 ),
               ),
               const SizedBox(height: 20),
@@ -76,5 +67,31 @@ class _UserInfoState extends State<UserInfo> {
         );
       },
     );
+  }
+
+  Widget _buildProfileImage(String? imagePath) {
+    if (imagePath == null || imagePath.isEmpty) {
+      return const CircleAvatar(
+        radius: 64,
+        backgroundColor: Colors.grey,
+        child: Icon(Icons.person, size: 64, color: Colors.white),
+      );
+    }
+
+    if (kIsWeb) {
+      // For Web
+      return CircleAvatar(
+        radius: 64,
+        backgroundImage: NetworkImage(imagePath), // Ensure this URL is web-compatible
+        backgroundColor: Colors.grey[500],
+      );
+    } else {
+      // For Mobile
+      return CircleAvatar(
+        radius: 64,
+        backgroundImage: FileImage(File(imagePath)),
+        backgroundColor: Colors.grey[500],
+      );
+    }
   }
 }

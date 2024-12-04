@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/purchase/purchase_functions.dart';
@@ -170,13 +172,24 @@ _loadCurrencySymbol();  // Load the currency symbol when the widget is initializ
                                            SizedBox(
                                              height: 70,
                                              width: 70,
-                                             child: ClipRRect(
-                                               borderRadius: BorderRadius.circular(8.0),
-                                               child: Image(
-                                                 image: FileImage(File(purchaseProduct.product.productImage)),
-                                                 fit: BoxFit.cover,
-                                               ),
-                                             ),
+                                             child:  ClipRRect(
+  borderRadius: BorderRadius.circular(8.0),
+  child: purchaseProduct.product.productImage.isNotEmpty
+      ? (kIsWeb
+          ? Image.memory(
+              base64Decode(purchaseProduct.product.productImage),
+              fit: BoxFit.cover, 
+            )
+          : Image.file(
+              File(purchaseProduct.product.productImage),
+              fit: BoxFit.cover, 
+            ))
+      : Image.asset(
+          'assets/images/box.jpg',
+          fit: BoxFit.cover,
+        ),
+),
+
                                            ),
                                            const SizedBox(width: 10),
                                            Expanded(

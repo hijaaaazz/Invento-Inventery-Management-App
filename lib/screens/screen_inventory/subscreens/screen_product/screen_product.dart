@@ -11,6 +11,7 @@ import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widg
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/edit_product_details.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/edit_stock_managment.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/product_delete_diallog.dart';
+import 'package:invento2/screens/widgets/app_bar.dart';
 import 'package:pinch_to_zoom_scrollable/pinch_to_zoom_scrollable.dart';
 class ScreenProductDetails extends StatefulWidget {
   final ProductModel product;
@@ -41,9 +42,9 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
   }
 
   _loadCurrencySymbol() async {
-    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+    String symbol = await AppPreferences.symbol; 
     setState(() {
-      currencysymbol = symbol;  // Update the state with the fetched symbol
+      currencysymbol = symbol;
     });
   }
 
@@ -55,15 +56,19 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    AppStyle appStyle = AppStyle();
 
     return Scaffold(
       backgroundColor: AppStyle.backgroundWhite,
-      appBar: build_product_page_appbar(
-          () => showProductDeleteDialog(context, productDetailsNotifier.value, widget.Gridviewnotifier)
-,
+      appBar: appBarHelper("",
+      actions: [
+        IconButton(onPressed: 
+        (){
+          showProductDeleteDialog(
           context,
-          appStyle),
+          productDetailsNotifier.value,
+          widget.Gridviewnotifier);
+        }, icon: Icon(Icons.delete,color: Colors.red,))
+      ]),
       body: ValueListenableBuilder(
           valueListenable: productDetailsNotifier,
           builder: (context, updatedProduct, _) {
@@ -127,14 +132,12 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: Text(
-                                updatedProduct.name,
-                                maxLines: 10,
-                                overflow: TextOverflow.clip,
-                                style: GoogleFonts.outfit(
-                                    fontSize: 24, fontWeight: FontWeight.w500),
-                              ),
+                            Text(
+                              updatedProduct.name,
+                              maxLines: 10,
+                              overflow: TextOverflow.clip,
+                              style: GoogleFonts.outfit(
+                                  fontSize: 24, fontWeight: FontWeight.w500),
                             ),
                             IconButton(
                                 onPressed: () {

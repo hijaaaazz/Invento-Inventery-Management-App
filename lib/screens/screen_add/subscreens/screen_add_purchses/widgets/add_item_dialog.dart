@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
@@ -97,10 +99,24 @@ _loadCurrencySymbol();  // Load the currency symbol when the widget is initializ
                     itemBuilder: (context, index) {
                       final product = filteredProducts[index];
                       return ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: AppStyle.backgroundWhite,
-                          backgroundImage: FileImage(File(product.productImage)),
-                        ),
+                       leading: ClipRRect(
+  borderRadius: BorderRadius.circular(8.0), // Adjust the border radius as needed
+  child: product.productImage.isNotEmpty
+      ? (kIsWeb
+          ? Image.memory(
+              base64Decode(product.productImage),
+              fit: BoxFit.cover, // Adjust BoxFit if needed
+            )
+          : Image.file(
+              File(product.productImage),
+              fit: BoxFit.cover, // Adjust BoxFit if needed
+            ))
+      : Image.asset(
+          'assets/images/box.jpg',
+          fit: BoxFit.cover, // Adjust BoxFit if needed
+        ),
+),
+
                         title: Text(product.name,style: GoogleFonts.inter(color: AppStyle.textBlack,fontSize: 15),),
                         subtitle: Text("$_currencySymbol${product.rate}",style: GoogleFonts.inter(color: AppStyle.textBlack,fontSize: 12),),
                         onTap: () {
