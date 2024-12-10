@@ -17,7 +17,7 @@ Since all data is stored offline, **Invento** does not back up or store your dat
 We value your feedback and are here to assist you with any queries or suggestions.  
 Feel free to reach out to us via email at **mhcnkd@gmail.com**.
 
-### Current Version: 1.0.0
+### Current Version: 1.0.1+1
 
 We are continually working to improve your experience, so stay tuned for updates.  
 Thank you for trusting **Invento** to manage your inventory efficiently and securely!
