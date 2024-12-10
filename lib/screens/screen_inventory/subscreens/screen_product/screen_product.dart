@@ -7,7 +7,6 @@ import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/helpers/user_prefs.dart';
-import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/app_bar.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/edit_product_details.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/edit_stock_managment.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/widgets/product_delete_diallog.dart';
@@ -67,7 +66,7 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
           context,
           productDetailsNotifier.value,
           widget.Gridviewnotifier);
-        }, icon: Icon(Icons.delete,color: Colors.red,))
+        }, icon: const Icon(Icons.delete,color: Colors.red,))
       ]),
       body: ValueListenableBuilder(
           valueListenable: productDetailsNotifier,

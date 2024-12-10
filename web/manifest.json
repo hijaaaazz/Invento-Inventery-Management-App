@@ -1,6 +1,6 @@
 {
-    "name": "invento2",
-    "short_name": "invento2",
+    "name": "invento",
+    "short_name": "invento",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

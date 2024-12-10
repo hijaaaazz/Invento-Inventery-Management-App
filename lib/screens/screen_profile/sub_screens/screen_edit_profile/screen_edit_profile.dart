@@ -1,16 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
-import 'package:invento2/helpers/styles_helper/styles_helper.dart';
-import 'package:invento2/screens/screen_profile/sub_screens/screen_edit_profile/widgets/edit_fields.dart';
-import 'package:invento2/screens/widgets/app_bar.dart';
 
 class ScreenEditProfile extends StatefulWidget {
   final UserModel userdata;
@@ -25,22 +21,31 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> {
   late TextEditingController emailController;
   late TextEditingController nameController;
   late TextEditingController phoneController;
-  late String? imagePath;
 
-  @override
-  void initState() {
-    super.initState();
-    emailController = TextEditingController(text: userDataNotifier.value.email);
-    nameController = TextEditingController(text: userDataNotifier.value.name);
-    phoneController = TextEditingController(text: userDataNotifier.value.phone);
-    imagePath = userDataNotifier.value.profileImage;
-  }
+  ValueNotifier<XFile?> imageFile = ValueNotifier<XFile?>(null);
+  Uint8List? webImage;
 
-  void updateImage(String pickedPath) {
-    setState(() {
-      imagePath = pickedPath;
-    });
+  final ImagePicker picker = ImagePicker();
+@override
+void initState() {
+  super.initState();
+  emailController = TextEditingController(text: widget.userdata.email);
+  nameController = TextEditingController(text: widget.userdata.name);
+  phoneController = TextEditingController(text: widget.userdata.phone);
+
+  final existingImage = userDataNotifier.value.profileImage;
+  imageFile.value = (kIsWeb || existingImage == null || existingImage.isEmpty) 
+      ? null 
+      : XFile(existingImage);
+
+  if (kIsWeb && existingImage != null && existingImage.isNotEmpty) {
+    try {
+      webImage = base64Decode(existingImage);
+    } catch (e) {
+      webImage = null;
+    }
   }
+}
 
   @override
   void dispose() {
@@ -50,116 +55,172 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> {
     super.dispose();
   }
 
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      imageFile.value = pickedFile;
+
+      if (kIsWeb) {
+        final bytes = await pickedFile.readAsBytes();
+        setState(() {
+          webImage = bytes;
+        });
+      }
+    }
+  }
+
+  Widget _buildImagePicker() {
+    return Center(
+      child: ValueListenableBuilder<XFile?>(
+        valueListenable: imageFile,
+        builder: (context, file, _) {
+          return GestureDetector(
+            onTap: _pickImage,
+            child: CircleAvatar(
+              radius: 64,
+              backgroundColor: Colors.grey[300],
+              child: ClipOval(
+                child: kIsWeb
+                    ? (webImage != null
+                        ? Image.memory(
+                            webImage!,
+                            width: 128,
+                            height: 128,
+                            fit: BoxFit.cover,
+                          )
+                        : _placeholderImage())
+                    : (file != null
+                        ? Image.file(
+                            File(file.path),
+                            width: 128,
+                            height: 128,
+                            fit: BoxFit.cover,
+                          )
+                        : _placeholderImage()),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _placeholderImage() {
+    return Container(
+      width: 128,
+      height: 128,
+      color: Colors.grey[300],
+      child: const Icon(
+        Icons.person,
+        size: 64,
+        color: Colors.grey,
+      ),
+    );
+  }
+
+  Future<void> _updateProfile() async {
+  final updatedUser = UserModel(
+    id: widget.userdata.id,
+    email: emailController.text,
+    name: nameController.text,
+    phone: phoneController.text,
+    profileImage: kIsWeb
+        ? base64Encode(webImage!)
+        : imageFile.value?.path ?? widget.userdata.profileImage,
+    username: userDataNotifier.value.email,
+    password: userDataNotifier.value.password,
+  );
+
+  await updateUser(
+    id: widget.userdata.id,
+    email: updatedUser.email,
+    name: updatedUser.name,
+    phone: updatedUser.phone,
+    image: updatedUser.profileImage,
+  );
+
+  // Update the notifier
+  userDataNotifier.value = updatedUser;
+
+  // Navigate back
+  // ignore: use_build_context_synchronously
+  Navigator.of(context).pop();
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyle.backgroundWhite,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          "Edit Profile",
+          style: GoogleFonts.outfit(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: _updateProfile,
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: appBarHelper("",
-              actions: [IconButton(onPressed: (){
-                updateUser(
-                  id: userDataNotifier.value.id,
-                  email: emailController.text,
-                  name: nameController.text,
-                  phone: phoneController.text,
-                  image: imagePath ?? userDataNotifier.value.profileImage ?? "",
-                );
-                Navigator.of(context).pop();
-              }, icon: Icon(Icons.check) )
-              ]),
-            ),
-            SizedBox(height: MediaQueryInfo.screenHeight * 0.07),
-              GestureDetector(
-                onTap: () {
-                  _pickImage(updateImage);
-                },
-                child: CircleAvatar(
-                  radius: 64,
-                  backgroundImage: imagePath != null
-                      ? (kIsWeb
-                          ? NetworkImage(imagePath!) // Use a compatible URL or base64 on web
-                          : FileImage(File(imagePath!)) as ImageProvider)
-                      : null,
-                  backgroundColor: Colors.grey[300],
-                  child: imagePath == null
-                      // ignore: prefer_const_constructors
-                      ?  Center(
-                          child:Icon(Icons.person,size: 50,)
-                        )
-                      : null,
-                ),
-              ),
-
-            SizedBox(height: MediaQueryInfo.screenHeight * 0.07),
-            _buildEditFields(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+          child: Column(
+            children: [
+              _buildImagePicker(),
+              SizedBox(height: MediaQueryInfo.screenHeight * 0.05),
+              _buildEditFields(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-
   Widget _buildEditFields() {
+    return Column(
+      children: [
+        _buildTextField("Name", nameController),
+        _buildTextField("Email", emailController),
+        _buildTextField("Phone", phoneController),
+      ],
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: MediaQueryInfo.screenWidth * 0.1),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          EditProfileFields(
-            controller: nameController,
-            label: 'Name',
-            icon:  Icon(Icons.person, color: AppStyle.backgroundBlack),
+          Text(
+            label,
+            style: GoogleFonts.outfit(fontSize: 16),
           ),
-          const Divider(height: 5),
-          EditProfileFields(
-            controller: emailController,
-            label: 'Email ID',
-            icon: Icon(Icons.email, color: AppStyle.backgroundBlack),
+          const SizedBox(height: 8),
+          TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color(0xFFF3F3F3),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide.none,
+              ),
+            ),
+            style: GoogleFonts.outfit(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[700],
+            ),
           ),
-          const Divider(height: 5),
-          EditProfileFields(
-            controller: phoneController,
-            label: 'Phone Number',
-            icon:  Icon(Icons.phone, color:  AppStyle.backgroundBlack),
-          ),
-          const Divider(height: 5),
         ],
       ),
     );
-  }
-}
-
-Future<void> convertBlobToBase64(String blobUrl, Function(String) onBase64Ready) async {
-  html.HttpRequest.request(blobUrl, responseType: "arraybuffer").then((request) {
-    final Uint8List bytes = Uint8List.view(request.response);
-    final base64String = base64Encode(bytes);
-    onBase64Ready(base64String);
-  });
-}
-Future<void> _pickImage(Function updateImage) async {
-  if (kIsWeb) {
-    html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.accept = 'image/*';
-    uploadInput.click();
-    uploadInput.onChange.listen((event) {
-      final files = uploadInput.files;
-      if (files!.isNotEmpty) {
-        final reader = html.FileReader();
-        reader.readAsDataUrl(files[0]);
-        reader.onLoadEnd.listen((event) {
-          updateImage(reader.result as String);
-        });
-      }
-    });
-  } else {
-    // mobile
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      updateImage(pickedFile.path);
-    }
   }
 }

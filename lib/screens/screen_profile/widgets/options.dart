@@ -4,7 +4,6 @@ import 'package:hive/hive.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_profile/sub_screens/screen_about.dart';
 import 'package:invento2/screens/screen_profile/sub_screens/screen_settings.dart/screen_settings.dart';
-import 'package:invento2/screens/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:invento2/screens/screen_intro/screen_intro.dart';
 import 'package:invento2/screens/screen_profile/widgets/logout_dialog.dart';
@@ -38,10 +37,16 @@ class OptionsList extends StatelessWidget {
       debugPrint("Error sending feedback: $e");
     }
   }
+Future<void> rateApp(BuildContext context) async {
+  final Uri rateAppLink = Uri.parse("https://www.amazon.com/dp/B0DPNC87X6/ref=apps_sf_sta");
 
-  Future<void> rateAppPlacehlder(BuildContext context) async {
-    showCustomSnackbar("Coming Soon", context, Colors.orange);
+  try {
+    await launchUrl(rateAppLink, mode: LaunchMode.externalApplication);
+  // ignore: empty_catches
+  } catch (e) {
+
   }
+}
 
   Future<void> showLogoutDialog(BuildContext context) async {
     showDialog(
@@ -94,7 +99,7 @@ class OptionsList extends StatelessWidget {
           Option(
             title: 'Rate App',
             icon: Icons.star_border,
-            onTap: () => rateAppPlacehlder(context),
+            onTap: () => rateApp(context),
           ),
           Option(
             title: 'About',

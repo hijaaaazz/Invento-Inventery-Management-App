@@ -47,8 +47,8 @@ static ThemeData get theme {
   ];
 
   static const List<Color> lightGradientRed = [
-    Color.fromARGB(255, 255, 21, 21),
-    Color.fromARGB(255, 255, 111, 111)
+    Color.fromARGB(255, 241, 9, 9),
+    Color.fromARGB(255, 240, 56, 56)
   ];
 
   static List<Color?> lightPurpleShades = [
@@ -106,8 +106,8 @@ static ThemeData get theme {
   ];
 
   static const List<Color> darkGradientRed = [
-    Color(0xFFD32F2F),
-    Color(0xFFEF9A9A)
+    Color.fromARGB(255, 190, 38, 38),
+    Color.fromARGB(255, 180, 36, 36)
   ];
 
   static List<Color?> darkPurpleShades = [

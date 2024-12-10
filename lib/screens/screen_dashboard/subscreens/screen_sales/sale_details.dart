@@ -52,7 +52,7 @@ class SalesDetails extends StatelessWidget {
                     fontWeight: FontWeight.bold
                   ),),
                   Text(
-                    DateFormat('kk:mm , y-M-d' ).format(DateTime.fromMicrosecondsSinceEpoch(int.parse(sale.id) )),
+                    DateFormat('kk:mm , d-M-y' ).format(DateTime.fromMicrosecondsSinceEpoch(int.parse(sale.id) )),
                     style: GoogleFonts.lato(
                       fontSize: 15,
                       fontWeight: FontWeight.bold

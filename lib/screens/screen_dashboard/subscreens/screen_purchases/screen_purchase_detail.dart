@@ -55,7 +55,7 @@ class PurchaseDetailsScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold
                   ),),
                   Text(
-                    DateFormat('kk:mm , y-M-d' ).format(DateTime.fromMicrosecondsSinceEpoch(int.parse(purchase.id) )),
+                    DateFormat('kk:mm , d-M-y' ).format(DateTime.fromMicrosecondsSinceEpoch(int.parse(purchase.id) )),
                     style: GoogleFonts.lato(
                       fontSize: 15,
                       fontWeight: FontWeight.bold
