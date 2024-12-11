@@ -319,7 +319,6 @@ class _ScreenAddProductState extends State<ScreenAddProduct> {
   }
 }
 
-// Helper class to manage image data
 class ImageData {
   final Uint8List? webImageBytes;
   final String? imagePath;
