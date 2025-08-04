@@ -30,18 +30,17 @@ void main() async {
 
   try {
     await initUserDB();
-    await initCategoryDB();
+    await initCategoryDB(); // ensure categories are fully loaded
     await initProductDB();
     await initPurchaseDatabase();
     await initSalesDatabase();
-  // ignore: empty_catches
   } catch (e) {
-    log(e.toString());
+    log("Error during DB initialization: $e");
   }
-  
 
   runApp(const MyApp());
 }
+
 
 
 class MyApp extends StatelessWidget {

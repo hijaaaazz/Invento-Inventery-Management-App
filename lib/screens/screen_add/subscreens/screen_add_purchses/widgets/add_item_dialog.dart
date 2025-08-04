@@ -35,7 +35,6 @@ class _ScreenAddPurchaseItemState extends State<ScreenAddPurchaseItem> {
     super.initState();
     searchController.addListener(_onSearchChanged);
     filteredProducts = ProductListNotifier.value
-        .where((a) => a.userId == userDataNotifier.value.id)
         .toList();
 
     quantityController.text = quantityNotifier.value.toString();
@@ -54,7 +53,7 @@ _loadCurrencySymbol();  // Load the currency symbol when the widget is initializ
     setState(() {
       filteredProducts = ProductListNotifier.value
           .where((product) =>
-              product.userId == userDataNotifier.value.id &&
+              
               product.name.toLowerCase().contains(query))
           .toList()
         ..sort((a, b) =>

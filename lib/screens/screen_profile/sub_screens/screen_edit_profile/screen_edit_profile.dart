@@ -9,7 +9,7 @@ import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 
 class ScreenEditProfile extends StatefulWidget {
-  final UserModel userdata;
+  final UserModel? userdata;
 
   const ScreenEditProfile({super.key, required this.userdata});
 
@@ -18,9 +18,7 @@ class ScreenEditProfile extends StatefulWidget {
 }
 
 class _ScreenEditProfileState extends State<ScreenEditProfile> {
-  late TextEditingController emailController;
   late TextEditingController nameController;
-  late TextEditingController phoneController;
 
   ValueNotifier<XFile?> imageFile = ValueNotifier<XFile?>(null);
   Uint8List? webImage;
@@ -29,29 +27,13 @@ class _ScreenEditProfileState extends State<ScreenEditProfile> {
 @override
 void initState() {
   super.initState();
-  emailController = TextEditingController(text: widget.userdata.email);
-  nameController = TextEditingController(text: widget.userdata.name);
-  phoneController = TextEditingController(text: widget.userdata.phone);
-
-  final existingImage = userDataNotifier.value.profileImage;
-  imageFile.value = (kIsWeb || existingImage == null || existingImage.isEmpty) 
-      ? null 
-      : XFile(existingImage);
-
-  if (kIsWeb && existingImage != null && existingImage.isNotEmpty) {
-    try {
-      webImage = base64Decode(existingImage);
-    } catch (e) {
-      webImage = null;
-    }
-  }
+  nameController = TextEditingController(text: widget.userdata?.name ?? '');
 }
+
 
   @override
   void dispose() {
-    emailController.dispose();
     nameController.dispose();
-    phoneController.dispose();
     super.dispose();
   }
 
@@ -69,83 +51,30 @@ void initState() {
     }
   }
 
-  Widget _buildImagePicker() {
-    return Center(
-      child: ValueListenableBuilder<XFile?>(
-        valueListenable: imageFile,
-        builder: (context, file, _) {
-          return GestureDetector(
-            onTap: _pickImage,
-            child: CircleAvatar(
-              radius: 64,
-              backgroundColor: Colors.grey[300],
-              child: ClipOval(
-                child: kIsWeb
-                    ? (webImage != null
-                        ? Image.memory(
-                            webImage!,
-                            width: 128,
-                            height: 128,
-                            fit: BoxFit.cover,
-                          )
-                        : _placeholderImage())
-                    : (file != null
-                        ? Image.file(
-                            File(file.path),
-                            width: 128,
-                            height: 128,
-                            fit: BoxFit.cover,
-                          )
-                        : _placeholderImage()),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
 
-  Widget _placeholderImage() {
-    return Container(
-      width: 128,
-      height: 128,
-      color: Colors.grey[300],
-      child: const Icon(
-        Icons.person,
-        size: 64,
-        color: Colors.grey,
-      ),
-    );
-  }
 
   Future<void> _updateProfile() async {
   final updatedUser = UserModel(
-    id: widget.userdata.id,
-    email: emailController.text,
+    id: widget.userdata!.id,
     name: nameController.text,
-    phone: phoneController.text,
-    profileImage: kIsWeb
-        ? base64Encode(webImage!)
-        : imageFile.value?.path ?? widget.userdata.profileImage,
-    username: userDataNotifier.value.email,
-    password: userDataNotifier.value.password,
   );
 
-  await updateUser(
-    id: widget.userdata.id,
-    email: updatedUser.email,
+  final success = await updateUser(
+    id: updatedUser.id,
     name: updatedUser.name,
-    phone: updatedUser.phone,
-    image: updatedUser.profileImage,
   );
 
-  // Update the notifier
-  userDataNotifier.value = updatedUser;
-
-  // Navigate back
-  // ignore: use_build_context_synchronously
-  Navigator.of(context).pop();
+  if (success) {
+    userDataNotifier.value = updatedUser;
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pop();
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to update profile')),
+    );
+  }
 }
+
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +92,10 @@ void initState() {
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed: _updateProfile,
+            onPressed:(){
+              _updateProfile();
+            } 
+           
           ),
         ],
       ),
@@ -172,8 +104,7 @@ void initState() {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
           child: Column(
             children: [
-              _buildImagePicker(),
-              SizedBox(height: MediaQueryInfo.screenHeight * 0.05),
+
               _buildEditFields(),
             ],
           ),
@@ -186,8 +117,6 @@ void initState() {
     return Column(
       children: [
         _buildTextField("Name", nameController),
-        _buildTextField("Email", emailController),
-        _buildTextField("Phone", phoneController),
       ],
     );
   }

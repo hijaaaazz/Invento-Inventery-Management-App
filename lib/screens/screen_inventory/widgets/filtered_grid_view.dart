@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
+import 'package:invento2/helpers/image_helper.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/screen_product.dart';
 
 class ProductGridView extends StatelessWidget {
@@ -54,11 +55,8 @@ final ValueNotifier<List<ProductModel>> filteredProductsNotifier;
                         padding: const EdgeInsets.only(left: 8.0, top: 8, right: 8),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: Image.file(
-                            File(product.productImage),
-                            fit: BoxFit.contain,
-                            width: double.infinity,
-                          ),
+                          child: 
+                          ImageHelper.buildSafeImage(product.productId)
                         ),
                       ),
                     ),

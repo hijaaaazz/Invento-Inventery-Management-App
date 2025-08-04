@@ -48,25 +48,7 @@ Future<void> rateApp(BuildContext context) async {
   }
 }
 
-  Future<void> showLogoutDialog(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (context) => LogoutDialog(
-        onConfirm: () => logout(context),
-      ),
-    );
-  }
 
-  Future<void> logout(BuildContext context) async {
-    var sessionBox = await Hive.openBox('sessionBox');
-    await sessionBox.delete('lastLoggedUser');
-    // ignore: use_build_context_synchronously
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => const ScreenIntro(),
-      ),
-    );
-  }
 
   navSettings(BuildContext context) {
     Navigator.of(context).push(
@@ -106,12 +88,7 @@ Future<void> rateApp(BuildContext context) async {
             icon: Icons.help_outline,
             onTap: () async => navScreenAbout(context),
           ),
-          Option(
-            title: 'Logout',
-            icon: Icons.logout,
-            color: Colors.red,
-            onTap: () => showLogoutDialog(context),
-          ),
+         
         ];
 
         return Padding(

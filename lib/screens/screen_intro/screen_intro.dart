@@ -63,53 +63,34 @@ class ScreenIntro extends StatelessWidget {
             const SizedBox(
               width: double.infinity,
               height: 40,
+            
             ),
             Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const ScreenSignIn(), ));
-                  },
-                  child: Container(
-                    width: MediaQueryInfo.screenWidth*0.43,
-                    height: MediaQueryInfo.screenHeight*0.08,
-                    decoration:  BoxDecoration(
-                        color: AppStyle.backgroundPurple,
-                        borderRadius: const BorderRadius.horizontal(
-                            left: Radius.circular(15)
-                        )
-                    ),
-                    child: Center(
-                      child: Text("Sign in",
-                        style:GoogleFonts.outfit(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: AppStyle.textWhite
-                        ),),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: (){
-               
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const ScreenRegister()));
-                  },
-                  child: Container(
-                    width: MediaQueryInfo.screenWidth*0.43,
-                    height: MediaQueryInfo.screenHeight*0.08,
-                    decoration: BoxDecoration(
-                        color: AppStyle.backgroundGrey,
-                        borderRadius: const BorderRadius.horizontal(
-                            right: Radius.circular(15)
-                        )
-                    ),
-                    child: Center(
-                      child: Text("Register",
-                        style:GoogleFonts.outfit(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: AppStyle.textBlack
-                        ),),
+            
+                Expanded(
+                  child: GestureDetector(
+                    onTap: (){
+                                 
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ScreenRegister()));
+                    },
+                    child: Container(
+                      width: MediaQueryInfo.screenWidth*0.43,
+                      height: MediaQueryInfo.screenHeight*0.08,
+                      decoration: BoxDecoration(
+                          color: AppStyle.backgroundGrey,
+                          borderRadius: BorderRadius.circular(
+                              15
+                          )
+                      ),
+                      child: Center(
+                        child: Text("Get Sarted",
+                          style:GoogleFonts.outfit(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppStyle.textBlack
+                          ),),
+                      ),
                     ),
                   ),
                 )

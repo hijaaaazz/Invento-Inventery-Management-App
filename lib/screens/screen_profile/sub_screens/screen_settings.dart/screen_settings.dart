@@ -202,15 +202,7 @@ class _ScreenSettingsState extends State<ScreenSettings> {
             const Divider(height: 5),
             SizedBox(height: MediaQueryInfo.screenHeight * 0.03),
 
-            SettingsOptionTile(
-              textColor: Colors.red,
-              icon: Icons.delete,
-              title: "Delete User",
-              trailing: IconButton(
-                onPressed: _showDeleteConfirmationDialog,
-                icon:const Icon(Icons.arrow_forward_ios_outlined, size: 20)) ,
-             
-            ),
+            
           ],
         ),
       ),

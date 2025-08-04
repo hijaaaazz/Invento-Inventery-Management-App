@@ -8,50 +8,61 @@ import 'package:invento2/database/inventory/sales/sales_functions.dart';
 import 'package:invento2/database/users/user_model.dart';
 
 ValueNotifier<UserModel> userDataNotifier = ValueNotifier(
-  UserModel(id: '', name: '', email: '', phone: '', username: '', password: '',profileImage: '')
+  UserModel(id: '', name: ''),
 );
 
-// ignore: constant_identifier_names
 const USER_DB_NAME = 'user_db';
-
 Box<UserModel>? userBox;
 
+/// ✅ Initialize User Box
 Future<void> initUserDB() async {
   try {
-    userBox= await Hive.openBox<UserModel>(USER_DB_NAME);
+    if (!Hive.isBoxOpen(USER_DB_NAME)) {
+      userBox = await Hive.openBox<UserModel>(USER_DB_NAME);
+    } else {
+      userBox = Hive.box<UserModel>(USER_DB_NAME);
+    }
   } catch (e) {
     log('Error initializing userDB: $e');
+    // Try to delete corrupted box and re-open
+    await Hive.deleteBoxFromDisk(USER_DB_NAME);
+    userBox = await Hive.openBox<UserModel>(USER_DB_NAME);
   }
 }
 
+/// ✅ Get Current User (Only One Allowed)
+Future<UserModel?> getCurrentUser() async {
+  await initUserDB();
+
+  try {
+    if (userBox != null && userBox!.isNotEmpty) {
+      final user = userBox!.values.first;
+      log("User fetched: ${user.name}");
+      return user;
+    } else {
+      log("No user found.");
+      return null;
+    }
+  } catch (e) {
+    log("Error fetching current user: $e");
+    return null;
+  }
+}
+
+/// ✅ Add User (Overrides previous if exists)
 Future<bool> addUser({
   required String id,
   required String name,
-  required String email,
-  required String phone,
-  required String username,
-  required String pass,
-  
 }) async {
   await initUserDB();
 
-  if (await userExists(username)) {
-    log("Username already exists: $username");
-    return false;
-  }
-
-  final newUser = UserModel(
-    id: id,
-    name: name,
-    email: email,
-    phone: phone,
-    username: username,
-    password: pass,
-  );
+  final newUser = UserModel(id: id, name: name);
 
   try {
-    await userBox!.put(id, newUser); 
-    await getAllUser(); 
+    // Clear any existing user and save new one
+    await userBox!.clear();
+    await userBox!.put(id, newUser);
+
     log("User added: $name");
     return true;
   } catch (e) {
@@ -60,86 +71,18 @@ Future<bool> addUser({
   }
 }
 
-Future<void> updateUser({
-  required String id,
-  required String name,
-  required String email,
-  required String phone,
-   String? image,
-}) async {
-  await initUserDB();
-
-  final user = userBox?.get(id); 
-  if (user != null) {
-    final updatedUser = UserModel(
-      id: id,
-      name: name,
-      email: email,
-      phone: phone,
-      username: user.username, 
-      password: user.password,
-      profileImage: image, 
-    );
-
-    try {
-      await userBox!.put(id, updatedUser);
-      userDataNotifier.value = updatedUser; 
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-      userDataNotifier.notifyListeners(); 
-      var sessionBox = await Hive.openBox('sessionBox'); 
-      await sessionBox.put('lastLoggedUser', updatedUser);
-
-      
-
-      log("User updated: ${updatedUser.name}");
-
-    } catch (e) {
-      log("Error updating user: $e");
-    }
-  } else {
-    log("User with ID $id not found.");
-  }
-  }
-   
-
-
-Future<bool> userExists(String username) async {
-  await initUserDB();
-  final matchingUsers = userBox!.values.where((user) => user.username == username);
-  return matchingUsers.isNotEmpty;
-}
-
-Future<void> getAllUser() async {
-  await initUserDB();
-
-  final allUsers = userBox!.values.toList();
-  log("All users in box: ${allUsers.map((user) => user.name).toList()}");
-  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-  userDataNotifier.notifyListeners();
-}
-
-Future<void> logOutUser(String id) async {
-  await initUserDB();
-
-  UserModel? user = userBox!.get(id);
-  if (user != null) {
-    log("User logged out: ${user.name}");
-  } else {
-    log("User with ID $id not found for logout.");
-  }
-}
+/// ✅ Delete User and Related Data
 Future<bool> deleteUser(String id) async {
   await initUserDB();
 
   final user = userBox?.get(id);
   if (user != null) {
     try {
-      // Helper function to delete user-related data if the box is not empty
       Future<void> deleteUserRelatedData(Box box, String userId) async {
-        if (box.isNotEmpty) { // Check if the box is not empty
+        if (box.isNotEmpty) {
           final keysToDelete = box.keys.where((key) {
             final item = box.get(key);
-            return item != null && item == userId; // Update this condition if schema differs
+            return item != null && item == userId;
           }).toList();
 
           for (var key in keysToDelete) {
@@ -153,22 +96,53 @@ Future<bool> deleteUser(String id) async {
       if (productBox != null) await deleteUserRelatedData(productBox!, id);
       await deleteUserRelatedData(purchaseBox, id);
 
-      
-
-       var sessionBox = await Hive.openBox('sessionBox');
-    await sessionBox.delete('lastLoggedUser');
       await userBox!.delete(id);
 
-      await getAllUser(); 
-
-      log("User and associated data deleted: ${user.name}");
+      log("User and related data deleted: ${user.name}");
       return true;
     } catch (e) {
-      log("Error deleting user and associated data: $e");
+      log("Error deleting user: $e");
       return false;
     }
   } else {
-    log("User with ID $id not found.");
+    log("User not found: $id");
+    return false;
+  }
+
+
+
+
+  
+}
+
+
+/// ✅ Update Existing User (Only id and name)
+Future<bool> updateUser({
+  required String id,
+  required String name,
+}) async {
+  await initUserDB();
+
+  try {
+    final existingUser = userBox?.get(id);
+    if (existingUser == null) {
+      log("User not found for update: $id");
+      return false;
+    }
+
+    final updatedUser = UserModel(
+      id: id,
+      name: name,
+  
+    );
+
+    await userBox!.put(id, updatedUser);
+    userDataNotifier.value = updatedUser;
+
+    log("User updated: ${updatedUser.name}");
+    return true;
+  } catch (e) {
+    log("Error updating user: $e");
     return false;
   }
 }

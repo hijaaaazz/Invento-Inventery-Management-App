@@ -53,7 +53,6 @@ Future<void> addPurchase(BuildContext ctx,double grandTotal,String supplierName,
       id: "${DateTime.now().microsecondsSinceEpoch}",
       purchaseNumber: "INV-$invoiceCounter",
       purchaseProducts: List.from(puchasesAddedProductsList.value),
-      userId: userDataNotifier.value.id,
       grandTotal: grandTotal,
       supplierName: supplierName,
       supplierPhone: supplierNumber

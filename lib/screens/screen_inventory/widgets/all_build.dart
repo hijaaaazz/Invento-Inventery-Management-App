@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/users/user_model.dart';
+import 'package:invento2/helpers/image_helper.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_add/subscreens/screen_add_product/screen_add_product.dart';
@@ -14,13 +15,11 @@ import 'package:invento2/screens/screen_inventory/subscreens/screen_category_lis
 import 'package:invento2/screens/screen_inventory/subscreens/screen_product/screen_product.dart';
 import 'package:lottie/lottie.dart';
 
-Widget buildAllSection(UserModel userData, BuildContext ctx) {
+Widget buildAllSection(BuildContext ctx) {
   return ValueListenableBuilder(
     valueListenable: ProductListNotifier,
     builder: (context, productList, _) {
-      final userSpecificProducts = productList
-          .where((product) => product.userId == userData.id)
-          .toList();
+      final userSpecificProducts = productList;
 
       return Container(
         width: double.infinity,
@@ -106,20 +105,8 @@ Widget buildAllSection(UserModel userData, BuildContext ctx) {
                           child: Stack(
                             children: [
                             Positioned.fill(
-                            child: product.productImage.isNotEmpty
-                              ? (kIsWeb
-                                  ? Image.memory(
-                                      base64Decode(product.productImage),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(product.productImage),
-                                      fit: BoxFit.cover,
-                                    ))
-                              : Image.asset(
-                                  'assets/images/box.jpg',
-                                  fit: BoxFit.cover,
-                                ),
+                              
+                            child:ImageHelper.buildSafeImage(product.productImage) 
                           ),
                               Container(
                                 decoration: BoxDecoration(

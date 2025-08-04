@@ -29,7 +29,7 @@ class _ScreenPurchasesState extends State<ScreenPurchases> {
 void initState() {
   super.initState();
 
-  filteredPurchases = List.from(purchasesList.value.where((purchase)=>purchase.userId==userDataNotifier.value.id))..sort((a, b) {
+  filteredPurchases = List.from(purchasesList.value)..sort((a, b) {
     return b.id.compareTo(a.id);
   });
 _loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
@@ -51,7 +51,6 @@ _loadCurrencySymbol();  // Load the currency symbol when the widget is initializ
   }
 void _filterPurchases(String query) {
   final filtered = purchasesList.value.where((purchase) {
-    if (purchase.userId != userDataNotifier.value.id) return false; // Ensure only current user's purchases are filtered.
 
     if (filterOption == 'invoice') {
       return purchase.purchaseNumber.toLowerCase().contains(query.toLowerCase());
@@ -160,7 +159,7 @@ void _filterPurchases(String query) {
         valueListenable: purchasesList,
         builder: (context, purchase, child) {
         double totalPurchaseValue = purchase.fold(0, (a, b) => 
-          b.userId == userDataNotifier.value.id ? a + b.grandTotal : a
+           a + b.grandTotal 
         );
 
           return Scaffold(

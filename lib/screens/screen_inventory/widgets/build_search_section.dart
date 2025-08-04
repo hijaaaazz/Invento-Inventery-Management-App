@@ -51,7 +51,6 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
 
     filteredProductsNotifier = ValueNotifier(
       ProductListNotifier.value
-      .where((product) => product.userId == userDataNotifier.value.id)  
       .toList(),);  
 
       _clearFilters();
@@ -60,7 +59,7 @@ class _SearchAndFilterSectionState extends State<SearchAndFilterSection> with Ti
   void filterProducts(String query) {
   filteredProductsNotifier.value = ProductListNotifier.value
       .where((product) {
-        return product.userId == userDataNotifier.value.id &&
+        return 
             product.name.toLowerCase().contains(query.toLowerCase()) &&
             (selectedCategories.isEmpty || selectedCategories.contains(product.category)) &&
             product.price >= minPrice &&

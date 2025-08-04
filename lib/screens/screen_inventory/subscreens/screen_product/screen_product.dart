@@ -101,21 +101,33 @@ class _ScreenProductDetailsState extends State<ScreenProductDetails> {
                         Center(
                           child: PinchToZoomScrollableWidget(
                             child: ClipRRect(
-                              child:  updatedProduct.productImage.isNotEmpty
-                              ? (kIsWeb
-                                  ? Image.memory(
-                                      base64Decode( updatedProduct.productImage),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File( updatedProduct.productImage),
-                                      fit: BoxFit.cover,
-                                    ))
-                              : Image.asset(
-                                  'assets/images/box.jpg',
-                                  fit: BoxFit.cover,
-                                ),
-                            ),
+  child: updatedProduct.productImage.isNotEmpty
+      ? (kIsWeb
+          ? Image.memory(
+              base64Decode(updatedProduct.productImage),
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'assets/images/box.jpg',
+                  fit: BoxFit.cover,
+                );
+              },
+            )
+          : Image.file(
+              File(updatedProduct.productImage),
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'assets/images/box.jpg',
+                  fit: BoxFit.cover,
+                );
+              },
+            ))
+      : Image.asset(
+          'assets/images/box.jpg',
+          fit: BoxFit.cover,
+        ),
+),
                           ),
                         )
                       ],

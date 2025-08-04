@@ -39,7 +39,7 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
   void initState() {
     super.initState();
     searchController.addListener(_onSearchChanged);
-    filteredProducts = ProductListNotifier.value.where((a) => a.userId == userDataNotifier.value.id).toList();
+    filteredProducts = ProductListNotifier.value.toList();
 
 
     quantityController.text = quantityNotifier.value.toString();
@@ -57,7 +57,7 @@ class _ScreenAddSalesItemState extends State<ScreenAddSalesItem> {
     final query = searchController.text.toLowerCase();
     setState(() {
       filteredProducts = ProductListNotifier.value
-          .where((product) => product.userId == userDataNotifier.value.id && product.name.toLowerCase().contains(query))
+          .where((product) =>  product.name.toLowerCase().contains(query))
           .toList()
         ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     });

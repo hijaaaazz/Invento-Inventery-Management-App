@@ -11,9 +11,8 @@ import 'package:invento2/screens/screen_inventory/widgets/all_build.dart';
 import 'package:invento2/screens/screen_inventory/widgets/gategory_build.dart';
 
 class InventoryList extends StatefulWidget {
-  final UserModel userData;
 
-  const InventoryList({super.key, required this.userData});
+  const InventoryList({super.key,});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -35,7 +34,7 @@ void initState() {
 
 loadCategories() async{
   categoryList = await getAllCategories();
-  categoryListNotifier.value=categoryList.where((category)=> category.userId==userDataNotifier.value.id).toList();
+  categoryListNotifier.value=categoryList.toList();
 }
 
 
@@ -45,7 +44,7 @@ loadCategories() async{
     return Column(
       children: [
         const SizedBox(height: 15),
-        buildAllSection(widget.userData, context),
+        buildAllSection(context),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
           child: Row(
@@ -57,7 +56,7 @@ loadCategories() async{
               ),
               IconButton(
                 onPressed: () {
-                  showAddCategoryDialog(context, widget.userData.id);
+                  showAddCategoryDialog(context);
                 },
                 icon: Icon(
                   Icons.add_circle_outline_rounded,
@@ -75,9 +74,7 @@ loadCategories() async{
                   ValueListenableBuilder<List<CategoryModel>>(
                     valueListenable: categoryListNotifier,
                     builder: (ctx, updatedList, _) {
-                      final filteredCategories = updatedList
-                          .where((category) => category.userId == widget.userData.id)
-                          .toList();
+                      final filteredCategories = updatedList.toList();
 
                       if (filteredCategories.isEmpty) {
                         return Center(
@@ -99,7 +96,7 @@ loadCategories() async{
                         itemCount: filteredCategories.length,
                         itemBuilder: (context, index) {
                           final category = filteredCategories[index];
-                          return buildCategorySection(category, index, widget.userData, context);
+                          return buildCategorySection(category, index,context);
                         },
                       );
                     },

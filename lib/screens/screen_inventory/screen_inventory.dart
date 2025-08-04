@@ -8,9 +8,9 @@ import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/widgets/app_bar.dart';
 
 class ScreenInventory extends StatefulWidget {
-  final UserModel userData;
+  final UserModel? userData;
 
-  const ScreenInventory({super.key, required this.userData});
+  const ScreenInventory({super.key, this.userData});
 
   @override
   State<ScreenInventory> createState() => _ScreenInventoryState();
@@ -60,7 +60,7 @@ class _ScreenInventoryState extends State<ScreenInventory> {
           switchOutCurve: Curves.easeInOut,
           child: isSearchClicked
               ? const SearchAndFilterSection(key: ValueKey('search'))
-              : InventoryList(userData: widget.userData,),
+              : const InventoryList(),
           transitionBuilder: (child, animation) {
             const curve = Curves.easeInOut;
 

@@ -1,11 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
-import 'package:invento2/database/users/user_fuctions.dart';
+import 'package:invento2/helpers/image_helper.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/helpers/user_prefs.dart';
@@ -25,23 +24,29 @@ class ScreenProductList extends StatefulWidget {
 }
 
 class _ScreenProductListState extends State<ScreenProductList> {
-  String currencysymbol="";
+  String currencysymbol = "";
+
   @override
   void initState() {
     super.initState();
     _loadCurrencySymbol();
+    _loadCategories();
   }
 
-  _loadCurrencySymbol() async {
-    String symbol = await AppPreferences.symbol; // Fetch symbol asynchronously
+  Future<void> _loadCategories() async {
+    await initCategoryDB();
+    refreshCategoryList();
+  }
+
+  Future<void> _loadCurrencySymbol() async {
+    String symbol = await AppPreferences.symbol;
     setState(() {
-      currencysymbol = symbol;  // Update the state with the fetched symbol
+      currencysymbol = symbol;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    
-    
     return Scaffold(
       backgroundColor: AppStyle.backgroundWhite,
       appBar: appBarHelper(widget.title),
@@ -51,10 +56,8 @@ class _ScreenProductListState extends State<ScreenProductList> {
           valueListenable: ProductListNotifier,
           builder: (context, List<ProductModel> productList, _) {
             final userProducts = productList.where((product) {
-              return product.userId == userDataNotifier.value.id &&
-                  (widget.title == "All Products" || product.category == widget.title);
+              return (widget.title == "All Products" || product.category == widget.title);
             }).toList();
-
 
             if (userProducts.isEmpty) {
               return Center(
@@ -69,6 +72,7 @@ class _ScreenProductListState extends State<ScreenProductList> {
               itemCount: userProducts.length,
               itemBuilder: (context, index) {
                 final product = userProducts[index];
+
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
@@ -98,26 +102,7 @@ class _ScreenProductListState extends State<ScreenProductList> {
                             width: MediaQueryInfo.screenHeight * 0.1,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: product.productImage.isNotEmpty
-                              ? (kIsWeb
-                                  ? Image.memory(
-                                      base64Decode(product.productImage),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(product.productImage),
-                                      fit: BoxFit.cover,
-                                    ))
-                              : Image.asset(
-                                  'assets/images/box.jpg',
-                                  fit: BoxFit.cover,
-                                ),
-                                  ),
-                                ],
-                              ),
+                              child: ImageHelper.buildSafeImage(product.productImage),
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -128,13 +113,15 @@ class _ScreenProductListState extends State<ScreenProductList> {
                               children: [
                                 Text(
                                   product.name,
-                                  style: GoogleFonts.outfit(color: AppStyle.textBlack, fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.outfit(
+                                    color: AppStyle.textBlack,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   product.description,
-
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.lato(color: AppStyle.textBlack),

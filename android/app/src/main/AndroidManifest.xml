@@ -2,7 +2,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <application
-        android:label="invento"
+        android:label="Invento"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">  <!-- Add this line -->

@@ -1,14 +1,13 @@
-import 'dart:io';
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
+// Modified UserInfo Widget
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/users/user_fuctions.dart';
 import 'package:invento2/database/users/user_model.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
+import 'package:invento2/screens/screen_profile/widgets/edit_profile_button.dart';
 
 class UserInfo extends StatefulWidget {
-  final UserModel user;
+  final UserModel? user;
 
   const UserInfo({super.key, required this.user});
 
@@ -17,100 +16,115 @@ class UserInfo extends StatefulWidget {
 }
 
 class _UserInfoState extends State<UserInfo> {
-  Uint8List? webImage;
+  bool isEditing = false;
+  late TextEditingController nameController;
+  late FocusNode focusNode;
 
   @override
   void initState() {
     super.initState();
-    // Handle web image decoding
-    if (kIsWeb && userDataNotifier.value.profileImage != null) {
-      try {
-        webImage = base64Decode(userDataNotifier.value.profileImage!);
-      } catch (e) {
-        webImage = null;
+    nameController = TextEditingController(text: widget.user?.name ?? '');
+    focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  void toggleEditMode() {
+    setState(() {
+      isEditing = !isEditing;
+      if (isEditing) {
+        // Use the current displayed name from userDataNotifier
+        nameController.text = userDataNotifier.value.name;
+        // Auto-focus and position cursor at the end
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          focusNode.requestFocus();
+          nameController.selection = TextSelection.fromPosition(
+            TextPosition(offset: nameController.text.length),
+          );
+        });
       }
+    });
+  }
+
+  Future<void> _saveChanges() async {
+    final newName = nameController.text.trim();
+    if (newName.isEmpty || widget.user == null) return;
+
+    final success = await updateUser(id: widget.user!.id, name: newName);
+    if (success) {
+      setState(() {
+        isEditing = false;
+      });
+      // Unfocus the text field
+      focusNode.unfocus();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update user')),
+      );
     }
-  }
-
-  Widget _placeholderImage() {
-    return CircleAvatar(
-      radius: 64,
-      backgroundColor: Colors.grey[300],
-      child: const Icon(
-        Icons.person,
-        size: 64,
-        color: Colors.grey,
-      ),
-    );
-  }
-
-  Widget _buildProfileImage(UserModel userData) {
-    try {
-      if (kIsWeb) {
-        // Web image handling (base64)
-        return userData.profileImage != null && userData.profileImage!.isNotEmpty
-            ? CircleAvatar(
-                radius: 64,
-                backgroundImage: MemoryImage(base64Decode(userData.profileImage!)),
-              )
-            : _placeholderImage();
-      } else {
-        // Mobile image handling (file path)
-        return userData.profileImage != null && userData.profileImage!.isNotEmpty
-            ? CircleAvatar(
-                radius: 64,
-                backgroundImage: FileImage(File(userData.profileImage!)),
-              )
-            : _placeholderImage();
-      }
-    } catch (e) {
-      return _placeholderImage();
-    }
-  }
-
-  Widget _buildInfoText(String text) {
-    return Text(
-      text,
-      style: GoogleFonts.lato(
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-        color: AppStyle.textBlack,
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<UserModel?>(
+    return ValueListenableBuilder<UserModel>(
       valueListenable: userDataNotifier,
       builder: (context, userData, child) {
-        if (userData == null) {
-          return const Center(child: Text('No user data available'));
-        }
-
         return Container(
-          color: AppStyle.backgroundGrey,
+          color: AppStyle.backgroundPurple,
           child: Column(
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
                 width: double.infinity,
               ),
-              _buildProfileImage(userData),
               const SizedBox(height: 10),
-              Text(
-                userData.name,
-                style: GoogleFonts.montserrat(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppStyle.textBlack,
-                ),
+
+              // Editable Name
+              isEditing
+                  ? IntrinsicHeight(
+                      child: TextField(
+                        controller: nameController,
+                        focusNode: focusNode,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        cursorColor: const Color.fromARGB(255, 0, 0, 0),
+                        cursorWidth: 3,
+                        cursorHeight: 20,
+                        decoration: const InputDecoration(
+                          
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                          isDense: true,
+                        ),
+                        style: GoogleFonts.montserrat(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppStyle.textWhite,
+                        ),
+                      ),
+                    )
+                  : Text(
+                      userData.name,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppStyle.textWhite,
+                      ),
+                    ),
+
+              const SizedBox(height: 25),
+
+              EditProfileButton(
+                user: widget.user,
+                isEditing: isEditing,
+                onToggleEdit: toggleEditMode,
+                onSave: _saveChanges,
               ),
-              const SizedBox(height: 20),
-              if (userData.email.isNotEmpty)
-                _buildInfoText(userData.email),
-              if (userData.phone.isNotEmpty)
-                _buildInfoText(userData.phone),
             ],
           ),
         );

@@ -52,8 +52,7 @@ class _RevenueLineChartState extends State<RevenueLineChart> {
                 final saleDate = DateTime.fromMicrosecondsSinceEpoch(int.parse(sale.id));
                 return saleDate.day == targetDate.day &&
                        saleDate.month == targetDate.month &&
-                       saleDate.year == targetDate.year &&
-                       sale.userId == userDataNotifier.value.id;
+                       saleDate.year == targetDate.year;
               })
               .fold(0.0, (sum, sale) => sum + sale.grandTotal);
           
@@ -68,8 +67,7 @@ class _RevenueLineChartState extends State<RevenueLineChart> {
               .where((sale) {
                 final saleDate = DateTime.fromMicrosecondsSinceEpoch(int.parse(sale.id));
                 return saleDate.month == targetDate.month &&
-                       saleDate.year == targetDate.year &&
-                       sale.userId == userDataNotifier.value.id;
+                       saleDate.year == targetDate.year ;
               })
               .fold(0.0, (sum, sale) => sum + sale.grandTotal);
           
@@ -83,8 +81,7 @@ class _RevenueLineChartState extends State<RevenueLineChart> {
           final yearlyRevenue = salesList.value
               .where((sale) {
                 final saleDate = DateTime.fromMicrosecondsSinceEpoch(int.parse(sale.id));
-                return saleDate.year == targetYear &&
-                       sale.userId == userDataNotifier.value.id;
+                return saleDate.year == targetYear ;
               })
               .fold(0.0, (sum, sale) => sum + sale.grandTotal);
           

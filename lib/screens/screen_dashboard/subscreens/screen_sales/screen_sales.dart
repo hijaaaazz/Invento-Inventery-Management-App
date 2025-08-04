@@ -30,7 +30,7 @@ class _ScreenSalesState extends State<ScreenSales> {
   void initState() {
     super.initState();
    filteredSales = List.from(
-  salesList.value.where((sale) => sale.userId == userDataNotifier.value.id)
+  salesList.value
 )..sort((a, b) => b.id.compareTo(a.id));
 
   _loadCurrencySymbol();  // Load the currency symbol when the widget is initialized
@@ -51,7 +51,6 @@ class _ScreenSalesState extends State<ScreenSales> {
 
  void _filterSales(String query) {
   final filtered = salesList.value.where((sale) {
-    if (sale.userId != userDataNotifier.value.id) return false;
 
     if (filterOption == 'invoice') {
       return sale.saleNumber.toLowerCase().contains(query.toLowerCase());
@@ -158,9 +157,9 @@ class _ScreenSalesState extends State<ScreenSales> {
       return ValueListenableBuilder<List<SalesModel>>(
         valueListenable: salesList,
         builder: (context, sales, child) {
-         double totalSaleValue = sales.fold(0, (a, b) =>b.userId==userDataNotifier.value.id?  
+         double totalSaleValue = sales.fold(0, (a, b) =>
          a + b.grandTotal
-         : a);
+    );
           return Scaffold(
             backgroundColor: AppStyle.backgroundWhite,
             appBar: appBarHelper("sales"),

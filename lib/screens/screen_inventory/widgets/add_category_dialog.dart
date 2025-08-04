@@ -4,17 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:invento2/database/inventory/category/category_functions.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 
-Future<void> showAddCategoryDialog(BuildContext context, String userId) async {
+Future<void> showAddCategoryDialog(BuildContext context) async {
   showDialog(
     context: context,
     builder: (context) => AddCategoryDialog(
       onConfirm: (String name, String categoryId) {
         addCategory(
           categoryId: categoryId,
-          userId: userId,
           categoryName: name,
         );
-        log("Added category: id = $userId, name = $name for userId = $userId");
       },
     ),
   );

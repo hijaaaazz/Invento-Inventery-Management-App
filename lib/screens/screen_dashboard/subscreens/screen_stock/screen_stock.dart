@@ -46,21 +46,20 @@ class _ScreenStockState extends State<ScreenStock> {
               builder: (context, products, _) {
                 double totalStockValue = products.fold(
                   0,
-                  (total, product) => product.userId==userDataNotifier.value.id
-                      ? total + (product.stock * product.price)
-                      : total,
+                  (total, product) =>total + (product.stock * product.price)
+                     ,
                 );
 
                 int noOfProducts = products
-                .where((product) => product.userId == userDataNotifier.value.id)
+                
                 .length.toInt();
 
                 List<ProductModel> fullStockCount =
-                    products.where((product) => product.stock >= product.maxlimit && product.userId== userDataNotifier.value.id).toList();
+                    products.where((product) => product.stock >= product.maxlimit ).toList();
                 List<ProductModel> lowStockCount = products
-                    .where((product) => product.stock < product.maxlimit && product.stock > 0&& product.userId== userDataNotifier.value.id).toList();
+                    .where((product) => product.stock < product.maxlimit && product.stock > 0).toList();
                 List<ProductModel> zeroStockCount =
-                    products.where((product) => product.stock == 0&& product.userId== userDataNotifier.value.id).toList();
+                    products.where((product) => product.stock == 0).toList();
 
                 
 

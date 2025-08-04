@@ -9,8 +9,7 @@ import '../screen_profile/screen_profile.dart';
 import 'package:invento2/database/users/user_model.dart';
 
 class ScreenMain extends StatefulWidget {
-  final UserModel userdetails;
-  const ScreenMain({super.key, required this.userdetails});
+  const ScreenMain({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -21,6 +20,7 @@ class ScreenMain extends StatefulWidget {
 class _ScreenMainState extends State<ScreenMain> {
   final PageController _pageController = PageController(viewportFraction: 0.22, initialPage: 1);
   int _currentIndex = 1;
+   UserModel? user;
 
   @override
   void initState() {
@@ -28,9 +28,21 @@ class _ScreenMainState extends State<ScreenMain> {
     if (userDataNotifier.value.id.isNotEmpty) {
     log("Current User ID: ${userDataNotifier.value.id}");
     }
-    
+    loadUser();
     
 
+  }
+
+  Future<void> loadUser() async {
+    final currentUser = await getCurrentUser();
+    if (currentUser != null) {
+      setState(() {
+        user = currentUser;
+      });
+      log("Current User: ");
+    } else {
+      log("No user found.");
+    }
   }
 
   final List<IconData> icons = [
@@ -56,10 +68,10 @@ class _ScreenMainState extends State<ScreenMain> {
           IndexedStack(
             index: _currentIndex,
             children: [
-              ScreenDashboard(userData: widget.userdetails),
-              ScreenAddOrder(userData: widget.userdetails), 
-              ScreenInventory(userData: widget.userdetails),
-              ScreenProfile(user: widget.userdetails,)  
+              ScreenDashboard(userData: user),
+              ScreenAddOrder(userData: user), 
+              ScreenInventory(userData: user),
+              ScreenProfile(user: user,)  
             ],
           ),
           Align(

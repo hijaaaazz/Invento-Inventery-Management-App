@@ -59,7 +59,6 @@ Future<void> addSale(
       id: "${DateTime.now().microsecondsSinceEpoch}",
       saleNumber: "SINV-$SalesinvoiceCounter",
       saleProducts: List.from(salesAddedProductsList.value),
-      userId: userDataNotifier.value.id,
       customerName: customerName,
       grandTotal: grandTotal,
       customerNumber: customerNumber

@@ -28,9 +28,6 @@ class ProductModel extends HiveObject {
   @HiveField(7)
   final double stock;
 
-  @HiveField(8)
-  final String userId;
-
   @HiveField(9)
   final String productId;
 
@@ -51,7 +48,6 @@ class ProductModel extends HiveObject {
     required this.maxlimit,
     required this.rate,
     this.stock = 0,
-    required this.userId,
     required this.productImage
   });
 
@@ -71,7 +67,6 @@ class ProductModel extends HiveObject {
     double? stock,
   }) {
     return ProductModel(
-      userId: userId ?? this.userId,
       productId: productId ?? this.productId,
       name: name ?? this.name,
       category: category ?? this.category,

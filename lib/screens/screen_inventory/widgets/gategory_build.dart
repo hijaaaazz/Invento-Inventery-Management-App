@@ -8,6 +8,7 @@ import 'package:invento2/database/inventory/category/category_model.dart';
 import 'package:invento2/database/inventory/product/product_functions.dart';
 import 'package:invento2/database/inventory/product/product_model.dart';
 import 'package:invento2/database/users/user_model.dart';
+import 'package:invento2/helpers/image_helper.dart';
 import 'package:invento2/helpers/media_query_helper/media_query_helper.dart';
 import 'package:invento2/helpers/styles_helper/styles_helper.dart';
 import 'package:invento2/screens/screen_inventory/subscreens/screen_category_list/screen_category.dart';
@@ -15,20 +16,20 @@ import 'package:invento2/screens/screen_inventory/subscreens/screen_product/scre
 import 'package:invento2/screens/screen_inventory/widgets/delete_category.dart';
 
 Widget buildCategorySection(
-    CategoryModel category, int index, UserModel userData, BuildContext ctx) {
+    CategoryModel category, int index,BuildContext ctx) {
   if (category.name.isEmpty) return Container();
 
   ValueNotifier<List<ProductModel>> productsInCategoryNotifier = ValueNotifier(
     ProductListNotifier.value
         .where((product) =>
-            product.category == category.name && product.userId == userData.id)
+            product.category == category.name )
         .toList(),
   );
 
   void updateCategoryNotifier() {
     productsInCategoryNotifier.value = ProductListNotifier.value
         .where((product) =>
-            product.category == category.name && product.userId == userData.id)
+            product.category == category.name )
         .toList();
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     productsInCategoryNotifier.notifyListeners();
@@ -117,20 +118,7 @@ Widget buildCategorySection(
                     child: Stack(
                       children: [
                         Positioned.fill(
-                          child:  product.productImage.isNotEmpty
-                              ? (kIsWeb
-                                  ? Image.memory(
-                                      base64Decode(product.productImage),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(product.productImage),
-                                      fit: BoxFit.cover,
-                                    ))
-                              : Image.asset(
-                                  'assets/images/box.jpg',
-                                  fit: BoxFit.cover,
-                                ),
+                          child:  ImageHelper.buildSafeImage(product.productImage)
                         ),
                         Container(
                           decoration: BoxDecoration(

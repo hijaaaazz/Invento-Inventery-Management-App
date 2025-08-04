@@ -27,7 +27,6 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       maxlimit: fields[6] as double,
       rate: fields[11] as double,
       stock: fields[7] as double,
-      userId: fields[8] as String,
       productImage: fields[10] as String,
     );
   }
@@ -35,7 +34,7 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
   @override
   void write(BinaryWriter writer, ProductModel obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -52,8 +51,6 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       ..write(obj.maxlimit)
       ..writeByte(7)
       ..write(obj.stock)
-      ..writeByte(8)
-      ..write(obj.userId)
       ..writeByte(9)
       ..write(obj.productId)
       ..writeByte(10)

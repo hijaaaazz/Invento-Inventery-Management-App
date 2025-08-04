@@ -15,22 +15,18 @@ class SalesModel extends HiveObject {
   final List<SaleProduct> saleProducts;
 
   @HiveField(3)
-  final String userId;
-
-  @HiveField(4)
   final String? customerName; 
   
-  @HiveField(5)
+  @HiveField(4)
   final double grandTotal;
 
-   @HiveField(6)
+   @HiveField(5)
   final int? customerNumber; 
 
   SalesModel({
     required this.id,
     required this.saleNumber,
     required this.saleProducts,
-    required this.userId,
     this.customerName, 
     this.customerNumber,
     required this.grandTotal,

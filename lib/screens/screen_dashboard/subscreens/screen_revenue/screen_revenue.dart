@@ -79,7 +79,7 @@ void _filterSalesByCustomRange(DateTime now) {
   totalSales = salesList.value.where((b) {
     final saleDate = DateTime.fromMicrosecondsSinceEpoch(int.parse(b.id));
     
-    return b.userId == userDataNotifier.value.id && 
+    return 
            (saleDate.isAtSameMomentAs(customRange!.start) || saleDate.isAfter(customRange!.start)) &&
            (saleDate.isAtSameMomentAs(customRange!.end) || saleDate.isBefore(customRange!.end));
   }).toList();
@@ -90,7 +90,6 @@ void _filterSalesByCustomRange(DateTime now) {
 
 void _filterSalesByPredefinedPeriod(DateTime now) {
   totalSales = salesList.value.where((b) {
-    if (b.userId != userDataNotifier.value.id) return false;
 
     final date = DateTime.fromMicrosecondsSinceEpoch(int.parse(b.id));
     return _matchesPeriod(date, now, _tabController.index);
@@ -102,7 +101,7 @@ void _filterSalesByPredefinedPeriod(DateTime now) {
   previousRevenue = salesList.value
       .where((sale) {
         final date = DateTime.fromMicrosecondsSinceEpoch(int.parse(sale.id));
-        return sale.userId == userDataNotifier.value.id &&
+        return 
                _matchesPreviousPeriod(date, now, _tabController.index);
       })
       .fold<double>(0, (total, sale) => total + sale.grandTotal);
@@ -255,7 +254,7 @@ return DefaultTabController(
         backgroundColor: AppStyle.backgroundWhite,
         appBar: appBarHelper("Revenue"),
         body: 
-        salesList.value.where((sale)=>sale.userId==userDataNotifier.value.id).isEmpty?
+        salesList.value.isEmpty?
         const Center(
           child: Text("No Sales Recorded Yet",style:TextStyle(
             fontSize: 20,

@@ -1,54 +1,64 @@
+// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:invento2/database/users/user_fuctions.dart';
 import 'category_model.dart';
 
 ValueNotifier<List<CategoryModel>> categoryListNotifier = ValueNotifier<List<CategoryModel>>([]);
 
 Box<CategoryModel>? categoryBox;
 
-
 Future<void> initCategoryDB() async {
   try {
-    categoryBox ??= await Hive.openBox<CategoryModel>('category_db');
-    // Filter and update the list
-    categoryListNotifier.value = categoryBox!.values
-        .where((category) => category.userId == userDataNotifier.value.id)
-        .toList();
-    
-    // Notify listeners explicitly
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-    categoryListNotifier.notifyListeners();
+    if (!Hive.isBoxOpen('category_db')) {
+      categoryBox = await Hive.openBox<CategoryModel>('category_db');
+    } else {
+      categoryBox = Hive.box<CategoryModel>('category_db');
+    }
+
+    // Move notifier update into separate function
+    _updateCategoryList();
   } catch (e) {
     log('Error initializing category DB: $e');
   }
 }
 
+void _updateCategoryList() {
+  if (categoryBox != null) {
+    final values = categoryBox!.values.toList();
+    categoryListNotifier.value = [...values]; // force rebuild
+    categoryListNotifier.notifyListeners();
+  }
+}
+
+
+Future<void> refreshCategoryList() async {
+  if (categoryBox == null || !Hive.isBoxOpen('category_db')) {
+    categoryBox = await Hive.openBox<CategoryModel>('category_db');
+  }
+
+  categoryListNotifier.value = categoryBox!.values.toList();
+  categoryListNotifier.notifyListeners();
+}
 
 Future<bool> addCategory({
   required String categoryId,
   required String categoryName,
-  required String userId,
 }) async {
   await initCategoryDB();
 
   final newCategory = CategoryModel(
     id: categoryId,
     name: categoryName,
-    userId: userId,
+    userId: '', // optional or ignored for single user
   );
 
   try {
     await categoryBox!.put(categoryId, newCategory);
     log("Category added: $categoryName");
 
-    categoryListNotifier.value = categoryBox!.values
-        .where((category) => category.userId == userDataNotifier.value.id)
-        .toList();
-    
-    // Notify listeners explicitly
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    categoryListNotifier.value = categoryBox!.values.toList();
     categoryListNotifier.notifyListeners();
 
     return true;
@@ -57,9 +67,6 @@ Future<bool> addCategory({
     return false;
   }
 }
-
-
-
 
 Future<List<CategoryModel>> getAllCategories() async {
   await initCategoryDB();
@@ -70,7 +77,6 @@ Future<bool> categoryExists(String categoryId) async {
   await initCategoryDB();
   return categoryBox!.containsKey(categoryId);
 }
-
 
 Future<void> deleteCategory(
   String categoryId,
@@ -88,12 +94,7 @@ Future<void> deleteCategory(
       await categoryBox!.delete(categoryId);
       log("Category with ID $categoryId deleted successfully");
 
-      categoryListNotifier.value = categoryBox!.values
-          .where((category) => category.userId == userDataNotifier.value.id)
-          .toList();
-      
-      // Notify listeners explicitly
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      categoryListNotifier.value = categoryBox!.values.toList();
       categoryListNotifier.notifyListeners();
 
       // ignore: use_build_context_synchronously

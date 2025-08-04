@@ -16,22 +16,18 @@ class PurchaseModel extends HiveObject {
   final List<PurchaseProduct> purchaseProducts;
 
   @HiveField(3)
-  final String userId;
-
-  @HiveField(4)
   final double grandTotal ;
 
-  @HiveField(5)
+  @HiveField(4)
   final String? supplierName ;
 
-  @HiveField(6)
+  @HiveField(5)
   final int? supplierPhone ;
 
   PurchaseModel({
     required this.id,
     required this.purchaseNumber,
     required this.purchaseProducts,
-    required this.userId,
     required this.grandTotal,
     this.supplierName,
     this.supplierPhone

@@ -20,17 +20,16 @@ class PurchaseModelAdapter extends TypeAdapter<PurchaseModel> {
       id: fields[0] as String,
       purchaseNumber: fields[1] as String,
       purchaseProducts: (fields[2] as List).cast<PurchaseProduct>(),
-      userId: fields[3] as String,
-      grandTotal: fields[4] as double,
-      supplierName: fields[5] as String?,
-      supplierPhone: fields[6] as int?,
+      grandTotal: fields[3] as double,
+      supplierName: fields[4] as String?,
+      supplierPhone: fields[5] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, PurchaseModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,12 +37,10 @@ class PurchaseModelAdapter extends TypeAdapter<PurchaseModel> {
       ..writeByte(2)
       ..write(obj.purchaseProducts)
       ..writeByte(3)
-      ..write(obj.userId)
-      ..writeByte(4)
       ..write(obj.grandTotal)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.supplierName)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.supplierPhone);
   }
 

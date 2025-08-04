@@ -8,7 +8,7 @@ import 'package:invento2/database/inventory/purchase/purchase_model.dart';
 ValueNotifier<List<ProductModel>> ProductListNotifier = ValueNotifier([]);
 // ignore: non_constant_identifier_names
 ValueNotifier<List<ProductModel>> FilteredProductListNotifier = ValueNotifier([]);
-ValueNotifier<ProductModel> productDetailsNotifier= ValueNotifier(ProductModel(userId: '', productId: '', name: '', category: '', description: '', unit: '', price: 0, minlimit: 0, maxlimit: 0, rate: 0, productImage: '',));
+ValueNotifier<ProductModel> productDetailsNotifier= ValueNotifier(ProductModel( productId: '', name: '', category: '', description: '', unit: '', price: 0, minlimit: 0, maxlimit: 0, rate: 0, productImage: '',));
 
 
 // ignore: constant_identifier_names
@@ -51,7 +51,6 @@ Future<bool> addProduct({
     price: price,
     minlimit: minlimit,
     maxlimit: maxlimit,
-    userId: userId,
     productImage: productImage,
     rate: rate
   );
@@ -104,7 +103,6 @@ Future<void> updateProduct({
       minlimit: minlimit,
       maxlimit: maxlimit,
       stock: stock??product.stock, 
-      userId: product.userId,
       productImage: productImage,
     );
 
